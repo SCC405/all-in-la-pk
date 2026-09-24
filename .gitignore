@@ -50,3 +50,6 @@ desktop.ini
 
 # Temporales de Office (los docs de docs/ sí se versionan)
 ~$*
+
+# Configuracion local de Claude Code
+.claude/
