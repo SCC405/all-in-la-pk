@@ -27,7 +27,7 @@ sin depender de Postman ni de modificar código.
 
 | Integrante | Rol | GitHub |
 |---|---|---|
-| Nicolay | Desarrollador | _por definir_ |
+| Nicolay | Desarrollador | [@Nicolayyy](https://github.com/Nicolayyy) |
 | Chifu (Santiago) | Desarrollador | [@SCC405](https://github.com/SCC405) |
 
 **Metodología:** Scrum resumido/adaptado — 3 sprints de 2 semanas · 115 puntos de historia.
