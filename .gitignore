@@ -1,0 +1,52 @@
+# Dependencias
+node_modules/
+.pnp
+.pnp.js
+
+# Variables de entorno (NUNCA subir credenciales de MongoDB Atlas)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Builds
+dist/
+build/
+frontend/dist/
+backend/dist/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Certificados HTTPS locales (HU-20)
+*.pem
+*.key
+*.crt
+certs/
+
+# Cache de herramientas
+.cache/
+.parcel-cache/
+.vite/
+coverage/
+.eslintcache
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+
+# Temporales de Office (los docs de docs/ sí se versionan)
+~$*

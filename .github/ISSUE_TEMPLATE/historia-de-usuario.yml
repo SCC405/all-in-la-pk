@@ -1,0 +1,63 @@
+name: Historia de usuario
+description: Nueva historia del Product Backlog
+title: "HU-XX — "
+labels: ["historia de usuario"]
+body:
+  - type: textarea
+    id: historia
+    attributes:
+      label: Descripción / Historia de usuario
+      placeholder: Como <rol>, quiero <acción> para <beneficio>.
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: subtareas
+    attributes:
+      label: Subtareas
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: input
+    id: dependencias
+    attributes:
+      label: Dependencias
+      placeholder: "HU-01, HU-02 (o: Ninguna)"
+  - type: dropdown
+    id: prioridad
+    attributes:
+      label: Prioridad
+      options: ["Muy alta", "Alta", "Media", "Baja"]
+    validations:
+      required: true
+  - type: dropdown
+    id: puntos
+    attributes:
+      label: Puntos de historia
+      options: ["1", "2", "3", "5", "8", "13"]
+    validations:
+      required: true
+  - type: dropdown
+    id: sprint
+    attributes:
+      label: Sprint
+      options: ["Sprint 1", "Sprint 2", "Sprint 3"]
+    validations:
+      required: true
+  - type: dropdown
+    id: responsable
+    attributes:
+      label: Responsable
+      options: ["Nicolay", "Chifu", "Equipo"]
+    validations:
+      required: true
