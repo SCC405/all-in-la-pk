@@ -1,6 +1,6 @@
 # Cómo trabajamos en All In La PK
 
-Guía corta para que Nicolay y Chifu trabajemos sin pisarnos el código.
+Guía corta para que Nicolay Baquero y Santiago Cifuentes trabajemos sin pisarnos el código.
 
 ---
 

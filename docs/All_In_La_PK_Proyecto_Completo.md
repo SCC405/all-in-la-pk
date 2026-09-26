@@ -2,7 +2,7 @@
 
 ## Proyecto de aula — Tienda en Línea Modular
 
-**Integrantes:** Nicolay, Chifu
+**Integrantes:** Nicolay Baquero, Santiago Cifuentes
 
 **Metodología:** Scrum resumido/adaptado — 3 sprints de 2 semanas.
 
@@ -65,7 +65,7 @@ La solución abarcará una tienda web funcional para productos de póker. Los vi
 
 ## 8. Metodología de desarrollo
 
-Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product Backlog general y se trabajará en 3 sprints de 2 semanas. Cada sprint tendrá Sprint Goal, Sprint Backlog, responsables y revisión de resultados. La carga se distribuirá de forma equitativa entre Nicolay y Chifu.
+Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product Backlog general y se trabajará en 3 sprints de 2 semanas. Cada sprint tendrá Sprint Goal, Sprint Backlog, responsables y revisión de resultados. La carga se distribuirá de forma equitativa entre Nicolay Baquero y Santiago Cifuentes.
 
 | Sprint | Semanas | Enfoque |
 |---|---|---|
@@ -115,40 +115,40 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 | RNF-13 | Las operaciones CRUD deberán actualizar la interfaz sin provocar una recarga completa de la página. |
 | RNF-14 | HTTPS, mitigación XSS y protección CSRF deberán poder demostrarse mediante casos concretos durante la sustentación. |
 | RNF-15 | La aplicación final deberá estar desplegada o ejecutándose en un entorno accesible para personas diferentes a los integrantes del equipo. |
-| RNF-16 | La aplicación no podrá depender exclusivamente del computador de Nicolay o Chifu para su demostración. |
+| RNF-16 | La aplicación no podrá depender exclusivamente del computador de Nicolay Baquero o Santiago Cifuentes para su demostración. |
 | RNF-17 | El proyecto deberá contar con documentación técnica suficiente para comprender su estructura, instalación, ejecución y funcionamiento. |
 
 ## 11. Product Backlog
 
 | ID | Historia | Prioridad | Puntos | Dependencias | Sprint | Responsable |
 |---|---|---|---:|---|---:|---|
-| HU-01 | Configurar backend y conexión a base de datos | Muy alta | 5 | Ninguna | 1 | Nicolay |
-| HU-02 | Crear modelo de categorías | Muy alta | 3 | HU-01 | 1 | Chifu |
-| HU-03 | CRUD REST de categorías | Muy alta | 5 | HU-02 | 1 | Chifu |
-| HU-04 | Crear modelo de productos | Muy alta | 3 | HU-01, HU-02 | 1 | Nicolay |
-| HU-05 | CRUD REST de productos | Muy alta | 8 | HU-04 | 1 | Nicolay |
-| HU-06 | Documentar API con Swagger/OpenAPI | Alta | 3 | HU-03, HU-05 | 1 | Chifu |
-| HU-07 | Configurar frontend y comunicación con API | Muy alta | 3 | Ninguna | 1 | Chifu |
-| HU-08 | Visualizar catálogo público | Muy alta | 5 | HU-05, HU-07 | 1 | Chifu |
-| HU-09 | Filtrar catálogo por categoría | Alta | 3 | HU-03, HU-08 | 1 | Nicolay |
-| HU-10 | Agregar productos al carrito | Muy alta | 3 | HU-08 | 2 | Nicolay |
-| HU-11 | Gestionar cantidades y eliminar del carrito | Muy alta | 5 | HU-10 | 2 | Chifu |
-| HU-12 | Calcular total del carrito | Muy alta | 3 | HU-10, HU-11 | 2 | Nicolay |
-| HU-13 | Administrar categorías desde frontend | Muy alta | 5 | HU-03, HU-07 | 2 | Chifu |
-| HU-14 | Administrar productos desde frontend | Muy alta | 8 | HU-05, HU-07 | 2 | Nicolay |
-| HU-15 | Implementar validaciones y actualización dinámica | Alta | 3 | HU-13, HU-14 | 2 | Chifu |
-| HU-16 | Migrar estilos a SCSS | Alta | 5 | HU-07 | 2 | Nicolay |
-| HU-17 | Configurar gestor de dependencias y scripts | Alta | 2 | HU-07 | 2 | Chifu |
-| HU-18 | Implementar mitigación XSS | Muy alta | 3 | HU-13, HU-14 | 2 | Nicolay |
-| HU-19 | Implementar protección CSRF | Muy alta | 5 | HU-03, HU-05 | 2 | Chifu |
-| HU-20 | Configurar HTTPS | Muy alta | 3 | HU-01, HU-07 | 2 | Chifu |
-| HU-21 | Integrar el sistema completo | Muy alta | 5 | HU-09, HU-12, HU-15, HU-18, HU-19, HU-20 | 3 | Nicolay |
-| HU-22 | Ejecutar pruebas funcionales | Muy alta | 5 | HU-21 | 3 | Chifu |
-| HU-23 | Validar seguridad | Muy alta | 3 | HU-18, HU-19, HU-20 | 3 | Chifu |
-| HU-24 | Crear documentación técnica | Alta | 5 | HU-06, HU-21 | 3 | Nicolay |
-| HU-25 | Desplegar aplicación | Muy alta | 8 | HU-21, HU-20 | 3 | Chifu |
-| HU-26 | Corregir errores finales | Muy alta | 3 | HU-22, HU-23, HU-25 | 3 | Nicolay |
-| HU-27 | Preparar sustentación | Alta | 3 | HU-24, HU-25, HU-26 | 3 | Nicolay |
+| HU-01 | Configurar backend y conexión a base de datos | Muy alta | 5 | Ninguna | 1 | Nicolay Baquero |
+| HU-02 | Crear modelo de categorías | Muy alta | 3 | HU-01 | 1 | Santiago Cifuentes |
+| HU-03 | CRUD REST de categorías | Muy alta | 5 | HU-02 | 1 | Santiago Cifuentes |
+| HU-04 | Crear modelo de productos | Muy alta | 3 | HU-01, HU-02 | 1 | Nicolay Baquero |
+| HU-05 | CRUD REST de productos | Muy alta | 8 | HU-04 | 1 | Nicolay Baquero |
+| HU-06 | Documentar API con Swagger/OpenAPI | Alta | 3 | HU-03, HU-05 | 1 | Santiago Cifuentes |
+| HU-07 | Configurar frontend y comunicación con API | Muy alta | 3 | Ninguna | 1 | Santiago Cifuentes |
+| HU-08 | Visualizar catálogo público | Muy alta | 5 | HU-05, HU-07 | 1 | Santiago Cifuentes |
+| HU-09 | Filtrar catálogo por categoría | Alta | 3 | HU-03, HU-08 | 1 | Nicolay Baquero |
+| HU-10 | Agregar productos al carrito | Muy alta | 3 | HU-08 | 2 | Nicolay Baquero |
+| HU-11 | Gestionar cantidades y eliminar del carrito | Muy alta | 5 | HU-10 | 2 | Santiago Cifuentes |
+| HU-12 | Calcular total del carrito | Muy alta | 3 | HU-10, HU-11 | 2 | Nicolay Baquero |
+| HU-13 | Administrar categorías desde frontend | Muy alta | 5 | HU-03, HU-07 | 2 | Santiago Cifuentes |
+| HU-14 | Administrar productos desde frontend | Muy alta | 8 | HU-05, HU-07 | 2 | Nicolay Baquero |
+| HU-15 | Implementar validaciones y actualización dinámica | Alta | 3 | HU-13, HU-14 | 2 | Santiago Cifuentes |
+| HU-16 | Migrar estilos a SCSS | Alta | 5 | HU-07 | 2 | Nicolay Baquero |
+| HU-17 | Configurar gestor de dependencias y scripts | Alta | 2 | HU-07 | 2 | Santiago Cifuentes |
+| HU-18 | Implementar mitigación XSS | Muy alta | 3 | HU-13, HU-14 | 2 | Nicolay Baquero |
+| HU-19 | Implementar protección CSRF | Muy alta | 5 | HU-03, HU-05 | 2 | Santiago Cifuentes |
+| HU-20 | Configurar HTTPS | Muy alta | 3 | HU-01, HU-07 | 2 | Santiago Cifuentes |
+| HU-21 | Integrar el sistema completo | Muy alta | 5 | HU-09, HU-12, HU-15, HU-18, HU-19, HU-20 | 3 | Nicolay Baquero |
+| HU-22 | Ejecutar pruebas funcionales | Muy alta | 5 | HU-21 | 3 | Santiago Cifuentes |
+| HU-23 | Validar seguridad | Muy alta | 3 | HU-18, HU-19, HU-20 | 3 | Santiago Cifuentes |
+| HU-24 | Crear documentación técnica | Alta | 5 | HU-06, HU-21 | 3 | Nicolay Baquero |
+| HU-25 | Desplegar aplicación | Muy alta | 8 | HU-21, HU-20 | 3 | Santiago Cifuentes |
+| HU-26 | Corregir errores finales | Muy alta | 3 | HU-22, HU-23, HU-25 | 3 | Nicolay Baquero |
+| HU-27 | Preparar sustentación | Alta | 3 | HU-24, HU-25, HU-26 | 3 | Nicolay Baquero |
 
 **Total Product Backlog: 115 puntos.**
 
@@ -162,7 +162,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 5  
 **Dependencias:** Ninguna  
 **Sprint:** 1  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - El servidor Express inicia correctamente.
@@ -186,7 +186,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-01  
 **Sprint:** 1  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - Cada categoría posee un identificador único.
@@ -208,7 +208,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 5  
 **Dependencias:** HU-02  
 **Sprint:** 1  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - Es posible crear una categoría.
@@ -234,7 +234,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-01, HU-02  
 **Sprint:** 1  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - Cada producto tiene identificador único.
@@ -257,7 +257,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 8  
 **Dependencias:** HU-04  
 **Sprint:** 1  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - Puede crearse un producto.
@@ -284,7 +284,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-03, HU-05  
 **Sprint:** 1  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - Swagger es accesible.
@@ -308,7 +308,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** Ninguna  
 **Sprint:** 1  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - El frontend funciona como proyecto independiente.
@@ -331,7 +331,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 5  
 **Dependencias:** HU-05, HU-07  
 **Sprint:** 1  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - Los productos se obtienen desde la API.
@@ -354,7 +354,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-03, HU-08  
 **Sprint:** 1  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - Las categorías se cargan desde la API.
@@ -376,7 +376,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-08  
 **Sprint:** 2  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - Existe una acción para agregar al carrito.
@@ -399,7 +399,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 5  
 **Dependencias:** HU-10  
 **Sprint:** 2  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - Puede aumentarse la cantidad.
@@ -422,7 +422,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-10, HU-11  
 **Sprint:** 2  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - Se calcula precio por cantidad.
@@ -444,7 +444,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 5  
 **Dependencias:** HU-03, HU-07  
 **Sprint:** 2  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - Puede crear categorías.
@@ -469,7 +469,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 8  
 **Dependencias:** HU-05, HU-07  
 **Sprint:** 2  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - Puede registrar un producto desde la interfaz.
@@ -496,7 +496,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-13, HU-14  
 **Sprint:** 2  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - Los campos requeridos son validados.
@@ -520,7 +520,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 5  
 **Dependencias:** HU-07  
 **Sprint:** 2  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - SCSS está configurado.
@@ -543,7 +543,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 2  
 **Dependencias:** HU-07  
 **Sprint:** 2  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - Las dependencias aparecen correctamente declaradas.
@@ -566,7 +566,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-13, HU-14  
 **Sprint:** 2  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - Las entradas no ejecutan scripts introducidos por usuarios.
@@ -587,7 +587,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 5  
 **Dependencias:** HU-03, HU-05  
 **Sprint:** 2  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - Las operaciones modificadoras cuentan con protección CSRF.
@@ -611,7 +611,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-01, HU-07  
 **Sprint:** 2  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - La aplicación puede accederse mediante HTTPS.
@@ -633,7 +633,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 5  
 **Dependencias:** HU-09, HU-12, HU-15, HU-18, HU-19, HU-20  
 **Sprint:** 3  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - El catálogo consume datos reales.
@@ -658,7 +658,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 5  
 **Dependencias:** HU-21  
 **Sprint:** 3  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - El CRUD de categorías es probado.
@@ -685,7 +685,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-18, HU-19, HU-20  
 **Sprint:** 3  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - Existe evidencia de HTTPS.
@@ -708,7 +708,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 5  
 **Dependencias:** HU-06, HU-21  
 **Sprint:** 3  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - Se explica arquitectura.
@@ -735,14 +735,14 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 8  
 **Dependencias:** HU-21, HU-20  
 **Sprint:** 3  
-**Responsable:** Chifu
+**Responsable:** Santiago Cifuentes
 
 **Criterios de aceptación:**
 - El frontend está disponible externamente.
 - El backend está disponible externamente.
 - La aplicación puede conectarse a la base de datos.
 - Un tercero puede abrirla y probarla.
-- No depende del computador personal de Nicolay o Chifu.
+- No depende del computador personal de Nicolay Baquero o Santiago Cifuentes.
 
 **Subtareas:**
 - Seleccionar entorno de despliegue.
@@ -761,7 +761,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-22, HU-23, HU-25  
 **Sprint:** 3  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - Los errores bloqueantes están corregidos.
@@ -783,7 +783,7 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Puntos:** 3  
 **Dependencias:** HU-24, HU-25, HU-26  
 **Sprint:** 3  
-**Responsable:** Nicolay
+**Responsable:** Nicolay Baquero
 
 **Criterios de aceptación:**
 - Se puede demostrar el CRUD.
@@ -810,18 +810,18 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 
 | HU | Actividad | Responsable | Puntos | Dependencias |
 |---|---|---|---:|---|
-| HU-01 | Configurar backend y conexión a base de datos | Nicolay | 5 | Ninguna |
-| HU-02 | Crear modelo de categorías | Chifu | 3 | HU-01 |
-| HU-03 | CRUD REST de categorías | Chifu | 5 | HU-02 |
-| HU-04 | Crear modelo de productos | Nicolay | 3 | HU-01, HU-02 |
-| HU-05 | CRUD REST de productos | Nicolay | 8 | HU-04 |
-| HU-06 | Documentar API con Swagger/OpenAPI | Chifu | 3 | HU-03, HU-05 |
-| HU-07 | Configurar frontend y comunicación con API | Chifu | 3 | Ninguna |
-| HU-08 | Visualizar catálogo público | Chifu | 5 | HU-05, HU-07 |
-| HU-09 | Filtrar catálogo por categoría | Nicolay | 3 | HU-03, HU-08 |
+| HU-01 | Configurar backend y conexión a base de datos | Nicolay Baquero | 5 | Ninguna |
+| HU-02 | Crear modelo de categorías | Santiago Cifuentes | 3 | HU-01 |
+| HU-03 | CRUD REST de categorías | Santiago Cifuentes | 5 | HU-02 |
+| HU-04 | Crear modelo de productos | Nicolay Baquero | 3 | HU-01, HU-02 |
+| HU-05 | CRUD REST de productos | Nicolay Baquero | 8 | HU-04 |
+| HU-06 | Documentar API con Swagger/OpenAPI | Santiago Cifuentes | 3 | HU-03, HU-05 |
+| HU-07 | Configurar frontend y comunicación con API | Santiago Cifuentes | 3 | Ninguna |
+| HU-08 | Visualizar catálogo público | Santiago Cifuentes | 5 | HU-05, HU-07 |
+| HU-09 | Filtrar catálogo por categoría | Nicolay Baquero | 3 | HU-03, HU-08 |
 
-**Carga Nicolay:** 19 puntos  
-**Carga Chifu:** 19 puntos  
+**Carga Nicolay Baquero:** 19 puntos  
+**Carga Santiago Cifuentes:** 19 puntos  
 **Total Sprint 1:** 38 puntos
 
 ### Sprint 2
@@ -830,20 +830,20 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 
 | HU | Actividad | Responsable | Puntos | Dependencias |
 |---|---|---|---:|---|
-| HU-10 | Agregar productos al carrito | Nicolay | 3 | HU-08 |
-| HU-11 | Gestionar cantidades y eliminar del carrito | Chifu | 5 | HU-10 |
-| HU-12 | Calcular total del carrito | Nicolay | 3 | HU-10, HU-11 |
-| HU-13 | Administrar categorías desde frontend | Chifu | 5 | HU-03, HU-07 |
-| HU-14 | Administrar productos desde frontend | Nicolay | 8 | HU-05, HU-07 |
-| HU-15 | Implementar validaciones y actualización dinámica | Chifu | 3 | HU-13, HU-14 |
-| HU-16 | Migrar estilos a SCSS | Nicolay | 5 | HU-07 |
-| HU-17 | Configurar gestor de dependencias y scripts | Chifu | 2 | HU-07 |
-| HU-18 | Implementar mitigación XSS | Nicolay | 3 | HU-13, HU-14 |
-| HU-19 | Implementar protección CSRF | Chifu | 5 | HU-03, HU-05 |
-| HU-20 | Configurar HTTPS | Chifu | 3 | HU-01, HU-07 |
+| HU-10 | Agregar productos al carrito | Nicolay Baquero | 3 | HU-08 |
+| HU-11 | Gestionar cantidades y eliminar del carrito | Santiago Cifuentes | 5 | HU-10 |
+| HU-12 | Calcular total del carrito | Nicolay Baquero | 3 | HU-10, HU-11 |
+| HU-13 | Administrar categorías desde frontend | Santiago Cifuentes | 5 | HU-03, HU-07 |
+| HU-14 | Administrar productos desde frontend | Nicolay Baquero | 8 | HU-05, HU-07 |
+| HU-15 | Implementar validaciones y actualización dinámica | Santiago Cifuentes | 3 | HU-13, HU-14 |
+| HU-16 | Migrar estilos a SCSS | Nicolay Baquero | 5 | HU-07 |
+| HU-17 | Configurar gestor de dependencias y scripts | Santiago Cifuentes | 2 | HU-07 |
+| HU-18 | Implementar mitigación XSS | Nicolay Baquero | 3 | HU-13, HU-14 |
+| HU-19 | Implementar protección CSRF | Santiago Cifuentes | 5 | HU-03, HU-05 |
+| HU-20 | Configurar HTTPS | Santiago Cifuentes | 3 | HU-01, HU-07 |
 
-**Carga Nicolay:** 22 puntos  
-**Carga Chifu:** 23 puntos  
+**Carga Nicolay Baquero:** 22 puntos  
+**Carga Santiago Cifuentes:** 23 puntos  
 **Total Sprint 2:** 45 puntos
 
 ### Sprint 3
@@ -852,25 +852,25 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 
 | HU | Actividad | Responsable | Puntos | Dependencias |
 |---|---|---|---:|---|
-| HU-21 | Integrar el sistema completo | Nicolay | 5 | HU-09, HU-12, HU-15, HU-18, HU-19, HU-20 |
-| HU-22 | Ejecutar pruebas funcionales | Chifu | 5 | HU-21 |
-| HU-23 | Validar seguridad | Chifu | 3 | HU-18, HU-19, HU-20 |
-| HU-24 | Crear documentación técnica | Nicolay | 5 | HU-06, HU-21 |
-| HU-25 | Desplegar aplicación | Chifu | 8 | HU-21, HU-20 |
-| HU-26 | Corregir errores finales | Nicolay | 3 | HU-22, HU-23, HU-25 |
-| HU-27 | Preparar sustentación | Nicolay | 3 | HU-24, HU-25, HU-26 |
+| HU-21 | Integrar el sistema completo | Nicolay Baquero | 5 | HU-09, HU-12, HU-15, HU-18, HU-19, HU-20 |
+| HU-22 | Ejecutar pruebas funcionales | Santiago Cifuentes | 5 | HU-21 |
+| HU-23 | Validar seguridad | Santiago Cifuentes | 3 | HU-18, HU-19, HU-20 |
+| HU-24 | Crear documentación técnica | Nicolay Baquero | 5 | HU-06, HU-21 |
+| HU-25 | Desplegar aplicación | Santiago Cifuentes | 8 | HU-21, HU-20 |
+| HU-26 | Corregir errores finales | Nicolay Baquero | 3 | HU-22, HU-23, HU-25 |
+| HU-27 | Preparar sustentación | Nicolay Baquero | 3 | HU-24, HU-25, HU-26 |
 
-**Carga Nicolay:** 16 puntos  
-**Carga Chifu:** 16 puntos  
+**Carga Nicolay Baquero:** 16 puntos  
+**Carga Santiago Cifuentes:** 16 puntos  
 **Total Sprint 3:** 32 puntos
 
 ## 14. Resumen de carga
 
-| Sprint | Nicolay | Chifu | Total |
+| Sprint | Nicolay Baquero | Santiago Cifuentes | Total |
 |---|---:|---:|---:|
 | Sprint 1 | 19 | 19 | 38 |
 | Sprint 2 | 22 | 23 | 45 |
 | Sprint 3 | 16 | 16 | 32 |
 | **Total** | **57** | **58** | **115** |
 
-La distribución global queda equilibrada: 57 puntos para Nicolay y 58 puntos para Chifu.
+La distribución global queda equilibrada: 57 puntos para Nicolay Baquero y 58 puntos para Santiago Cifuentes.

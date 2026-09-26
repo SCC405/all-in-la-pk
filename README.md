@@ -27,8 +27,8 @@ sin depender de Postman ni de modificar código.
 
 | Integrante | Rol | GitHub |
 |---|---|---|
-| Nicolay | Desarrollador | [@Nicolayyy](https://github.com/Nicolayyy) |
-| Chifu (Santiago) | Desarrollador | [@SCC405](https://github.com/SCC405) |
+| Nicolay Baquero | Desarrollador | [@Nicolayyy](https://github.com/Nicolayyy) |
+| Santiago Cifuentes | Desarrollador | [@SCC405](https://github.com/SCC405) |
 
 **Metodología:** Scrum resumido/adaptado — 3 sprints de 2 semanas · 115 puntos de historia.
 
@@ -151,5 +151,5 @@ la convención de commits y cómo se cierra una historia de usuario.
 ---
 
 <div align="center">
-<sub>Proyecto de aula · Nicolay & Chifu · 2026</sub>
+<sub>Proyecto de aula · Nicolay Baquero & Santiago Cifuentes · 2026</sub>
 </div>
