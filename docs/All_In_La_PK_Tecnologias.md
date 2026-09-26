@@ -24,7 +24,7 @@ Las tecnologías descritas en este documento corresponden a la propuesta técnic
 | Documentación API | Swagger / OpenAPI | Documentación y prueba de endpoints |
 | Gestor de dependencias | npm | Instalación de librerías y ejecución de scripts |
 | Control de versiones | Git | Seguimiento de cambios del código |
-| Repositorios | GitHub | Trabajo colaborativo entre Nicolay y Chifu |
+| Repositorios | GitHub | Trabajo colaborativo entre Nicolay Baquero y Santiago Cifuentes |
 | Seguridad | HTTPS | Protección de la comunicación |
 | Seguridad | Medidas anti-XSS | Mitigación de contenido malicioso |
 | Seguridad | Protección CSRF | Protección de operaciones que modifican datos |
@@ -184,7 +184,7 @@ Cada producto estará asociado a una categoría.
 
 Para facilitar el despliegue de la aplicación se propone utilizar **MongoDB Atlas**.
 
-Esto permitirá que la base de datos sea accesible desde el backend desplegado sin depender del computador de Nicolay o Chifu.
+Esto permitirá que la base de datos sea accesible desde el backend desplegado sin depender del computador de Nicolay Baquero o Santiago Cifuentes.
 
 ---
 
@@ -537,7 +537,7 @@ Base de datos: MongoDB Atlas
 ## Equipo
 
 **Proyecto:** All In La PK  
-**Integrantes:** Nicolay y Chifu  
+**Integrantes:** Nicolay Baquero y Santiago Cifuentes  
 **Metodología:** Scrum resumido  
 **Sprints:** 3  
 **Duración por Sprint:** 2 semanas

@@ -5,7 +5,7 @@ No renderiza vistas: únicamente recibe solicitudes, procesa la lógica y devuel
 
 ## Estado
 
-Pendiente de inicializar en **HU-01 — Configurar backend y conexión a base de datos** (Nicolay).
+Pendiente de inicializar en **HU-01 — Configurar backend y conexión a base de datos** (Nicolay Baquero).
 
 ## Estructura prevista
 
