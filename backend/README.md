@@ -5,7 +5,14 @@ No renderiza vistas: únicamente recibe solicitudes, procesa la lógica y devuel
 
 ## Estado
 
-Pendiente de inicializar en **HU-01 — Configurar backend y conexión a base de datos** (Nicolay Baquero).
+Base del backend implementada en **HU-01 — Configurar backend y conexión a base de datos**.
+
+- Servidor Express con respuestas JSON.
+- Configuración mediante variables de entorno.
+- Conexión a MongoDB mediante Mongoose.
+- Manejo controlado de errores de configuración y conexión.
+- Endpoint de salud en `GET /api/health`.
+- Pruebas automáticas con el módulo de pruebas de Node.js.
 
 ## Estructura prevista
 
@@ -21,7 +28,27 @@ backend/
 │   └── app.js
 ├── .env.example
 ├── package.json
+├── test/
 └── server.js
+```
+
+## Puesta en marcha
+
+```bash
+npm install
+cp .env.example .env
+npm run dev
+```
+
+Antes de iniciar, completa `MONGODB_URI` en `.env`. El servidor solo comienza a escuchar solicitudes después de establecer correctamente la conexión con MongoDB.
+
+Comandos disponibles:
+
+```bash
+npm run dev     # desarrollo con recarga automática
+npm start       # ejecución normal
+npm test        # pruebas automáticas
+npm run check   # validación de sintaxis
 ```
 
 ## Endpoints previstos
@@ -39,7 +66,9 @@ PUT    /api/productos/:id
 DELETE /api/productos/:id
 ```
 
-Documentación interactiva en `/api-docs` (Swagger UI).
+La documentación interactiva en `/api-docs` (Swagger UI) se incorporará en la HU-06.
+
+El endpoint `GET /api/health` ya está disponible como comprobación básica del backend. Los demás endpoints se implementarán en sus respectivas historias de usuario.
 
 ## Modelos
 
