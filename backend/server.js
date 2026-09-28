@@ -5,16 +5,35 @@ import { env } from './src/config/env.js';
 let httpServer;
 let isShuttingDown = false;
 
+function escuchar() {
+  return new Promise((resolve, reject) => {
+    httpServer = app.listen(env.port);
+
+    const alFallar = (error) => reject(error);
+    httpServer.once('error', alFallar);
+    httpServer.once('listening', () => {
+      httpServer.off('error', alFallar);
+      resolve();
+    });
+  });
+}
+
+function detalleDeInicio(error) {
+  if (error?.code === 'EADDRINUSE') {
+    return `El puerto ${env.port} ya está en uso.`;
+  }
+
+  return error instanceof Error ? error.message : 'Error desconocido';
+}
+
 async function startServer() {
   try {
     await connectDatabase(env.mongodbUri);
-
-    httpServer = app.listen(env.port, () => {
-      console.log(`Backend disponible en http://localhost:${env.port}`);
-    });
+    await escuchar();
+    console.log(`Backend disponible en http://localhost:${env.port}`);
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error desconocido';
-    console.error(`No fue posible iniciar el backend: ${message}`);
+    console.error(`No fue posible iniciar el backend: ${detalleDeInicio(error)}`);
+    await disconnectDatabase();
     process.exitCode = 1;
   }
 }
@@ -28,7 +47,9 @@ async function shutdown(signal) {
   console.log(`Cerrando el backend por señal ${signal}...`);
 
   if (httpServer) {
-    await new Promise((resolve) => httpServer.close(resolve));
+    const cierre = new Promise((resolve) => httpServer.close(resolve));
+    httpServer.closeAllConnections?.();
+    await cierre;
   }
 
   await disconnectDatabase();
