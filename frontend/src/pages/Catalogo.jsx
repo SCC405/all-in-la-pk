@@ -51,9 +51,11 @@ export default function Catalogo() {
   }
 
   return (
-    <section className="catalogo">
+    <section className="catalogo" aria-labelledby="titulo-catalogo">
       <div className="catalogo__encabezado">
-        <h1 className="catalogo__titulo">Catálogo</h1>
+        <h1 className="catalogo__titulo" id="titulo-catalogo">
+          Catálogo
+        </h1>
         <p className="catalogo__conteo">
           {estado.productos.length} {estado.productos.length === 1 ? 'producto' : 'productos'}
         </p>
