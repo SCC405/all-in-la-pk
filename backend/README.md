@@ -80,9 +80,10 @@ La especificación vive en un único archivo, [`src/docs/openapi.js`](src/docs/o
 de repartida en comentarios por las rutas: así se lee el contrato completo de un vistazo, que es
 lo que pide RNF-05.
 
-Hay una prueba que **compara la tabla de rutas real de Express con lo documentado** y falla si
-alguien agrega, cambia o elimina un endpoint sin actualizar Swagger. La documentación no puede
-quedarse desactualizada en silencio.
+Hay una prueba que **compara las tablas de rutas de salud, categorías y productos con lo
+documentado** y falla si alguien agrega, cambia o elimina una operación en esos routers sin
+actualizar Swagger. También comprueba que Swagger distinga los cuerpos obligatorios de creación
+de las actualizaciones parciales.
 
 ### Categorías (implementado en HU-03)
 

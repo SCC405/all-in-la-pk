@@ -109,7 +109,7 @@ export const openapi = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/CategoriaEntrada' },
+              schema: { $ref: '#/components/schemas/CategoriaCreacion' },
               example: { nombre: 'Fichas de póker', descripcion: 'Fichas sueltas y por juegos completos.' },
             },
           },
@@ -142,7 +142,7 @@ export const openapi = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/CategoriaEntrada' },
+              schema: { $ref: '#/components/schemas/CategoriaActualizacion' },
               example: { nombre: 'Mesas de póker', descripcion: 'Plegables y profesionales.' },
             },
           },
@@ -201,7 +201,7 @@ export const openapi = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/ProductoEntrada' },
+              schema: { $ref: '#/components/schemas/ProductoCreacion' },
               example: {
                 nombre: 'Set de 500 fichas profesionales',
                 descripcion: 'Fichas de arcilla de 14 g en maletín de aluminio.',
@@ -255,7 +255,7 @@ export const openapi = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/ProductoEntrada' },
+              schema: { $ref: '#/components/schemas/ProductoActualizacion' },
               example: { precio: 299000, stock: 8 },
             },
           },
@@ -303,9 +303,8 @@ export const openapi = {
           updatedAt: { type: 'string', format: 'date-time' },
         },
       },
-      CategoriaEntrada: {
+      CategoriaCampos: {
         type: 'object',
-        required: ['nombre'],
         properties: {
           nombre: {
             type: 'string',
@@ -315,6 +314,16 @@ export const openapi = {
           },
           descripcion: { type: 'string', maxLength: 300, example: 'Fichas sueltas y por juegos completos.' },
         },
+      },
+      CategoriaCreacion: {
+        allOf: [
+          { $ref: '#/components/schemas/CategoriaCampos' },
+          { type: 'object', required: ['nombre'] },
+        ],
+      },
+      CategoriaActualizacion: {
+        allOf: [{ $ref: '#/components/schemas/CategoriaCampos' }],
+        description: 'Solo se modifican los campos enviados; ninguno es obligatorio por sí solo.',
       },
       Producto: {
         type: 'object',
@@ -333,9 +342,8 @@ export const openapi = {
           updatedAt: { type: 'string', format: 'date-time' },
         },
       },
-      ProductoEntrada: {
+      ProductoCampos: {
         type: 'object',
-        required: ['nombre', 'precio', 'stock', 'imagen', 'categoria'],
         properties: {
           nombre: { type: 'string', maxLength: 100, example: 'Set de 500 fichas profesionales' },
           descripcion: { type: 'string', maxLength: 1000 },
@@ -347,6 +355,16 @@ export const openapi = {
             description: 'Identificador de una categoría existente. Si no existe, la API responde 400.',
           },
         },
+      },
+      ProductoCreacion: {
+        allOf: [
+          { $ref: '#/components/schemas/ProductoCampos' },
+          { type: 'object', required: ['nombre', 'precio', 'stock', 'imagen', 'categoria'] },
+        ],
+      },
+      ProductoActualizacion: {
+        allOf: [{ $ref: '#/components/schemas/ProductoCampos' }],
+        description: 'Solo se modifican los campos enviados; ninguno es obligatorio por sí solo.',
       },
       Error: {
         type: 'object',

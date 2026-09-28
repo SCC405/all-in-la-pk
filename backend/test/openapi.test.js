@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import app from '../src/app.js';
 import categoriasRouter from '../src/routes/categorias.routes.js';
+import healthRouter from '../src/routes/health.routes.js';
 import productosRouter from '../src/routes/productos.routes.js';
 import openapi from '../src/docs/openapi.js';
 
@@ -21,6 +22,7 @@ async function servidorDePrueba(contexto) {
 //   router '/:id' montado en '/productos'   ->  '/productos/{id}'
 function rutasReales() {
   const montajes = [
+    ['', healthRouter],
     ['/categorias', categoriasRouter],
     ['/productos', productosRouter],
   ];
@@ -43,16 +45,37 @@ function rutasDocumentadas() {
 
 test('la documentación cubre exactamente los endpoints que existen', () => {
   const reales = rutasReales().sort();
-  // /health se documenta pero no vive en estos routers, así que se excluye de la comparación.
-  const documentadas = rutasDocumentadas()
-    .filter((r) => !r.endsWith('/health'))
-    .sort();
+  const documentadas = rutasDocumentadas().sort();
 
   const sinDocumentar = reales.filter((r) => !documentadas.includes(r));
   const documentadasDeMas = documentadas.filter((r) => !reales.includes(r));
 
   assert.deepEqual(sinDocumentar, [], 'hay endpoints sin documentar en Swagger');
   assert.deepEqual(documentadasDeMas, [], 'Swagger documenta endpoints que ya no existen');
+});
+
+test('Swagger distingue los cuerpos obligatorios de creación y las actualizaciones parciales', () => {
+  const referenciaCuerpo = (ruta, metodo) =>
+    openapi.paths[ruta][metodo].requestBody.content['application/json'].schema.$ref;
+
+  assert.equal(referenciaCuerpo('/categorias', 'post'), '#/components/schemas/CategoriaCreacion');
+  assert.equal(
+    referenciaCuerpo('/categorias/{id}', 'put'),
+    '#/components/schemas/CategoriaActualizacion',
+  );
+  assert.equal(referenciaCuerpo('/productos', 'post'), '#/components/schemas/ProductoCreacion');
+  assert.equal(
+    referenciaCuerpo('/productos/{id}', 'put'),
+    '#/components/schemas/ProductoActualizacion',
+  );
+
+  const requeridosCategoria = openapi.components.schemas.CategoriaCreacion.allOf[1].required;
+  const requeridosProducto = openapi.components.schemas.ProductoCreacion.allOf[1].required;
+
+  assert.deepEqual(requeridosCategoria, ['nombre']);
+  assert.deepEqual(requeridosProducto, ['nombre', 'precio', 'stock', 'imagen', 'categoria']);
+  assert.equal(openapi.components.schemas.CategoriaActualizacion.required, undefined);
+  assert.equal(openapi.components.schemas.ProductoActualizacion.required, undefined);
 });
 
 test('cada operación declara resumen, etiqueta y respuestas', () => {
