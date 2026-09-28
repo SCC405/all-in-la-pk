@@ -83,6 +83,40 @@ Categoria                 Producto
                           - categoria → ref Categoria
 ```
 
+### Categoria (implementado en HU-02)
+
+`src/models/categoria.model.js`
+
+| Campo | Tipo | Reglas |
+|---|---|---|
+| `_id` | ObjectId | Identificador único, generado por MongoDB |
+| `nombre` | String | **Obligatorio**, único, sin espacios sobrantes, máximo 60 caracteres |
+| `descripcion` | String | Opcional, por defecto `''`, máximo 300 caracteres |
+| `createdAt` / `updatedAt` | Date | Automáticos (`timestamps`) |
+
+El nombre es único para que el catálogo no quede ambiguo: dos categorías llamadas igual
+harían imposible saber cuál está filtrando el visitante. Un intento de duplicado hace que
+MongoDB devuelva el error `11000`, que el CRUD traduce a una respuesta HTTP en HU-03.
+
+## Pruebas
+
+```bash
+npm test      # pruebas unitarias, no necesitan base de datos
+npm run check # comprueba que todos los archivos son sintácticamente válidos
+```
+
+Las pruebas que necesitan un MongoDB real se saltan salvo que se indique una base de datos
+de pruebas. Para ejecutarlas también:
+
+```bash
+MONGODB_URI_TEST=mongodb://localhost:27017/all_in_la_pk_test npm test
+```
+
+> ⚠️ **Esa base de datos se borra al terminar.** El clúster de Atlas se comparte con otro
+> proyecto, así que las pruebas rechazan cualquier URI cuya base no termine en `_test`
+> o `-test`. Si apuntas `MONGODB_URI_TEST` a `all_in_la_pk` (la base real) las pruebas
+> fallan a propósito en vez de borrarla.
+
 ## Variables de entorno
 
 Copia `.env.example` a `.env` y completa los valores. **`.env` nunca se sube al repositorio.**
