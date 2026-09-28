@@ -67,7 +67,22 @@ PUT    /api/productos/:id
 DELETE /api/productos/:id
 ```
 
-La documentación interactiva en `/api-docs` (Swagger UI) se incorporará en la HU-06.
+## Documentación de la API (HU-06)
+
+Con el backend corriendo:
+
+| Dirección | Qué es |
+|---|---|
+| `http://localhost:4000/api-docs` | Swagger UI: la API navegable, con botón **Try it out** para ejecutar cada operación |
+| `http://localhost:4000/api-docs.json` | La especificación OpenAPI cruda, importable en Postman o Insomnia |
+
+La especificación vive en un único archivo, [`src/docs/openapi.js`](src/docs/openapi.js), en vez
+de repartida en comentarios por las rutas: así se lee el contrato completo de un vistazo, que es
+lo que pide RNF-05.
+
+Hay una prueba que **compara la tabla de rutas real de Express con lo documentado** y falla si
+alguien agrega, cambia o elimina un endpoint sin actualizar Swagger. La documentación no puede
+quedarse desactualizada en silencio.
 
 ### Categorías (implementado en HU-03)
 
