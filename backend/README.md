@@ -68,6 +68,28 @@ DELETE /api/productos/:id
 
 La documentación interactiva en `/api-docs` (Swagger UI) se incorporará en la HU-06.
 
+### Categorías (implementado en HU-03)
+
+| Método | Ruta | Respuesta correcta | Errores |
+|---|---|---|---|
+| `GET` | `/api/categorias` | `200` con la lista ordenada por nombre | — |
+| `POST` | `/api/categorias` | `201` con la categoría creada | `400` datos no válidos · `409` nombre repetido |
+| `PUT` | `/api/categorias/:id` | `200` con la categoría actualizada | `400` datos o id no válidos · `404` no existe · `409` nombre repetido |
+| `DELETE` | `/api/categorias/:id` | `204` sin cuerpo | `400` id no válido · `404` no existe |
+
+Solo se aceptan `nombre` y `descripcion` del cuerpo de la petición; cualquier otro campo se
+ignora, de modo que un cliente no puede intentar fijar el `_id` ni las marcas de tiempo.
+
+Forma de las respuestas de error:
+
+```json
+{ "error": "Datos no válidos",
+  "detalles": { "nombre": "El nombre de la categoría es obligatorio." } }
+```
+
+`detalles` solo aparece cuando falla la validación del esquema, con un mensaje por campo
+para que el formulario del panel administrativo pueda señalar exactamente qué corregir.
+
 El endpoint `GET /api/health` ya está disponible como comprobación básica del backend. Los demás endpoints se implementarán en sus respectivas historias de usuario.
 
 ## Modelos

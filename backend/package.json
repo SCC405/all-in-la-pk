@@ -9,7 +9,7 @@
     "dev": "nodemon server.js",
     "start": "node server.js",
     "test": "node --test",
-    "check": "node --check server.js && node --check src/app.js && node --check src/config/database.js && node --check src/config/env.js && node --check src/routes/health.routes.js && node --check src/middlewares/not-found.js && node --check src/middlewares/error-handler.js && node --check test/app.test.js && node --check test/database.test.js && node --check src/models/categoria.model.js && node --check test/categoria.model.test.js && node --check test/categoria.persistencia.test.js && node --check test/ayuda-base-de-datos.js && node --check test/ayuda-base-de-datos.test.js"
+    "check": "node --check server.js && node --check src/app.js && node --check src/config/database.js && node --check src/config/env.js && node --check src/routes/health.routes.js && node --check src/middlewares/not-found.js && node --check src/middlewares/error-handler.js && node --check test/app.test.js && node --check test/database.test.js && node --check src/models/categoria.model.js && node --check test/categoria.model.test.js && node --check test/categoria.persistencia.test.js && node --check src/controllers/categorias.controller.js && node --check src/routes/categorias.routes.js && node --check test/error-handler.test.js && node --check test/categorias.routes.test.js && node --check test/ayuda-base-de-datos.js && node --check test/ayuda-base-de-datos.test.js"
   },
   "engines": {
     "node": ">=18"

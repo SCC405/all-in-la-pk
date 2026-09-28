@@ -4,10 +4,11 @@
 const URL_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
 
 export class ErrorApi extends Error {
-  constructor(mensaje, estado) {
+  constructor(mensaje, estado, detalles) {
     super(mensaje);
     this.name = 'ErrorApi';
     this.estado = estado;
+    this.detalles = detalles;
   }
 }
 
@@ -34,9 +35,12 @@ async function peticion(ruta, opciones = {}) {
   const cuerpo = await respuesta.json().catch(() => null);
 
   if (!respuesta.ok) {
+    // El backend responde { error, detalles? }: `detalles` trae el mensaje por
+    // campo cuando la validación del esquema rechaza el formulario.
     throw new ErrorApi(
-      cuerpo?.mensaje ?? `La API respondió con el estado ${respuesta.status}.`,
+      cuerpo?.error ?? `La API respondió con el estado ${respuesta.status}.`,
       respuesta.status,
+      cuerpo?.detalles,
     );
   }
 
