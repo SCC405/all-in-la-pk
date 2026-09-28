@@ -1,6 +1,6 @@
-// Las pruebas de integración borran la base de datos al terminar. Como el clúster
+// Las pruebas de integración eliminan los documentos que crean. Como el clúster
 // de Atlas se comparte con otro proyecto, apuntar MONGODB_URI_TEST a la base real
-// por descuido significaría perderla. Este guardia lo impide.
+// por descuido significaría perder datos. Este guardia lo impide.
 
 const SUFIJOS_PERMITIDOS = ['_test', '-test'];
 
@@ -33,7 +33,7 @@ export function uriDePruebas() {
 
   if (!SUFIJOS_PERMITIDOS.some((sufijo) => base.endsWith(sufijo))) {
     throw new Error(
-      `Las pruebas borran la base de datos al terminar y "${base}" no parece una base de pruebas. ` +
+      `Las pruebas eliminan datos al terminar y "${base}" no parece una base de pruebas. ` +
         'Usa una que termine en "_test" (por ejemplo all_in_la_pk_test). ' +
         'Nunca apuntes MONGODB_URI_TEST a la base real del proyecto.',
     );

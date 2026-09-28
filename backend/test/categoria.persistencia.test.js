@@ -14,11 +14,15 @@ const URI = uriDePruebas();
 test('una categoría creada queda almacenada de forma persistente', { skip: URI ? false : MOTIVO_SIN_BASE }, async (context) => {
   await mongoose.connect(URI, { serverSelectionTimeoutMS: 5_000 });
   context.after(async () => {
-    await mongoose.connection.dropDatabase();
-    await mongoose.disconnect();
+    try {
+      await Categoria.deleteMany({});
+    } finally {
+      await mongoose.disconnect();
+    }
   });
 
   await Categoria.init(); // asegura que el índice único exista antes de insertar
+  await Categoria.deleteMany({});
 
   const creada = await Categoria.create({
     nombre: 'Fichas de póker',

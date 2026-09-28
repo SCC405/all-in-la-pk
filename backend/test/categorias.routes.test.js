@@ -23,8 +23,11 @@ test('CRUD REST de categorías', { skip: URI ? false : motivo }, async (suite) =
 
   suite.after(async () => {
     await new Promise((resolve) => servidor.close(resolve));
-    await mongoose.connection.dropDatabase();
-    await mongoose.disconnect();
+    try {
+      await Categoria.deleteMany({});
+    } finally {
+      await mongoose.disconnect();
+    }
   });
 
   suite.beforeEach(async () => {
