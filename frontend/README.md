@@ -5,9 +5,9 @@ Consume la API REST del backend; no accede nunca a la base de datos directamente
 
 ## Estado
 
-Inicializado en **HU-07** con React 18 + Vite. El **catálogo público** está implementado (HU-08).
-Pendiente: filtro por categoría (HU-09), carrito (HU-10 a HU-12), panel administrativo
-(HU-13 a HU-15) y migración de estilos a SCSS (HU-16).
+Inicializado en **HU-07** con React 18 + Vite. El **catálogo público** (HU-08) y su **filtro por
+categoría** (HU-09) están implementados. Pendiente: carrito (HU-10 a HU-12), panel
+administrativo (HU-13 a HU-15) y migración de estilos a SCSS (HU-16).
 
 ## Puesta en marcha
 
@@ -25,6 +25,17 @@ conexión con la API, así que sirve para comprobar de un vistazo si el backend 
 | `npm run dev` | Servidor de desarrollo con recarga en caliente |
 | `npm run build` | Compila la versión de producción en `dist/` |
 | `npm run preview` | Sirve localmente lo compilado en `dist/` |
+| `npm test` | Prueba la lógica del filtro por categoría |
+
+## Filtro del catálogo (HU-09)
+
+El catálogo consulta productos y categorías desde la API. El selector permite mostrar todas las
+categorías o limitar las tarjetas a una sola sin volver a solicitar los productos. El contador se
+actualiza y se anuncia a tecnologías de asistencia; si una categoría no tiene productos, la vista
+lo informa y permite regresar a «Todas las categorías».
+
+El selector utiliza una etiqueta asociada, un área táctil mínima de 44 px y un foco visible para
+navegación por teclado.
 
 ## Estructura prevista
 

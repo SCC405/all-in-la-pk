@@ -1,17 +1,26 @@
 import { useEffect, useState } from 'react';
+import FiltroCategorias from '../components/FiltroCategorias.jsx';
 import TarjetaProducto from '../components/TarjetaProducto.jsx';
+import { categoriasServicio } from '../services/categoriasServicio.js';
 import { productosServicio } from '../services/productosServicio.js';
+import { filtrarProductosPorCategoria } from '../utils/filtrarProductos.js';
 
 export default function Catalogo() {
   const [estado, setEstado] = useState({ fase: 'cargando' });
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
 
   useEffect(() => {
     let vigente = true;
 
-    productosServicio
-      .listar()
-      .then((productos) => {
-        if (vigente) setEstado({ fase: 'listo', productos: productos ?? [] });
+    Promise.all([productosServicio.listar(), categoriasServicio.listar()])
+      .then(([productos, categorias]) => {
+        if (vigente) {
+          setEstado({
+            fase: 'listo',
+            productos: productos ?? [],
+            categorias: categorias ?? [],
+          });
+        }
       })
       .catch((error) => {
         if (vigente) setEstado({ fase: 'error', mensaje: error.message });
@@ -50,22 +59,50 @@ export default function Catalogo() {
     );
   }
 
+  const productosVisibles = filtrarProductosPorCategoria(
+    estado.productos,
+    categoriaSeleccionada,
+  );
+
+  const categoriaActiva = estado.categorias.find(
+    (categoria) => categoria._id === categoriaSeleccionada,
+  );
+
   return (
     <section className="catalogo" aria-labelledby="titulo-catalogo">
       <div className="catalogo__encabezado">
-        <h1 className="catalogo__titulo" id="titulo-catalogo">
-          Catálogo
-        </h1>
-        <p className="catalogo__conteo">
-          {estado.productos.length} {estado.productos.length === 1 ? 'producto' : 'productos'}
-        </p>
+        <div>
+          <h1 className="catalogo__titulo" id="titulo-catalogo">
+            Catálogo
+          </h1>
+          <p className="catalogo__conteo" aria-live="polite">
+            {productosVisibles.length}{' '}
+            {productosVisibles.length === 1 ? 'producto' : 'productos'}
+            {categoriaActiva ? ` en ${categoriaActiva.nombre}` : ''}
+          </p>
+        </div>
+
+        <FiltroCategorias
+          categorias={estado.categorias}
+          valor={categoriaSeleccionada}
+          alCambiar={setCategoriaSeleccionada}
+        />
       </div>
 
-      <div className="catalogo__rejilla">
-        {estado.productos.map((producto) => (
-          <TarjetaProducto key={producto._id} producto={producto} />
-        ))}
-      </div>
+      {productosVisibles.length === 0 ? (
+        <div className="aviso" role="status">
+          <p className="aviso__titulo">No hay productos en esta categoría</p>
+          <p className="aviso__detalle">
+            Selecciona otra categoría o vuelve a «Todas las categorías».
+          </p>
+        </div>
+      ) : (
+        <div className="catalogo__rejilla">
+          {productosVisibles.map((producto) => (
+            <TarjetaProducto key={producto._id} producto={producto} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

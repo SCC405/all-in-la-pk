@@ -120,7 +120,7 @@ body {
 
 .catalogo__encabezado {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 24px;
@@ -144,6 +144,50 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 20px;
+}
+
+.filtro-categorias {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(100%, 280px);
+}
+
+.filtro-categorias__etiqueta {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-texto);
+}
+
+.filtro-categorias__selector {
+  min-height: 44px;
+  padding: 8px 36px 8px 12px;
+  border: 1px solid var(--color-texto-secundario);
+  border-radius: var(--radio-sm);
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  font: inherit;
+  cursor: pointer;
+}
+
+.filtro-categorias__selector:hover {
+  border-color: var(--color-acento);
+}
+
+.filtro-categorias__selector:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+@media (max-width: 560px) {
+  .catalogo__encabezado {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .filtro-categorias {
+    width: 100%;
+  }
 }
 
 /* ---------- Tarjeta de producto ---------- */
