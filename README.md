@@ -113,10 +113,12 @@ Aplicación disponible en `http://localhost:5173`
 |---|---|---|
 | Verde póker | `#0F5132` | Color principal, botones, elementos activos |
 | Verde oscuro | `#0A3622` | Navbar, footer, hover |
+| Verde texto | `#3DB273` | Texto verde accesible sobre superficies oscuras |
 | Dorado | `#D4AF37` | Acentos, precios, elementos destacados |
 | Negro carbón | `#0D0D0D` | Fondo principal |
 | Gris oscuro | `#1C1C1C` | Tarjetas, formularios, superficies |
 | Rojo cartas | `#B3261E` | Errores y acciones destructivas |
+| Rojo texto | `#E5534B` | Texto de error accesible sobre superficies oscuras |
 | Blanco humo | `#F5F5F5` | Texto principal |
 | Gris claro | `#A7A7A7` | Texto secundario |
 

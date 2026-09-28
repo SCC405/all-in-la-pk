@@ -34,8 +34,10 @@ La aplicación utilizará fondos oscuros, superficies en gris oscuro, verde como
 | Gris oscuro | `#1C1C1C` | Tarjetas, paneles, formularios y superficies |
 | Verde póker | `#0F5132` | Color principal de marca, botones y elementos activos |
 | Verde oscuro | `#0A3622` | Navbar, footer y variaciones del color principal |
+| Verde texto | `#3DB273` | Texto verde accesible sobre fondos oscuros |
 | Dorado | `#D4AF37` | Acentos, botones destacados y elementos premium |
 | Rojo cartas | `#B3261E` | Alertas, errores y acciones de eliminación |
+| Rojo texto | `#E5534B` | Texto de error accesible sobre fondos oscuros |
 | Blanco humo | `#F5F5F5` | Texto principal |
 | Gris claro | `#A7A7A7` | Texto secundario y elementos menos importantes |
 
@@ -75,9 +77,11 @@ Se utilizará en:
 - Elementos activos.
 - Bordes destacados.
 - Indicadores.
-- Títulos secundarios.
 - Filtros seleccionados.
 - Acciones de edición.
+
+No debe utilizarse como texto sobre `#1C1C1C`: en esa combinación alcanza solamente
+`1,82:1` de contraste. Para texto verde sobre superficies oscuras se utilizará `#3DB273`.
 
 ### Verde oscuro — `#0A3622`
 
@@ -115,6 +119,24 @@ Ejemplos:
 - Mensajes de error.
 - Alertas.
 - Estados críticos.
+
+Como relleno con texto claro funciona correctamente, pero no debe utilizarse como texto sobre
+`#1C1C1C`: esa combinación alcanza solamente `2,61:1`. Para texto rojo sobre superficies
+oscuras se utilizará `#E5534B`.
+
+### Variantes accesibles para texto
+
+Las variantes siguientes mantienen la identidad cromática y se reservan para texto sobre
+superficies oscuras. No reemplazan los colores principales utilizados como relleno.
+
+| Variable | Color | Fondo evaluado | Contraste | WCAG AA para texto normal |
+|---|---|---|---:|---|
+| Verde texto | `#3DB273` | `#1C1C1C` | `6,34:1` | Cumple |
+| Rojo texto | `#E5534B` | `#1C1C1C` | `4,60:1` | Cumple |
+
+Se aplicarán, por ejemplo, al nombre de la categoría dentro de una tarjeta y al estado
+«Agotado». Para botones se mantienen `#0F5132` y `#B3261E` como fondos con texto `#F5F5F5`;
+esas combinaciones alcanzan `8,59:1` y `6,00:1`, respectivamente.
 
 ### Blanco humo — `#F5F5F5`
 
@@ -160,6 +182,12 @@ Acento
 
 Error / peligro
 #B3261E
+
+Texto verde sobre fondo oscuro
+#3DB273
+
+Texto de peligro sobre fondo oscuro
+#E5534B
 
 Texto principal
 #F5F5F5
@@ -233,6 +261,8 @@ Fondo: #1C1C1C
 Texto principal: #F5F5F5
 Texto secundario: #A7A7A7
 Precio: #D4AF37
+Categoría: #3DB273
+Agotado: #E5534B
 Botón principal: #0F5132
 ```
 
@@ -399,6 +429,8 @@ $color-danger: #B3261E;
 // Texto
 $color-text: #F5F5F5;
 $color-text-secondary: #A7A7A7;
+$color-primary-text: #3DB273;
+$color-danger-text: #E5534B;
 ```
 
 Estructura recomendada:
@@ -446,6 +478,8 @@ $spacing-xl: 32px;
 8. Mantener consistencia entre catálogo, carrito y panel administrativo.
 9. Utilizar los mismos estilos de botones en toda la aplicación.
 10. Mantener una apariencia moderna relacionada con el mundo del póker.
+11. No utilizar `#0F5132` ni `#B3261E` como texto sobre fondos oscuros; usar sus variantes
+    accesibles `#3DB273` y `#E5534B`.
 
 ---
 
@@ -477,6 +511,14 @@ Gris oscuro
 Peligro / Error
 #B3261E
 Rojo cartas
+
+Texto verde accesible
+#3DB273
+Verde texto
+
+Texto de error accesible
+#E5534B
+Rojo texto
 
 Texto principal
 #F5F5F5

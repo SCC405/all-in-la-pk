@@ -1,20 +1,25 @@
-import EstadoConexion from './components/EstadoConexion.jsx';
+import Catalogo from './pages/Catalogo.jsx';
 
 export default function App() {
   return (
     <div className="app">
-      <header className="app__encabezado">
-        <span className="app__palo">♠</span>
-        <h1 className="app__titulo">All In La PK</h1>
-        <p className="app__lema">Tienda en línea de artículos de póker</p>
+      <header className="cabecera">
+        <div className="cabecera__marca">
+          <span className="cabecera__palo" aria-hidden="true">♠</span>
+          <div>
+            <p className="cabecera__nombre">All In La PK</p>
+            <p className="cabecera__lema">Artículos y accesorios de póker</p>
+          </div>
+        </div>
       </header>
 
       <main className="app__contenido">
-        <EstadoConexion />
-        <p className="app__nota">
-          Frontend configurado (HU-07). El catálogo llega en HU-08 y los estilos SCSS en HU-16.
-        </p>
+        <Catalogo />
       </main>
+
+      <footer className="pie">
+        <p>All In La PK · Proyecto de aula</p>
+      </footer>
     </div>
   );
 }
