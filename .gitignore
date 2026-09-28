@@ -53,3 +53,9 @@ desktop.ini
 
 # Configuracion local de Claude Code
 .claude/
+
+# Impeccable escribe manifiestos de otros harnesses aqui; solo usamos la copia
+# global en ~/.claude/skills. Que no acaben en el repo compartido.
+.github/agents/
+.github/hooks/
+.github/skills/
