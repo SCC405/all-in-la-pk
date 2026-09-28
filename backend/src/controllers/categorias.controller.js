@@ -1,4 +1,5 @@
 import Categoria from '../models/categoria.model.js';
+import Producto from '../models/producto.model.js';
 
 // Solo estos campos se aceptan del cuerpo de la petición: evita que un cliente
 // intente escribir _id, createdAt o cualquier otra cosa que no le corresponde.
@@ -51,7 +52,23 @@ export async function actualizarCategoria(request, response, next) {
 
 export async function eliminarCategoria(request, response, next) {
   try {
-    const categoria = await Categoria.findByIdAndDelete(request.params.id);
+    const { id } = request.params;
+
+    // Se comprueba ANTES de borrar: si se borrara primero, los productos quedarían
+    // apuntando a una categoría inexistente y `populate` devolvería null, con lo que
+    // el catálogo mostraría productos sin categoría y los filtros no los encontrarían.
+    const productosAsociados = await Producto.countDocuments({ categoria: id });
+
+    if (productosAsociados > 0) {
+      response.status(409).json({
+        error:
+          `No se puede eliminar la categoría porque tiene ${productosAsociados} ` +
+          `producto(s) asociado(s). Cámbialos de categoría o elimínalos primero.`,
+      });
+      return;
+    }
+
+    const categoria = await Categoria.findByIdAndDelete(id);
 
     if (!categoria) {
       response.status(404).json({ error: 'Categoría no encontrada' });

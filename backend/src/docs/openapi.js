@@ -166,12 +166,18 @@ export const openapi = {
       delete: {
         tags: ['Categorías'],
         summary: 'Eliminar una categoría',
+        description:
+          'Solo se puede eliminar una categoría que no tenga productos asociados. Así ningún producto queda apuntando a una categoría inexistente.',
         parameters: [parametroId('la categoría')],
         responses: {
           204: { description: 'Categoría eliminada. No devuelve cuerpo.' },
           400: ERROR_ID,
           404: respuestaError('No existe una categoría con ese identificador.', {
             error: 'Categoría no encontrada',
+          }),
+          409: respuestaError('La categoría todavía tiene productos asociados.', {
+            error:
+              'No se puede eliminar la categoría porque tiene 3 producto(s) asociado(s). Cámbialos de categoría o elimínalos primero.',
           }),
         },
       },

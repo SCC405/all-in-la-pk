@@ -3,6 +3,7 @@ import test from 'node:test';
 import mongoose from 'mongoose';
 import app from '../src/app.js';
 import Categoria from '../src/models/categoria.model.js';
+import Producto from '../src/models/producto.model.js';
 
 // Prueba el CRUD completo contra un MongoDB real. Se salta cuando no hay uno,
 // para que `npm test` siga pasando en un clon recién hecho.
@@ -31,6 +32,7 @@ test('CRUD REST de categorías', { skip: URI ? false : motivo }, async (suite) =
   });
 
   suite.beforeEach(async () => {
+    await Producto.deleteMany({});
     await Categoria.deleteMany({});
   });
 
@@ -138,6 +140,44 @@ test('CRUD REST de categorías', { skip: URI ? false : motivo }, async (suite) =
     assert.equal(respuesta.status, 204);
     assert.equal(await respuesta.text(), '');
     assert.equal(await Categoria.findById(creada._id), null);
+  });
+
+  await suite.test('DELETE responde 409 si la categoría tiene productos, y no la borra', async () => {
+    const categoria = await Categoria.create({ nombre: 'Tapetes' });
+    await Producto.create({
+      nombre: 'Tapete verde profesional',
+      precio: 80000,
+      stock: 5,
+      imagen: 'https://ejemplo.com/tapete.jpg',
+      categoria: categoria._id,
+    });
+
+    const respuesta = await fetch(`${base}/${categoria._id}`, { method: 'DELETE' });
+
+    assert.equal(respuesta.status, 409);
+    assert.match((await respuesta.json()).error, /1 producto\(s\) asociado\(s\)/);
+
+    // Ni la categoría se borró, ni el producto quedó huérfano.
+    assert.ok(await Categoria.findById(categoria._id));
+    assert.equal(await Producto.countDocuments({ categoria: categoria._id }), 1);
+  });
+
+  await suite.test('DELETE funciona una vez que la categoría se queda sin productos', async () => {
+    const categoria = await Categoria.create({ nombre: 'Maletines' });
+    const producto = await Producto.create({
+      nombre: 'Maletín de aluminio',
+      precio: 150000,
+      stock: 2,
+      imagen: 'https://ejemplo.com/maletin.jpg',
+      categoria: categoria._id,
+    });
+
+    assert.equal((await fetch(`${base}/${categoria._id}`, { method: 'DELETE' })).status, 409);
+
+    await Producto.findByIdAndDelete(producto._id);
+
+    assert.equal((await fetch(`${base}/${categoria._id}`, { method: 'DELETE' })).status, 204);
+    assert.equal(await Categoria.findById(categoria._id), null);
   });
 
   await suite.test('DELETE sobre una categoría inexistente responde 404', async () => {

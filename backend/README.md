@@ -92,10 +92,15 @@ de las actualizaciones parciales.
 | `GET` | `/api/categorias` | `200` con la lista ordenada por nombre | — |
 | `POST` | `/api/categorias` | `201` con la categoría creada | `400` datos no válidos · `409` nombre repetido |
 | `PUT` | `/api/categorias/:id` | `200` con la categoría actualizada | `400` datos o id no válidos · `404` no existe · `409` nombre repetido |
-| `DELETE` | `/api/categorias/:id` | `204` sin cuerpo | `400` id no válido · `404` no existe |
+| `DELETE` | `/api/categorias/:id` | `204` sin cuerpo | `400` id no válido · `404` no existe · `409` tiene productos asociados |
 
 Solo se aceptan `nombre` y `descripcion` del cuerpo de la petición; cualquier otro campo se
 ignora, de modo que un cliente no puede intentar fijar el `_id` ni las marcas de tiempo.
+
+Una categoría **no puede eliminarse mientras tenga productos asociados**: la API responde `409`
+indicando cuántos son. Si se permitiera, esos productos quedarían apuntando a una categoría
+inexistente, `populate` devolvería `null` y el catálogo mostraría productos sin categoría que
+además no aparecerían en ningún filtro.
 
 Forma de las respuestas de error:
 
