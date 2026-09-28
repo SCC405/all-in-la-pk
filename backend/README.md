@@ -5,13 +5,14 @@ No renderiza vistas: únicamente recibe solicitudes, procesa la lógica y devuel
 
 ## Estado
 
-Base del backend implementada en **HU-01 — Configurar backend y conexión a base de datos**.
+Backend implementado hasta **HU-05 — CRUD REST de productos**.
 
 - Servidor Express con respuestas JSON.
 - Configuración mediante variables de entorno.
 - Conexión a MongoDB mediante Mongoose.
 - Manejo controlado de errores de configuración y conexión.
 - Endpoint de salud en `GET /api/health`.
+- CRUD REST de categorías y productos.
 - Pruebas automáticas con el módulo de pruebas de Node.js.
 
 ## Estructura prevista
@@ -51,7 +52,7 @@ npm test        # pruebas automáticas
 npm run check   # validación de sintaxis
 ```
 
-## Endpoints previstos
+## Endpoints
 
 ```
 GET    /api/categorias
@@ -90,7 +91,21 @@ Forma de las respuestas de error:
 `detalles` solo aparece cuando falla la validación del esquema, con un mensaje por campo
 para que el formulario del panel administrativo pueda señalar exactamente qué corregir.
 
-El endpoint `GET /api/health` ya está disponible como comprobación básica del backend. Los demás endpoints se implementarán en sus respectivas historias de usuario.
+### Productos (implementado en HU-05)
+
+| Método | Ruta | Respuesta correcta | Errores |
+|---|---|---|---|
+| `GET` | `/api/productos` | `200` con la lista ordenada por nombre | — |
+| `GET` | `/api/productos/:id` | `200` con el producto | `400` id no válido · `404` no existe |
+| `POST` | `/api/productos` | `201` con el producto creado | `400` datos o categoría no válidos |
+| `PUT` | `/api/productos/:id` | `200` con el producto actualizado | `400` datos, id o categoría no válidos · `404` no existe |
+| `DELETE` | `/api/productos/:id` | `204` sin cuerpo | `400` id no válido · `404` no existe |
+
+Los productos se devuelven con su categoría asociada mediante `populate`. Solo se aceptan
+`nombre`, `descripcion`, `precio`, `stock`, `imagen` y `categoria`; los campos reservados
+como `_id` y las marcas de tiempo se ignoran.
+
+El endpoint `GET /api/health` está disponible como comprobación básica del backend.
 
 ## Modelos
 
@@ -120,6 +135,24 @@ El nombre es único para que el catálogo no quede ambiguo: dos categorías llam
 harían imposible saber cuál está filtrando el visitante. Un intento de duplicado hace que
 MongoDB devuelva el error `11000`, que el CRUD traduce a una respuesta HTTP en HU-03.
 
+### Producto (implementado en HU-04)
+
+`src/models/producto.model.js`
+
+| Campo | Tipo | Reglas |
+|---|---|---|
+| `_id` | ObjectId | Identificador único, generado por MongoDB |
+| `nombre` | String | **Obligatorio**, sin espacios sobrantes, máximo 100 caracteres |
+| `descripcion` | String | Opcional, por defecto `''`, máximo 1000 caracteres |
+| `precio` | Number | **Obligatorio**, finito y mayor o igual que cero |
+| `stock` | Number | **Obligatorio**, entero y mayor o igual que cero |
+| `imagen` | String | **Obligatoria**, máximo 2048 caracteres |
+| `categoria` | ObjectId | **Obligatoria**, referencia a `Categoria` |
+| `createdAt` / `updatedAt` | Date | Automáticos (`timestamps`) |
+
+Además de validar el tipo de la referencia, el CRUD comprueba que la categoría exista antes
+de crear un producto o cambiar su asociación.
+
 ## Pruebas
 
 ```bash
@@ -134,7 +167,7 @@ de pruebas. Para ejecutarlas también:
 MONGODB_URI_TEST=mongodb://localhost:27017/all_in_la_pk_test npm test
 ```
 
-> ⚠️ **Esa base de datos se borra al terminar.** El clúster de Atlas se comparte con otro
+> ⚠️ **Las colecciones usadas por las pruebas se vacían al terminar.** El clúster de Atlas se comparte con otro
 > proyecto, así que las pruebas rechazan cualquier URI cuya base no termine en `_test`
 > o `-test`. Si apuntas `MONGODB_URI_TEST` a `all_in_la_pk` (la base real) las pruebas
 > fallan a propósito en vez de borrarla.
