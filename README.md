@@ -93,7 +93,11 @@ cp .env.example .env    # completar con la cadena de conexión de MongoDB Atlas
 npm run dev
 ```
 
-API disponible en `http://localhost:4000/api` · Documentación Swagger en `http://localhost:4000/api-docs`
+| Dirección | Qué es |
+|---|---|
+| `http://localhost:4000/api` | La API REST |
+| `http://localhost:4000/api-docs` | Swagger UI: documentación navegable y ejecutable |
+| `http://localhost:4000/api-docs.json` | Especificación OpenAPI, importable en Postman |
 
 ### Frontend
 
