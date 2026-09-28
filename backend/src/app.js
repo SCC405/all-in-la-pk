@@ -5,6 +5,7 @@ import { errorHandler } from './middlewares/error-handler.js';
 import { notFound } from './middlewares/not-found.js';
 import categoriasRouter from './routes/categorias.routes.js';
 import healthRouter from './routes/health.routes.js';
+import productosRouter from './routes/productos.routes.js';
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json({ limit: '1mb' }));
 
 app.use('/api', healthRouter);
 app.use('/api/categorias', categoriasRouter);
+app.use('/api/productos', productosRouter);
 app.use(notFound);
 app.use(errorHandler);
 
