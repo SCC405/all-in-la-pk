@@ -131,11 +131,13 @@ Las pruebas que necesitan un MongoDB real se saltan salvo que se indique una bas
 de pruebas. Para ejecutarlas también:
 
 ```bash
-MONGODB_URI_TEST=mongodb://localhost:27017/all-in-la-pk-test npm test
+MONGODB_URI_TEST=mongodb://localhost:27017/all_in_la_pk_test npm test
 ```
 
-> Esa base de datos se borra al terminar, así que **nunca** apuntes `MONGODB_URI_TEST`
-> a la base de datos real de All In La PK.
+> ⚠️ **Esa base de datos se borra al terminar.** El clúster de Atlas se comparte con otro
+> proyecto, así que las pruebas rechazan cualquier URI cuya base no termine en `_test`
+> o `-test`. Si apuntas `MONGODB_URI_TEST` a `all_in_la_pk` (la base real) las pruebas
+> fallan a propósito en vez de borrarla.
 
 ## Variables de entorno
 

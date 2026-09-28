@@ -2,16 +2,16 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import mongoose from 'mongoose';
 import Categoria from '../src/models/categoria.model.js';
+import { MOTIVO_SIN_BASE, uriDePruebas } from './ayuda-base-de-datos.js';
 
 // Estas pruebas necesitan un MongoDB real. Se saltan cuando no hay uno disponible
 // para que `npm test` siga pasando en una máquina recién clonada.
 //
 // Para ejecutarlas:
-//   MONGODB_URI_TEST=mongodb://localhost:27017/all-in-la-pk-test npm test
-const URI = process.env.MONGODB_URI_TEST?.trim();
-const motivo = 'define MONGODB_URI_TEST para ejecutar las pruebas contra un MongoDB real';
+//   MONGODB_URI_TEST=mongodb://localhost:27017/all_in_la_pk_test npm test
+const URI = uriDePruebas();
 
-test('una categoría creada queda almacenada de forma persistente', { skip: URI ? false : motivo }, async (context) => {
+test('una categoría creada queda almacenada de forma persistente', { skip: URI ? false : MOTIVO_SIN_BASE }, async (context) => {
   await mongoose.connect(URI, { serverSelectionTimeoutMS: 5_000 });
   context.after(async () => {
     await mongoose.connection.dropDatabase();
