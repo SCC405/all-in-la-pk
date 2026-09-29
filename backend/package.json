@@ -10,10 +10,11 @@
     "start": "node server.js",
     "test": "node --test --test-concurrency=1",
     "check": "node scripts/check.mjs",
+    "sembrar": "node scripts/sembrar.mjs",
     "certificados": "node scripts/generar-certificados.mjs"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
