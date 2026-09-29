@@ -66,7 +66,7 @@ export const openapi = {
   tags: [
     { name: 'Categorías', description: 'Organización del catálogo por tipo de artículo.' },
     { name: 'Productos', description: 'Artículos en venta, cada uno asociado a una categoría.' },
-    { name: 'Sistema', description: 'Comprobación del estado del servicio.' },
+    { name: 'Sistema', description: 'Comprobación del estado del servicio y token CSRF.' },
   ],
   paths: {
     '/health': {
@@ -79,6 +79,29 @@ export const openapi = {
             content: {
               'application/json': {
                 example: { status: 'ok', service: 'all-in-la-pk-backend', environment: 'development' },
+              },
+            },
+          },
+        },
+      },
+    },
+
+    '/csrf-token': {
+      get: {
+        tags: ['Sistema'],
+        summary: 'Obtener un token CSRF',
+        description: [
+          'Emite un token, lo deja en la cookie `XSRF-TOKEN` y lo devuelve en el cuerpo.',
+          '',
+          'Toda operación que modifique datos (`POST`, `PUT`, `DELETE`) debe reenviarlo en la',
+          'cabecera `X-CSRF-Token`. Si falta o no coincide con la cookie, la API responde `403`.',
+        ].join('\n'),
+        responses: {
+          200: {
+            description: 'Token emitido.',
+            content: {
+              'application/json': {
+                example: { csrfToken: '9f8e…c1.4a7b…d2' },
               },
             },
           },

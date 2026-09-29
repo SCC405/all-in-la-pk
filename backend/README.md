@@ -193,6 +193,58 @@ MONGODB_URI_TEST=mongodb://localhost:27017/all_in_la_pk_test npm test
 > o `-test`. Si apuntas `MONGODB_URI_TEST` a `all_in_la_pk` (la base real) las pruebas
 > fallan a propósito en vez de borrarla.
 
+## Protección CSRF (HU-19)
+
+Toda operación que modifica datos (`POST`, `PUT`, `PATCH`, `DELETE`) exige un token.
+Las lecturas no.
+
+### Cómo funciona
+
+1. El cliente pide un token en `GET /api/csrf-token`.
+2. El servidor lo devuelve **en el cuerpo** y además lo deja en la cookie `XSRF-TOKEN`.
+3. El cliente lo reenvía en la cabecera `X-CSRF-Token`.
+4. El servidor comprueba tres cosas: que cabecera y cookie coincidan, que la firma sea
+   válida, y que el `Origin` sea uno permitido.
+
+El token tiene la forma `valor.firma`, donde la firma es un HMAC-SHA256 del valor con
+`CSRF_SECRET`. La cookie **no** es `HttpOnly`, porque el cliente necesita leerla; por eso
+va firmada: que se pueda leer no basta para fabricar una válida.
+
+> El frontend no lee la cookie, toma el token del cuerpo. En desarrollo leerla funcionaría
+> —las cookies ignoran el puerto—, pero desplegados en dominios distintos JavaScript solo
+> ve las cookies de su propio dominio.
+
+### Demostración
+
+```bash
+# 1. Sin token: rechazado
+curl -X POST http://localhost:4000/api/categorias   -H "Content-Type: application/json" -d '{"nombre":"Intruso"}'
+# 403 {"error":"Falta el token CSRF..."}
+
+# 2. Con token válido pero desde otro origen: rechazado
+TOKEN=$(curl -s -c ck.txt http://localhost:4000/api/csrf-token | jq -r .csrfToken)
+curl -b ck.txt -X POST http://localhost:4000/api/categorias   -H "Content-Type: application/json" -H "X-CSRF-Token: $TOKEN"   -H "Origin: https://sitio-malicioso.example" -d '{"nombre":"Intruso"}'
+# 403 {"error":"Origen no permitido para esta operación"}
+
+# 3. Token y origen correctos: aceptado
+curl -b ck.txt -X POST http://localhost:4000/api/categorias   -H "Content-Type: application/json" -H "X-CSRF-Token: $TOKEN"   -H "Origin: http://localhost:5173" -d '{"nombre":"Tapetes"}'
+# 201
+```
+
+### Para el despliegue (HU-25)
+
+| Situación | Qué hace falta |
+|---|---|
+| Frontend y backend en el **mismo dominio** | Nada especial |
+| En **dominios distintos** | La cookie necesita `SameSite=None; Secure`, que se activa solo con `FORZAR_HTTPS=true`. Obliga a HTTPS en ambos extremos. |
+
+`CORS_ORIGIN` debe apuntar a la URL real del frontend desplegado: el backend rechaza cualquier
+otro origen en las operaciones que modifican datos.
+
+`CSRF_SECRET` debe estar fijado en producción. Sin él el servidor arranca igual, pero usa un
+secreto aleatorio por proceso: cada reinicio invalidaría los tokens ya emitidos, y con varias
+instancias cada una firmaría distinto.
+
 ## HTTPS (HU-20)
 
 ### Estrategia

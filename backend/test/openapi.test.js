@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import app from '../src/app.js';
 import categoriasRouter from '../src/routes/categorias.routes.js';
+import csrfRouter from '../src/routes/csrf.routes.js';
 import healthRouter from '../src/routes/health.routes.js';
 import productosRouter from '../src/routes/productos.routes.js';
 import openapi from '../src/docs/openapi.js';
@@ -23,6 +24,7 @@ async function servidorDePrueba(contexto) {
 function rutasReales() {
   const montajes = [
     ['', healthRouter],
+    ['', csrfRouter],
     ['/categorias', categoriasRouter],
     ['/productos', productosRouter],
   ];

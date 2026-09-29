@@ -33,4 +33,9 @@ export const env = Object.freeze({
   // la redirección.
   trustProxy: esVerdadero(process.env.TRUST_PROXY),
   forzarHttps: esVerdadero(process.env.FORZAR_HTTPS),
+
+  // Firma los tokens CSRF. Sin un secreto fijo el servidor arranca igual, pero
+  // cada reinicio invalida los tokens ya emitidos: tolerable en desarrollo,
+  // no en produccion, donde ademas puede haber varias instancias.
+  csrfSecret: process.env.CSRF_SECRET?.trim() || '',
 });
