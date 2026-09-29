@@ -64,11 +64,23 @@ frontend/
 
 ## Vistas previstas
 
-| Vista | Contenido |
-|---|---|
-| Catálogo | Listado de productos con filtro por categoría |
-| Carrito | Productos agregados, cantidades y total |
-| Administración | CRUD de categorías y de productos |
+| Ruta | Vista | Estado |
+|---|---|---|
+| `/` | Catálogo con filtro por categoría | Implementada (HU-08, HU-09) |
+| `/admin` | Administración: CRUD de categorías | Categorías en HU-13; productos en HU-14 |
+| _por definir_ | Carrito con cantidades y total | HU-10 a HU-12 |
+
+La navegación usa **react-router-dom**, así que cada vista tiene su propia URL y se puede
+enlazar directamente — útil para la sustentación.
+
+### Panel de administración
+
+Permite crear, consultar, editar y eliminar categorías sin usar Postman (RF-15). Los cambios
+se reflejan en la lista sin recargar la página (RNF-13).
+
+Los errores de la API se muestran donde corresponde: los de validación junto al campo que los
+provoca, y los generales —nombre repetido (`409`) o categoría con productos asociados (`409`)—
+como aviso del formulario.
 
 ## Estilos
 

@@ -328,3 +328,258 @@ body {
 .pie p {
   margin: 0;
 }
+
+/* ---------- Navegación ---------- */
+
+.cabecera__contenido {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 12px 16px;
+}
+
+.navegacion__lista {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navegacion__enlace {
+  display: flex;
+  align-items: center;
+  min-height: 44px; /* objetivo tactil minimo (WCAG 2.5.5) */
+  padding: 0 14px;
+  border-radius: var(--radio-sm);
+  color: var(--color-texto);
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.navegacion__enlace:hover {
+  color: var(--color-acento);
+  background: rgb(0 0 0 / 20%);
+}
+
+.navegacion__enlace--activo {
+  color: var(--color-acento);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--color-acento);
+}
+
+/* ---------- Foco visible ---------- */
+
+/* El contorno por defecto del navegador casi no se ve sobre fondo oscuro. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+/* ---------- Panel de administración ---------- */
+
+.admin__titulo {
+  margin: 0 0 4px;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.admin__intro {
+  margin: 0 0 24px;
+  color: var(--color-texto-secundario);
+}
+
+.panel {
+  background: var(--color-superficie);
+  border: 1px solid #2a2a2a;
+  border-radius: var(--radio-md);
+  padding: 20px;
+}
+
+.panel__titulo {
+  margin: 0 0 16px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.panel__estado {
+  margin: 12px 0 0;
+  min-height: 1.5em;
+  font-size: 14px;
+  color: var(--color-primario-texto);
+}
+
+/* ---------- Formularios ---------- */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  background: rgb(0 0 0 / 25%);
+  border-radius: var(--radio-sm);
+}
+
+.formulario__leyenda {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-texto-secundario);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.campo__etiqueta {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.campo__control {
+  min-height: 44px;
+  padding: 10px 12px;
+  background: var(--color-fondo);
+  border: 1px solid var(--color-texto-secundario);
+  border-radius: var(--radio-sm);
+  color: var(--color-texto);
+  font: inherit;
+  font-size: 15px;
+  resize: vertical;
+}
+
+.campo__control::placeholder {
+  color: #6f6f6f;
+}
+
+.campo__control:focus {
+  border-color: var(--color-acento);
+}
+
+/* Se usa la variante clara del rojo: el #B3261E de marca sobre el fondo del
+   input da 2,97:1 y WCAG pide 3:1 para elementos no textuales. */
+.campo__control--error {
+  border-color: var(--color-peligro-texto);
+}
+
+.campo__error,
+.formulario__error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-peligro-texto);
+}
+
+.formulario__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---------- Botones ---------- */
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radio-sm);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.boton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.boton--principal {
+  background: var(--color-primario);
+  color: var(--color-texto);
+}
+
+.boton--principal:hover:not(:disabled) {
+  background: var(--color-primario-oscuro);
+}
+
+.boton--peligro {
+  background: var(--color-peligro);
+  color: var(--color-texto);
+}
+
+.boton--peligro:hover:not(:disabled) {
+  background: #8f1e18;
+}
+
+.boton--secundario {
+  background: var(--color-superficie);
+  border-color: var(--color-texto-secundario);
+  color: var(--color-texto);
+}
+
+.boton--secundario:hover:not(:disabled) {
+  border-color: var(--color-acento);
+  color: var(--color-acento);
+}
+
+/* ---------- Lista de categorías ---------- */
+
+.lista {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #2a2a2a;
+}
+
+.lista__fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.lista__datos {
+  flex: 1 1 220px;
+}
+
+.lista__nombre {
+  margin: 0;
+  font-weight: 600;
+}
+
+.lista__descripcion {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--color-texto-secundario);
+}
+
+.lista__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.lista__pregunta {
+  font-size: 14px;
+  color: var(--color-peligro-texto);
+}
