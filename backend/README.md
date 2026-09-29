@@ -193,6 +193,59 @@ MONGODB_URI_TEST=mongodb://localhost:27017/all_in_la_pk_test npm test
 > o `-test`. Si apuntas `MONGODB_URI_TEST` a `all_in_la_pk` (la base real) las pruebas
 > fallan a propósito en vez de borrarla.
 
+## HTTPS (HU-20)
+
+### Estrategia
+
+| Entorno | Quién cifra | Certificado |
+|---|---|---|
+| **Producción** (HU-25) | El proveedor de despliegue termina TLS antes de llegar a Express | Emitido y renovado por el proveedor |
+| **Desarrollo** | El propio Express, si se le dan certificados | Autofirmado, generado en local |
+
+En producción el backend recibe tráfico ya descifrado detrás de un proxy, así que **no
+necesita certificados**. Lo que sí necesita es saber que la petición original venía por HTTPS,
+y eso se lo dice el proxy en la cabecera `X-Forwarded-Proto`.
+
+Por eso hay dos interruptores separados:
+
+| Variable | Para qué |
+|---|---|
+| `TRUST_PROXY` | Permite a Express leer `X-Forwarded-Proto`. **Solo detrás de un proxy real**: si se activara siempre, cualquier cliente podría enviar esa cabecera a mano y hacerse pasar por una conexión segura. |
+| `FORZAR_HTTPS` | Redirige las peticiones sin cifrar con `308` y añade la cabecera `Strict-Transport-Security`. |
+
+Se usa `308` y no `301` porque el `301` convierte un `POST` en `GET` y se perderían los datos
+del formulario al redirigir.
+
+### Probarlo en local
+
+```bash
+npm run certificados
+```
+
+Genera un certificado autofirmado en `backend/certs/` (ignorado por git) y te dice qué añadir
+al `.env`. Después, `npm run dev` arranca en `https://localhost:4000`.
+
+El navegador avisará de que el certificado no está firmado por una autoridad conocida: es lo
+esperado en un autofirmado. Hay que aceptar la excepción; **el cifrado es real igualmente**.
+Algunos navegadores integrados en otras herramientas lo rechazan sin dar opción, así que para
+la demostración conviene usar Chrome o Firefox directamente.
+
+### Evidencia
+
+```
+$ openssl s_client -connect localhost:4443 -servername localhost
+subject=C=CO, O=All In La PK, CN=localhost
+Protocol  : TLSv1.3
+Cipher    : TLS_AES_256_GCM_SHA384
+
+$ curl -skD - https://localhost:4443/api/health
+HTTP/1.1 200 OK
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+```
+
+Las pruebas automáticas cubren la redirección, la cabecera HSTS y una petición real sobre TLS
+comprobando la versión negociada.
+
 ## Variables de entorno
 
 Copia `.env.example` a `.env` y completa los valores. **`.env` nunca se sube al repositorio.**

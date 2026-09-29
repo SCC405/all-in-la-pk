@@ -9,7 +9,8 @@
     "dev": "nodemon server.js",
     "start": "node server.js",
     "test": "node --test --test-concurrency=1",
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "certificados": "node scripts/generar-certificados.mjs"
   },
   "engines": {
     "node": ">=18"
