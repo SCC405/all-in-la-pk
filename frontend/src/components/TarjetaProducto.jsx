@@ -12,7 +12,7 @@ function textoStock(stock) {
   return { texto: `${stock} disponibles`, agotado: false };
 }
 
-export default function TarjetaProducto({ producto }) {
+export default function TarjetaProducto({ producto, onAgregar }) {
   const [imagenFallida, setImagenFallida] = useState(false);
   const stock = textoStock(producto.stock);
 
@@ -64,6 +64,18 @@ export default function TarjetaProducto({ producto }) {
             {stock.texto}
           </p>
         </div>
+
+        <button
+          className="producto__agregar"
+          type="button"
+          disabled={stock.agotado}
+          onClick={() => onAgregar(producto)}
+          aria-label={stock.agotado
+            ? `${producto.nombre} está agotado`
+            : `Agregar ${producto.nombre} al carrito`}
+        >
+          {stock.agotado ? 'Producto agotado' : 'Agregar al carrito'}
+        </button>
       </div>
     </article>
   );
