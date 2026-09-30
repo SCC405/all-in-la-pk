@@ -4,8 +4,10 @@ import TarjetaProducto from '../components/TarjetaProducto.jsx';
 import { categoriasServicio } from '../services/categoriasServicio.js';
 import { productosServicio } from '../services/productosServicio.js';
 import { filtrarProductosPorCategoria } from '../utils/filtrarProductos.js';
+import { useCarrito } from '../context/CarritoContext.jsx';
 
 export default function Catalogo() {
+  const { agregarProducto } = useCarrito();
   const [estado, setEstado] = useState({ fase: 'cargando' });
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
 
@@ -99,7 +101,11 @@ export default function Catalogo() {
       ) : (
         <div className="catalogo__rejilla">
           {productosVisibles.map((producto) => (
-            <TarjetaProducto key={producto._id} producto={producto} />
+            <TarjetaProducto
+              key={producto._id}
+              producto={producto}
+              onAgregar={agregarProducto}
+            />
           ))}
         </div>
       )}
