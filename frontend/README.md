@@ -5,9 +5,10 @@ Consume la API REST del backend; no accede nunca a la base de datos directamente
 
 ## Estado
 
-Inicializado en **HU-07** con React 18 + Vite. El **catálogo público** (HU-08) y su **filtro por
-categoría** (HU-09) están implementados. Pendiente: carrito (HU-10 a HU-12), panel
-administrativo (HU-13 a HU-15) y migración de estilos a SCSS (HU-16).
+Inicializado en **HU-07** con React 18 + Vite. El **catálogo público** (HU-08), su **filtro por
+categoría** (HU-09) y la acción de **agregar al carrito** (HU-10) están implementados. Pendiente:
+gestión de cantidades y total del carrito (HU-11 y HU-12), panel administrativo (HU-13 a HU-15)
+y migración de estilos a SCSS (HU-16).
 
 ## Puesta en marcha
 
@@ -25,7 +26,7 @@ conexión con la API, así que sirve para comprobar de un vistazo si el backend 
 | `npm run dev` | Servidor de desarrollo con recarga en caliente |
 | `npm run build` | Compila la versión de producción en `dist/` |
 | `npm run preview` | Sirve localmente lo compilado en `dist/` |
-| `npm test` | Prueba la lógica del filtro por categoría |
+| `npm test` | Prueba la lógica del filtro por categoría y del carrito |
 
 ## Filtro del catálogo (HU-09)
 
@@ -36,6 +37,15 @@ lo informa y permite regresar a «Todas las categorías».
 
 El selector utiliza una etiqueta asociada, un área táctil mínima de 44 px y un foco visible para
 navegación por teclado.
+
+## Agregar productos al carrito (HU-10)
+
+Cada producto disponible tiene una acción **Agregar al carrito**. El estado se comparte mediante
+`CarritoProvider`, así que el contador y el resumen de la cabecera se actualizan inmediatamente y
+sin recargar la página. El resumen muestra el nombre de cada producto y las unidades agregadas.
+
+Los productos agotados no pueden agregarse. Los botones y el activador del carrito tienen un área
+mínima de 44 px, foco visible y mensajes anunciados mediante una región `aria-live`.
 
 ## Estructura prevista
 

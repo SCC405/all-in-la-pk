@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Admin from './pages/Admin.jsx';
 import Catalogo from './pages/Catalogo.jsx';
+import CarritoResumen from './components/CarritoResumen.jsx';
 
 export default function App() {
   return (
@@ -15,7 +16,10 @@ export default function App() {
               <p className="cabecera__lema">Artículos y accesorios de póker</p>
             </div>
           </div>
-          <Navbar />
+          <div className="cabecera__acciones">
+            <Navbar />
+            <CarritoResumen />
+          </div>
         </div>
       </header>
 
