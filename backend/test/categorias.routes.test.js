@@ -4,15 +4,16 @@ import mongoose from 'mongoose';
 import app from '../src/app.js';
 import Categoria from '../src/models/categoria.model.js';
 import Producto from '../src/models/producto.model.js';
+import { MOTIVO_SIN_BASE, uriDePruebas } from './ayuda-base-de-datos.js';
+import { cabecerasCsrf, obtenerCsrf } from './ayuda-csrf.js';
 
 // Prueba el CRUD completo contra un MongoDB real. Se salta cuando no hay uno,
 // para que `npm test` siga pasando en un clon recién hecho.
 //
-//   MONGODB_URI_TEST=mongodb://localhost:27017/all-in-la-pk-test npm test
-const URI = process.env.MONGODB_URI_TEST?.trim();
-const motivo = 'define MONGODB_URI_TEST para ejecutar el CRUD contra un MongoDB real';
+//   MONGODB_URI_TEST=mongodb://localhost:27017/all_in_la_pk_test npm test
+const URI = uriDePruebas();
 
-test('CRUD REST de categorías', { skip: URI ? false : motivo }, async (suite) => {
+test('CRUD REST de categorías', { skip: URI ? false : MOTIVO_SIN_BASE }, async (suite) => {
   await mongoose.connect(URI, { serverSelectionTimeoutMS: 5_000 });
   await Categoria.init();
 
@@ -20,7 +21,12 @@ test('CRUD REST de categorías', { skip: URI ? false : motivo }, async (suite) =
     const s = app.listen(0, '127.0.0.1', () => resolve(s));
     s.on('error', reject);
   });
-  const base = `http://127.0.0.1:${servidor.address().port}/api/categorias`;
+  const origen = `http://127.0.0.1:${servidor.address().port}`;
+  const base = `${origen}/api/categorias`;
+
+  // Con la proteccion CSRF activa, toda mutacion necesita el par cookie+cabecera.
+  const csrf = await obtenerCsrf(origen);
+  const borrar = () => ({ method: 'DELETE', headers: cabecerasCsrf(csrf) });
 
   suite.after(async () => {
     await new Promise((resolve) => servidor.close(resolve));
@@ -38,7 +44,7 @@ test('CRUD REST de categorías', { skip: URI ? false : motivo }, async (suite) =
 
   const json = (cuerpo) => ({
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: cabecerasCsrf(csrf),
     body: JSON.stringify(cuerpo),
   });
 
@@ -135,7 +141,7 @@ test('CRUD REST de categorías', { skip: URI ? false : motivo }, async (suite) =
   await suite.test('DELETE elimina la categoría y responde 204 sin cuerpo', async () => {
     const creada = await Categoria.create({ nombre: 'Porta fichas' });
 
-    const respuesta = await fetch(`${base}/${creada._id}`, { method: 'DELETE' });
+    const respuesta = await fetch(`${base}/${creada._id}`, borrar());
 
     assert.equal(respuesta.status, 204);
     assert.equal(await respuesta.text(), '');
@@ -152,7 +158,7 @@ test('CRUD REST de categorías', { skip: URI ? false : motivo }, async (suite) =
       categoria: categoria._id,
     });
 
-    const respuesta = await fetch(`${base}/${categoria._id}`, { method: 'DELETE' });
+    const respuesta = await fetch(`${base}/${categoria._id}`, borrar());
 
     assert.equal(respuesta.status, 409);
     assert.match((await respuesta.json()).error, /1 producto\(s\) asociado\(s\)/);
@@ -172,24 +178,24 @@ test('CRUD REST de categorías', { skip: URI ? false : motivo }, async (suite) =
       categoria: categoria._id,
     });
 
-    assert.equal((await fetch(`${base}/${categoria._id}`, { method: 'DELETE' })).status, 409);
+    assert.equal((await fetch(`${base}/${categoria._id}`, borrar())).status, 409);
 
     await Producto.findByIdAndDelete(producto._id);
 
-    assert.equal((await fetch(`${base}/${categoria._id}`, { method: 'DELETE' })).status, 204);
+    assert.equal((await fetch(`${base}/${categoria._id}`, borrar())).status, 204);
     assert.equal(await Categoria.findById(categoria._id), null);
   });
 
   await suite.test('DELETE sobre una categoría inexistente responde 404', async () => {
     const idAusente = new mongoose.Types.ObjectId().toString();
 
-    const respuesta = await fetch(`${base}/${idAusente}`, { method: 'DELETE' });
+    const respuesta = await fetch(`${base}/${idAusente}`, borrar());
 
     assert.equal(respuesta.status, 404);
   });
 
   await suite.test('un identificador con forma inválida responde 400, no 500', async () => {
-    const respuesta = await fetch(`${base}/no-es-un-id`, { method: 'DELETE' });
+    const respuesta = await fetch(`${base}/no-es-un-id`, borrar());
 
     assert.equal(respuesta.status, 400);
     assert.equal((await respuesta.json()).error, 'El identificador recibido no es válido');

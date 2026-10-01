@@ -77,39 +77,98 @@ all-in-la-pk/
 
 ## 🚀 Puesta en marcha
 
-Requisitos: **Node.js 18+** y **npm**, más una cuenta de **MongoDB Atlas**.
+Requisitos: **Node.js 20 o superior** (hay un `.nvmrc`) y **npm**. Para la base de datos,
+una cuenta de **MongoDB Atlas** o un MongoDB local.
 
 ```bash
 git clone https://github.com/SCC405/all-in-la-pk.git
-cd all-in-la-pk
 ```
 
-### Backend
+Backend y frontend son proyectos npm **independientes**: cada uno tiene sus dependencias y
+se instala por separado. Los comandos de abajo usan `--prefix` para no tener que entrar y
+salir de carpetas, y funcionan igual en PowerShell, CMD y bash.
+
+### 1. Instalar
 
 ```bash
-cd backend
-npm install
-cp .env.example .env    # completar con la cadena de conexión de MongoDB Atlas
-npm run dev
+npm ci --prefix backend
+```
+
+```bash
+npm ci --prefix frontend
+```
+
+> `npm ci` instala exactamente lo que dice el `package-lock.json`. Usa `npm install` solo
+> cuando vayas a añadir o actualizar una dependencia.
+
+### 2. Configurar el backend
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Completa `MONGODB_URI` en ese archivo. **Nunca se sube al repositorio.** El resto de
+variables traen valores válidos para desarrollo.
+
+### 3. Arrancar
+
+Hacen falta **dos terminales**, una para cada proyecto:
+
+```bash
+npm run dev --prefix backend
+```
+
+```bash
+npm run dev --prefix frontend
 ```
 
 | Dirección | Qué es |
 |---|---|
+| `http://localhost:5173` | La tienda |
 | `http://localhost:4000/api` | La API REST |
 | `http://localhost:4000/api-docs` | Swagger UI: documentación navegable y ejecutable |
 | `http://localhost:4000/api-docs.json` | Especificación OpenAPI, importable en Postman |
 
-### Frontend
+### 4. Datos de ejemplo (opcional)
 
 ```bash
-cd frontend
-npm install
-npm run dev
+npm run sembrar --prefix backend
 ```
 
-Aplicación disponible en `http://localhost:5173`
+Crea 5 categorías y 8 productos para ver la tienda con contenido. Si la base ya tiene datos
+se niega a continuar, porque sembrar los borra; para forzarlo, `npm run sembrar --prefix backend -- --confirmar`.
 
-> Las instrucciones detalladas se completan en **HU-24 (Documentación técnica)**.
+## 📜 Comandos disponibles
+
+### Backend
+
+| Comando | Qué hace |
+|---|---|
+| `npm run dev` | Servidor con reinicio automático al guardar |
+| `npm start` | Servidor en modo normal |
+| `npm test` | Pruebas. Las de integración se saltan si no hay base de datos de pruebas |
+| `npm run check` | Comprueba que todos los archivos sean sintácticamente válidos |
+| `npm run sembrar` | Llena la base con datos de ejemplo |
+| `npm run certificados` | Genera certificados autofirmados para probar HTTPS en local |
+
+Para ejecutar también las pruebas que necesitan MongoDB:
+
+```bash
+MONGODB_URI_TEST=mongodb://localhost:27017/all_in_la_pk_test npm test --prefix backend
+```
+
+> La base debe terminar en `_test` o `-test`: las pruebas borran datos al terminar y hay un
+> guardia que impide apuntarlas por error a la base real.
+
+### Frontend
+
+| Comando | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo con recarga en caliente |
+| `npm run build` | Compila la versión de producción en `dist/` |
+| `npm run preview` | Sirve localmente lo ya compilado |
+| `npm test` | Pruebas unitarias |
+
 
 ## 🎨 Identidad visual
 
