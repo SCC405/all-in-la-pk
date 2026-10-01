@@ -14,12 +14,34 @@ export function CarritoProvider({ children }) {
     dispatch({ type: 'producto/agregado', producto });
   }, []);
 
+  const aumentarCantidad = useCallback((productoId) => {
+    dispatch({ type: 'cantidad/aumentada', productoId });
+  }, []);
+
+  const disminuirCantidad = useCallback((productoId) => {
+    dispatch({ type: 'cantidad/disminuida', productoId });
+  }, []);
+
+  const eliminarProducto = useCallback((productoId) => {
+    dispatch({ type: 'producto/eliminado', productoId });
+  }, []);
+
   const valor = useMemo(() => ({
     items: estado.items,
     mensaje: estado.mensaje,
     totalUnidades: contarUnidades(estado.items),
     agregarProducto,
-  }), [agregarProducto, estado.items, estado.mensaje]);
+    aumentarCantidad,
+    disminuirCantidad,
+    eliminarProducto,
+  }), [
+    agregarProducto,
+    aumentarCantidad,
+    disminuirCantidad,
+    eliminarProducto,
+    estado.items,
+    estado.mensaje,
+  ]);
 
   return (
     <CarritoContext.Provider value={valor}>
