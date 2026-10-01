@@ -113,6 +113,14 @@ export function contarUnidades(items) {
   return items.reduce((total, item) => total + item.cantidad, 0);
 }
 
+export function calcularSubtotal({ producto, cantidad }) {
+  return producto.precio * cantidad;
+}
+
+export function calcularTotal(items) {
+  return items.reduce((total, item) => total + calcularSubtotal(item), 0);
+}
+
 export function carritoReducer(estado, accion) {
   switch (accion.type) {
     case 'producto/agregado':

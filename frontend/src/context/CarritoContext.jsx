@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useReducer } from 'react';
 import {
+  calcularTotal,
   carritoReducer,
   contarUnidades,
   ESTADO_INICIAL_CARRITO,
@@ -29,6 +30,7 @@ export function CarritoProvider({ children }) {
   const valor = useMemo(() => ({
     items: estado.items,
     mensaje: estado.mensaje,
+    totalPrecio: calcularTotal(estado.items),
     totalUnidades: contarUnidades(estado.items),
     agregarProducto,
     aumentarCantidad,
