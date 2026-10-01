@@ -1,4 +1,5 @@
 import AdminCategorias from '../components/AdminCategorias.jsx';
+import AdminProductos from '../components/AdminProductos.jsx';
 
 export default function Admin() {
   return (
@@ -8,7 +9,10 @@ export default function Admin() {
         Gestiona el catálogo de All In La PK sin salir de aquí.
       </p>
 
-      <AdminCategorias />
+      <div className="admin__paneles">
+        <AdminCategorias />
+        <AdminProductos />
+      </div>
     </div>
   );
 }
