@@ -5,6 +5,7 @@ import app from '../src/app.js';
 import Categoria from '../src/models/categoria.model.js';
 import Producto from '../src/models/producto.model.js';
 import { MOTIVO_SIN_BASE, uriDePruebas } from './ayuda-base-de-datos.js';
+import { cabecerasCsrf, obtenerCsrf } from './ayuda-csrf.js';
 
 const URI = uriDePruebas();
 
@@ -16,7 +17,12 @@ test('CRUD REST de productos', { skip: URI ? false : MOTIVO_SIN_BASE }, async (s
     const instancia = app.listen(0, '127.0.0.1', () => resolve(instancia));
     instancia.on('error', reject);
   });
-  const base = `http://127.0.0.1:${servidor.address().port}/api/productos`;
+  const origen = `http://127.0.0.1:${servidor.address().port}`;
+  const base = `${origen}/api/productos`;
+
+  // Con la proteccion CSRF activa, toda mutacion necesita el par cookie+cabecera.
+  const csrf = await obtenerCsrf(origen);
+  const borrar = () => ({ method: 'DELETE', headers: cabecerasCsrf(csrf) });
 
   suite.after(async () => {
     await new Promise((resolve) => servidor.close(resolve));
@@ -33,7 +39,7 @@ test('CRUD REST de productos', { skip: URI ? false : MOTIVO_SIN_BASE }, async (s
 
   const json = (cuerpo) => ({
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: cabecerasCsrf(csrf),
     body: JSON.stringify(cuerpo),
   });
 
@@ -174,7 +180,7 @@ test('CRUD REST de productos', { skip: URI ? false : MOTIVO_SIN_BASE }, async (s
     const categoria = await crearCategoria();
     const producto = await Producto.create(datosProducto(categoria));
 
-    const respuesta = await fetch(`${base}/${producto._id}`, { method: 'DELETE' });
+    const respuesta = await fetch(`${base}/${producto._id}`, borrar());
 
     assert.equal(respuesta.status, 204);
     assert.equal(await respuesta.text(), '');

@@ -1,13 +1,22 @@
+import { createServer as crearServidorHttp } from 'node:http';
+import { createServer as crearServidorHttps } from 'node:https';
 import app from './src/app.js';
 import { connectDatabase, disconnectDatabase } from './src/config/database.js';
 import { env } from './src/config/env.js';
+import { opcionesHttps } from './src/config/https.js';
 
 let httpServer;
 let isShuttingDown = false;
 
+let protocolo = 'http';
+
 function escuchar() {
   return new Promise((resolve, reject) => {
-    httpServer = app.listen(env.port);
+    const tls = opcionesHttps(env);
+    protocolo = tls ? 'https' : 'http';
+
+    httpServer = tls ? crearServidorHttps(tls, app) : crearServidorHttp(app);
+    httpServer.listen(env.port);
 
     const alFallar = (error) => reject(error);
     httpServer.once('error', alFallar);
@@ -30,7 +39,7 @@ async function startServer() {
   try {
     await connectDatabase(env.mongodbUri);
     await escuchar();
-    console.log(`Backend disponible en http://localhost:${env.port}`);
+    console.log(`Backend disponible en ${protocolo}://localhost:${env.port}`);
   } catch (error) {
     console.error(`No fue posible iniciar el backend: ${detalleDeInicio(error)}`);
     await disconnectDatabase();
