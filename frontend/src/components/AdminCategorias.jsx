@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { categoriasServicio } from '../services/categoriasServicio.js';
+import { hayErrores, primerCampoConError, validarCategoria } from '../utils/validaciones.js';
 
 const FORMULARIO_VACIO = { nombre: '', descripcion: '' };
+
+// Orden en que se ven en pantalla, para llevar el foco al primero que falle.
+const ORDEN_CAMPOS = ['nombre', 'descripcion'];
 
 function ordenarPorNombre(categorias) {
   return [...categorias].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
@@ -24,6 +28,8 @@ export default function AdminCategorias({ onCategorias }) {
   const [errorBorrado, setErrorBorrado] = useState('');
 
   const campoNombre = useRef(null);
+  const campoDescripcion = useRef(null);
+  const referencias = { nombre: campoNombre, descripcion: campoDescripcion };
 
   useEffect(() => {
     let vigente = true;
@@ -53,6 +59,14 @@ export default function AdminCategorias({ onCategorias }) {
   function cambiarCampo(evento) {
     const { name, value } = evento.target;
     setFormulario((anterior) => ({ ...anterior, [name]: value }));
+
+    // Al corregir un campo su error desaparece, en vez de quedarse en rojo
+    // hasta el siguiente envío.
+    setErrorFormulario((anterior) => {
+      if (!anterior?.detalles?.[name]) return anterior;
+      const { [name]: _, ...resto } = anterior.detalles;
+      return { ...anterior, detalles: resto };
+    });
   }
 
   function empezarEdicion(categoria) {
@@ -73,6 +87,18 @@ export default function AdminCategorias({ onCategorias }) {
 
   async function enviar(evento) {
     evento.preventDefault();
+
+    // Se valida antes de llamar a la API: si el error es evidente, no hace
+    // falta un viaje de ida y vuelta para enterarse.
+    const errores = validarCategoria(formulario);
+
+    if (hayErrores(errores)) {
+      setErrorFormulario({ mensaje: 'Revisa los campos marcados.', detalles: errores });
+      setExito('');
+      referencias[primerCampoConError(errores, ORDEN_CAMPOS)]?.current?.focus();
+      return;
+    }
+
     setGuardando(true);
     setErrorFormulario(null);
     setExito('');
@@ -182,6 +208,7 @@ export default function AdminCategorias({ onCategorias }) {
             className={`campo__control${errorDescripcion ? ' campo__control--error' : ''}`}
             id="categoria-descripcion"
             name="descripcion"
+            ref={campoDescripcion}
             value={formulario.descripcion}
             onChange={cambiarCampo}
             maxLength={300}

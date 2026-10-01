@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { productosServicio } from '../services/productosServicio.js';
+import { hayErrores, primerCampoConError, validarProducto } from '../utils/validaciones.js';
 import {
   FORMULARIO_PRODUCTO_VACIO,
   ordenarProductosPorNombre,
@@ -16,6 +17,9 @@ const formateadorPrecio = new Intl.NumberFormat('es-CO', {
 });
 
 const CAMPOS = ['nombre', 'descripcion', 'precio', 'stock', 'imagen', 'categoria'];
+
+// Orden en que se ven en pantalla, para llevar el foco al primero que falle.
+const ORDEN_CAMPOS = ['nombre', 'categoria', 'precio', 'stock', 'imagen', 'descripcion'];
 
 function idError(campo) {
   return `producto-error-${campo}`;
@@ -39,7 +43,15 @@ export default function AdminProductos({ categorias = [] }) {
   const [eliminandoId, setEliminandoId] = useState(null);
   const [errorBorrado, setErrorBorrado] = useState('');
 
-  const campoNombre = useRef(null);
+  const referencias = {
+    nombre: useRef(null),
+    categoria: useRef(null),
+    precio: useRef(null),
+    stock: useRef(null),
+    imagen: useRef(null),
+    descripcion: useRef(null),
+  };
+  const campoNombre = referencias.nombre;
 
   useEffect(() => {
     let vigente = true;
@@ -65,6 +77,14 @@ export default function AdminProductos({ categorias = [] }) {
   function cambiarCampo(evento) {
     const { name, value } = evento.target;
     setFormulario((anterior) => ({ ...anterior, [name]: value }));
+
+    // Al corregir un campo su error desaparece, en vez de quedarse en rojo
+    // hasta el siguiente envío.
+    setErrorFormulario((anterior) => {
+      if (!anterior?.detalles?.[name]) return anterior;
+      const { [name]: _, ...resto } = anterior.detalles;
+      return { ...anterior, detalles: resto };
+    });
   }
 
   function empezarEdicion(producto) {
@@ -84,6 +104,18 @@ export default function AdminProductos({ categorias = [] }) {
 
   async function enviar(evento) {
     evento.preventDefault();
+
+    // Se valida antes de llamar a la API: si el error es evidente, no hace
+    // falta un viaje de ida y vuelta para enterarse.
+    const errores = validarProducto(formulario);
+
+    if (hayErrores(errores)) {
+      setErrorFormulario({ mensaje: 'Revisa los campos marcados.', detalles: errores });
+      setExito('');
+      referencias[primerCampoConError(errores, ORDEN_CAMPOS)]?.current?.focus();
+      return;
+    }
+
     setGuardando(true);
     setErrorFormulario(null);
     setExito('');
@@ -198,6 +230,7 @@ export default function AdminProductos({ categorias = [] }) {
               className={`campo__control${detalles.categoria ? ' campo__control--error' : ''}`}
               id="producto-categoria"
               name="categoria"
+              ref={referencias.categoria}
               value={formulario.categoria}
               onChange={cambiarCampo}
               required
@@ -222,6 +255,7 @@ export default function AdminProductos({ categorias = [] }) {
               className={`campo__control${detalles.precio ? ' campo__control--error' : ''}`}
               id="producto-precio"
               name="precio"
+              ref={referencias.precio}
               type="number"
               min="0"
               step="1"
@@ -248,6 +282,7 @@ export default function AdminProductos({ categorias = [] }) {
               className={`campo__control${detalles.stock ? ' campo__control--error' : ''}`}
               id="producto-stock"
               name="stock"
+              ref={referencias.stock}
               type="number"
               min="0"
               step="1"
@@ -274,6 +309,7 @@ export default function AdminProductos({ categorias = [] }) {
               className={`campo__control${detalles.imagen ? ' campo__control--error' : ''}`}
               id="producto-imagen"
               name="imagen"
+              ref={referencias.imagen}
               type="url"
               value={formulario.imagen}
               onChange={cambiarCampo}
@@ -292,6 +328,7 @@ export default function AdminProductos({ categorias = [] }) {
               className={`campo__control${detalles.descripcion ? ' campo__control--error' : ''}`}
               id="producto-descripcion"
               name="descripcion"
+              ref={referencias.descripcion}
               value={formulario.descripcion}
               onChange={cambiarCampo}
               maxLength={1000}
