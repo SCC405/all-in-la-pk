@@ -11,6 +11,15 @@ const idObjeto = {
   description: 'Identificador de MongoDB (24 caracteres hexadecimales).',
 };
 
+const urlImagen = {
+  type: 'string',
+  format: 'uri',
+  pattern: '^https?://',
+  maxLength: 2048,
+  example: 'https://ejemplo.com/set-500-fichas.jpg',
+  description: 'Dirección absoluta de una imagen. Solo admite los protocolos HTTP y HTTPS.',
+};
+
 const parametroId = (recurso) => ({
   name: 'id',
   in: 'path',
@@ -362,7 +371,7 @@ export const openapi = {
           descripcion: { type: 'string', maxLength: 1000 },
           precio: { type: 'number', minimum: 0, example: 320000 },
           stock: { type: 'integer', minimum: 0, example: 12 },
-          imagen: { type: 'string', maxLength: 2048, example: 'https://ejemplo.com/set-500-fichas.jpg' },
+          imagen: { ...urlImagen },
           categoria: {
             allOf: [{ $ref: '#/components/schemas/Categoria' }],
             description: 'Categoría ya resuelta. Al crear o actualizar se envía solo su identificador.',
@@ -378,7 +387,7 @@ export const openapi = {
           descripcion: { type: 'string', maxLength: 1000 },
           precio: { type: 'number', minimum: 0, description: 'No puede ser negativo.', example: 320000 },
           stock: { type: 'integer', minimum: 0, description: 'Entero, no puede ser negativo.', example: 12 },
-          imagen: { type: 'string', maxLength: 2048, example: 'https://ejemplo.com/set-500-fichas.jpg' },
+          imagen: { ...urlImagen },
           categoria: {
             allOf: [idObjeto],
             description: 'Identificador de una categoría existente. Si no existe, la API responde 400.',

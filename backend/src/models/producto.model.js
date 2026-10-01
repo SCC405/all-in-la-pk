@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { esUrlHttpSegura } from '../utils/seguridad.js';
 
 export const NOMBRE_PRODUCTO_MAX_LENGTH = 100;
 export const DESCRIPCION_PRODUCTO_MAX_LENGTH = 1000;
@@ -50,6 +51,10 @@ const productoSchema = new mongoose.Schema(
         IMAGEN_MAX_LENGTH,
         `La dirección de la imagen no puede superar los ${IMAGEN_MAX_LENGTH} caracteres.`,
       ],
+      validate: {
+        validator: esUrlHttpSegura,
+        message: 'La dirección de la imagen debe ser una URL válida con http o https.',
+      },
     },
     categoria: {
       type: mongoose.Schema.Types.ObjectId,

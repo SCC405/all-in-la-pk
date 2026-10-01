@@ -120,3 +120,26 @@ Por eso hay dos variables adicionales, solo para texto, que mantienen el tono de
 ```
 
 Los colores de marca originales se siguen usando tal cual para fondos y rellenos.
+
+## Mitigación XSS (HU-18)
+
+Los nombres y descripciones escritos desde el panel se renderizan mediante interpolación JSX.
+React los codifica según el contexto, por lo que una entrada como
+`<script>alert("xss")</script>` aparece literalmente como texto y no crea un elemento `script`.
+El frontend no utiliza puntos de inyección que omitan ese escape.
+
+Las imágenes tienen una barrera adicional: solamente se asignan al atributo `src` las URL
+absolutas con protocolo `http:` o `https:`. Si la API entrega un valor antiguo o inseguro
+(`javascript:`, `data:` o una URL inválida), la tarjeta muestra el marcador de imagen ausente.
+
+La suite automatizada recorre `src/` y falla si se introduce una API que interprete cadenas
+como HTML. También demuestra el escape con un payload que combina `script`, `img` y `onerror`:
+
+```bash
+npm test
+```
+
+Para demostrarlo en la interfaz, registra temporalmente un producto con
+`<script>alert("xss")</script>` como nombre y una imagen HTTPS válida. El catálogo debe mostrar
+la etiqueta literalmente, sin abrir diálogos ni ejecutar código. Una imagen con
+`javascript:alert("xss")` debe ser rechazada por la API.
