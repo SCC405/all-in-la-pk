@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { categoriasServicio } from '../services/categoriasServicio.js';
 import { productosServicio } from '../services/productosServicio.js';
 import {
   FORMULARIO_PRODUCTO_VACIO,
@@ -22,10 +21,12 @@ function idError(campo) {
   return `producto-error-${campo}`;
 }
 
-export default function AdminProductos() {
+// Las categorías llegan desde arriba, no se cargan aquí: así el select refleja
+// al instante lo que se crea o se borra en el panel de categorías, que vive en
+// esta misma página.
+export default function AdminProductos({ categorias = [] }) {
   const [fase, setFase] = useState('cargando');
   const [productos, setProductos] = useState([]);
-  const [categorias, setCategorias] = useState([]);
   const [errorCarga, setErrorCarga] = useState('');
 
   const [formulario, setFormulario] = useState(FORMULARIO_PRODUCTO_VACIO);
@@ -43,11 +44,11 @@ export default function AdminProductos() {
   useEffect(() => {
     let vigente = true;
 
-    Promise.all([productosServicio.listar(), categoriasServicio.listar()])
-      .then(([listaProductos, listaCategorias]) => {
+    productosServicio
+      .listar()
+      .then((listaProductos) => {
         if (!vigente) return;
         setProductos(ordenarProductosPorNombre(listaProductos ?? []));
-        setCategorias(listaCategorias ?? []);
         setFase('listo');
       })
       .catch((error) => {
