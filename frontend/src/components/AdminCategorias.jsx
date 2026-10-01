@@ -7,7 +7,9 @@ function ordenarPorNombre(categorias) {
   return [...categorias].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
 }
 
-export default function AdminCategorias() {
+// `onCategorias` avisa a la página cada vez que la lista cambia, para que el
+// panel de productos vea al instante lo que se crea, renombra o elimina aquí.
+export default function AdminCategorias({ onCategorias }) {
   const [fase, setFase] = useState('cargando');
   const [categorias, setCategorias] = useState([]);
   const [errorCarga, setErrorCarga] = useState('');
@@ -43,6 +45,10 @@ export default function AdminCategorias() {
       vigente = false;
     };
   }, []);
+
+  useEffect(() => {
+    onCategorias?.(categorias);
+  }, [categorias, onCategorias]);
 
   function cambiarCampo(evento) {
     const { name, value } = evento.target;

@@ -59,3 +59,5 @@ desktop.ini
 .github/agents/
 .github/hooks/
 .github/skills/
+.agents/
+.codex/
