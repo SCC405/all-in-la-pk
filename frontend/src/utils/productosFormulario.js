@@ -12,14 +12,19 @@ function convertirNumero(valor) {
 }
 
 export function prepararProducto(formulario) {
-  return {
+  const producto = {
     nombre: formulario.nombre,
     descripcion: formulario.descripcion,
     precio: convertirNumero(formulario.precio),
     stock: convertirNumero(formulario.stock),
     imagen: formulario.imagen,
-    categoria: formulario.categoria,
   };
+
+  if (formulario.categoria) {
+    producto.categoria = formulario.categoria;
+  }
+
+  return producto;
 }
 
 export function productoAFormulario(producto) {

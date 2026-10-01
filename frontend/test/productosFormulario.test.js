@@ -44,6 +44,7 @@ test('conserva campos numéricos vacíos como null para que la API los valide', 
 
   assert.equal(datos.precio, null);
   assert.equal(datos.stock, null);
+  assert.equal('categoria' in datos, false);
 });
 
 test('convierte un producto de la API al formato editable del formulario', () => {
