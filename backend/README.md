@@ -167,12 +167,30 @@ MongoDB devuelva el error `11000`, que el CRUD traduce a una respuesta HTTP en H
 | `descripcion` | String | Opcional, por defecto `''`, máximo 1000 caracteres |
 | `precio` | Number | **Obligatorio**, finito y mayor o igual que cero |
 | `stock` | Number | **Obligatorio**, entero y mayor o igual que cero |
-| `imagen` | String | **Obligatoria**, máximo 2048 caracteres |
+| `imagen` | String | **Obligatoria**, URL absoluta HTTP(S), máximo 2048 caracteres |
 | `categoria` | ObjectId | **Obligatoria**, referencia a `Categoria` |
 | `createdAt` / `updatedAt` | Date | Automáticos (`timestamps`) |
 
 Además de validar el tipo de la referencia, el CRUD comprueba que la categoría exista antes
 de crear un producto o cambiar su asociación.
+
+## Mitigación XSS (HU-18)
+
+El backend conserva los nombres y descripciones como texto. No intenta convertir HTML recibido
+en HTML «limpio»: el escape depende del contexto donde se presenta y React ya codifica esos
+valores al interpolarlos. Así, `<script>alert("xss")</script>` se almacena y se devuelve como una
+cadena literal, nunca como código ejecutable.
+
+Las direcciones de imagen sí se validan en la entrada porque terminan en un atributo `src`. El
+modelo acepta únicamente URL absolutas con protocolo `http:` o `https:` y rechaza esquemas de
+contenido activo como `javascript:` y `data:`. El frontend vuelve a comprobar la URL antes de
+renderizarla como protección para datos antiguos o respuestas externas.
+
+Las pruebas cubren tres controles:
+
+- React codifica las etiquetas y los atributos introducidos como texto.
+- El frontend no contiene puntos de inyección que omitan el escape de React.
+- El modelo y la tarjeta rechazan protocolos de imagen distintos de HTTP(S).
 
 ## Pruebas
 

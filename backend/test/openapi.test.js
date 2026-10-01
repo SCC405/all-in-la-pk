@@ -80,6 +80,14 @@ test('Swagger distingue los cuerpos obligatorios de creación y las actualizacio
   assert.equal(openapi.components.schemas.ProductoActualizacion.required, undefined);
 });
 
+test('Swagger documenta que las imágenes solo admiten URL HTTP o HTTPS', () => {
+  for (const esquema of ['Producto', 'ProductoCampos']) {
+    const imagen = openapi.components.schemas[esquema].properties.imagen;
+    assert.equal(imagen.format, 'uri');
+    assert.equal(imagen.pattern, '^https?://');
+  }
+});
+
 test('cada operación declara resumen, etiqueta y respuestas', () => {
   for (const [ruta, operaciones] of Object.entries(openapi.paths)) {
     for (const [metodo, operacion] of Object.entries(operaciones)) {

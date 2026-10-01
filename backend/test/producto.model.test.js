@@ -94,6 +94,35 @@ test('los textos respetan sus longitudes máximas', () => {
   assert.ok(error.errors.imagen);
 });
 
+test('la imagen solo acepta direcciones absolutas con http o https', () => {
+  assert.equal(
+    productoValido({ imagen: 'http://ejemplo.com/baraja.webp' }).validateSync(),
+    undefined,
+  );
+
+  for (const imagen of [
+    'javascript:alert("xss")',
+    'data:image/svg+xml,<svg onload=alert(1)>',
+    'file:///etc/passwd',
+    'imagen-sin-protocolo.webp',
+  ]) {
+    const error = productoValido({ imagen }).validateSync();
+    assert.equal(
+      error.errors.imagen.message,
+      'La dirección de la imagen debe ser una URL válida con http o https.',
+    );
+  }
+});
+
+test('el contenido con etiquetas se conserva como texto para que React lo escape al mostrarlo', () => {
+  const contenido = '<script>alert("xss")</script>';
+  const producto = productoValido({ nombre: contenido, descripcion: contenido });
+
+  assert.equal(producto.validateSync(), undefined);
+  assert.equal(producto.nombre, contenido);
+  assert.equal(producto.descripcion, contenido);
+});
+
 test('la categoría referencia al modelo Categoria', () => {
   assert.equal(Producto.schema.path('categoria').options.ref, 'Categoria');
   assert.equal(Producto.schema.path('categoria').options.required[0], true);

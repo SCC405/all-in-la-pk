@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { normalizarUrlHttp } from '../utils/seguridad.js';
 
 const formateadorPrecio = new Intl.NumberFormat('es-CO', {
   style: 'currency',
@@ -19,6 +20,7 @@ export default function TarjetaProducto({ producto, onAgregar }) {
   // `categoria` llega resuelta por el backend, pero puede faltar si el producto
   // quedó apuntando a una categoría borrada: la tarjeta no debe romperse por eso.
   const categoria = producto.categoria?.nombre ?? 'Sin categoría';
+  const imagenSegura = normalizarUrlHttp(producto.imagen);
 
   // Nombra el <article> con el título del producto: quien navegue por artículos
   // con un lector de pantalla oye "Tapete verde profesional" y no solo "artículo".
@@ -27,13 +29,13 @@ export default function TarjetaProducto({ producto, onAgregar }) {
   return (
     <article className="producto" aria-labelledby={idNombre}>
       <div className="producto__imagen">
-        {imagenFallida ? (
+        {!imagenSegura || imagenFallida ? (
           <span className="producto__sin-imagen" aria-hidden="true">
             ♠
           </span>
         ) : (
           <img
-            src={producto.imagen}
+            src={imagenSegura}
             alt={producto.nombre}
             loading="lazy"
             onError={() => setImagenFallida(true)}
