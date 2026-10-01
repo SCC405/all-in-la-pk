@@ -1,3 +1,6 @@
+import { Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar.jsx';
+import Admin from './pages/Admin.jsx';
 import Catalogo from './pages/Catalogo.jsx';
 import CarritoResumen from './components/CarritoResumen.jsx';
 
@@ -13,13 +16,18 @@ export default function App() {
               <p className="cabecera__lema">Artículos y accesorios de póker</p>
             </div>
           </div>
-
-          <CarritoResumen />
+          <div className="cabecera__acciones">
+            <Navbar />
+            <CarritoResumen />
+          </div>
         </div>
       </header>
 
       <main className="app__contenido">
-        <Catalogo />
+        <Routes>
+          <Route path="/" element={<Catalogo />} />
+          <Route path="/admin" element={<Admin />} />
+        </Routes>
       </main>
 
       <footer className="pie">
