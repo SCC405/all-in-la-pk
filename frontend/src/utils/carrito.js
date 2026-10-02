@@ -36,6 +36,79 @@ export function agregarProductoAlCarrito(estado, producto) {
   };
 }
 
+export const CANTIDAD_MINIMA = 1;
+
+function buscarItem(estado, productoId) {
+  return estado.items.find((item) => item.producto._id === productoId);
+}
+
+function reemplazarCantidad(estado, productoId, cantidad, mensaje) {
+  return {
+    items: estado.items.map((item) => (
+      item.producto._id === productoId ? { ...item, cantidad } : item
+    )),
+    mensaje,
+  };
+}
+
+export function aumentarCantidad(estado, productoId) {
+  const item = buscarItem(estado, productoId);
+
+  if (!item) return estado;
+
+  // Mismo limite que al agregar: no se puede pedir mas de lo que hay en stock.
+  if (item.cantidad >= item.producto.stock) {
+    return {
+      ...estado,
+      mensaje: `No hay más unidades disponibles de ${item.producto.nombre}.`,
+    };
+  }
+
+  const cantidad = item.cantidad + 1;
+
+  return reemplazarCantidad(
+    estado,
+    productoId,
+    cantidad,
+    `${item.producto.nombre}: ${cantidad} unidades.`,
+  );
+}
+
+export function disminuirCantidad(estado, productoId) {
+  const item = buscarItem(estado, productoId);
+
+  if (!item) return estado;
+
+  // Llegado al minimo no se baja a cero: para quitarlo esta el boton de quitar,
+  // asi nadie elimina un producto del carrito sin querer.
+  if (item.cantidad <= CANTIDAD_MINIMA) {
+    return {
+      ...estado,
+      mensaje: `${item.producto.nombre} ya está en la cantidad mínima. Usa «Quitar» para eliminarlo.`,
+    };
+  }
+
+  const cantidad = item.cantidad - 1;
+
+  return reemplazarCantidad(
+    estado,
+    productoId,
+    cantidad,
+    `${item.producto.nombre}: ${cantidad} ${cantidad === 1 ? 'unidad' : 'unidades'}.`,
+  );
+}
+
+export function eliminarProducto(estado, productoId) {
+  const item = buscarItem(estado, productoId);
+
+  if (!item) return estado;
+
+  return {
+    items: estado.items.filter((otro) => otro.producto._id !== productoId),
+    mensaje: `${item.producto.nombre} se quitó del carrito.`,
+  };
+}
+
 export function contarUnidades(items) {
   return items.reduce((total, item) => total + item.cantidad, 0);
 }
@@ -44,6 +117,12 @@ export function carritoReducer(estado, accion) {
   switch (accion.type) {
     case 'producto/agregado':
       return agregarProductoAlCarrito(estado, accion.producto);
+    case 'cantidad/aumentada':
+      return aumentarCantidad(estado, accion.productoId);
+    case 'cantidad/disminuida':
+      return disminuirCantidad(estado, accion.productoId);
+    case 'producto/eliminado':
+      return eliminarProducto(estado, accion.productoId);
     default:
       return estado;
   }

@@ -93,6 +93,23 @@ Los errores de la API se muestran donde corresponde: los de validación junto al
 provoca, y los generales —nombre repetido (`409`) o categoría con productos asociados (`409`)—
 como aviso del formulario.
 
+## Carrito
+
+Vive en el cliente, sin tocar la API: el estado está en `src/context/CarritoContext.jsx`
+y la lógica pura en `src/utils/carrito.js`, separada para poder probarla sin DOM.
+
+Los productos se guardan como `{ producto, cantidad }`. Desde el panel del carrito se puede
+aumentar, disminuir o quitar cada línea (HU-11):
+
+| Regla | Comportamiento |
+|---|---|
+| Límite superior | No se puede pasar del stock del producto; el botón `+` se deshabilita |
+| Límite inferior | Disminuir se detiene en 1, no baja a cero |
+| Eliminar | Hay un botón «Quitar» aparte, para que nadie borre una línea sin querer al bajar la cantidad |
+
+Cada cambio se anuncia en una región `aria-live`, porque quien usa lector de pantalla no ve
+que el número de al lado cambió.
+
 ## Estilos
 
 Los estilos definitivos se escriben en **SCSS** (RNF-09) en **HU-16**. Por ahora están en CSS
