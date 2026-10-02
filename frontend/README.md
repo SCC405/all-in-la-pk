@@ -110,6 +110,23 @@ aumentar, disminuir o quitar cada línea (HU-11):
 Cada cambio se anuncia en una región `aria-live`, porque quien usa lector de pantalla no ve
 que el número de al lado cambió.
 
+## Validación de formularios (HU-15)
+
+Los formularios del panel validan **en el cliente antes de llamar a la API**
+(`src/utils/validaciones.js`). El servidor sigue siendo la autoridad; esto solo evita el viaje
+de ida y vuelta cuando el error es evidente.
+
+Los mensajes son **literalmente los mismos** que devuelve el esquema de Mongoose, y hay una
+prueba que lo comprueba palabra por palabra. Si divergieran, el administrador vería dos textos
+distintos para el mismo fallo según quién lo detectara.
+
+El resultado tiene la forma `{ campo: mensaje }`, igual que el `detalles` de la API, así que la
+interfaz muestra los errores igual venga de donde venga.
+
+Al enviar con errores, el foco salta al **primer campo que falla en el orden de la pantalla**, y
+el error de un campo desaparece en cuanto se corrige, en vez de quedarse en rojo hasta el
+siguiente envío.
+
 ## Estilos
 
 Los estilos definitivos se escriben en **SCSS** (RNF-09) en **HU-16**. Por ahora están en CSS
