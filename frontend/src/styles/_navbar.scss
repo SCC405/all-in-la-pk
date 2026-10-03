@@ -1,0 +1,96 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+.cabecera {
+  border-bottom: 1px solid rgb(212 175 55 / 25%);
+  background: v.$color-primary-dark;
+
+  &__contenido {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    max-width: v.$content-max-width;
+    margin: 0 auto;
+    padding: 12px v.$spacing-md;
+  }
+
+  &__marca {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__palo {
+    color: v.$color-accent;
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  &__nombre {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  &__lema {
+    margin: 0;
+    color: v.$color-text-secondary;
+    font-size: 13px;
+  }
+
+  // Navegación y carrito comparten el lado derecho de la cabecera.
+  &__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: v.$spacing-sm;
+  }
+}
+
+.navegacion {
+  &__lista {
+    display: flex;
+    gap: v.$spacing-xs;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__enlace {
+    display: flex;
+    align-items: center;
+    min-height: v.$touch-target-min;
+    padding: 0 14px;
+    border-radius: v.$border-radius-sm;
+    color: v.$color-text;
+    font-size: 15px;
+    text-decoration: none;
+
+    &:hover {
+      background: rgb(0 0 0 / 20%);
+      color: v.$color-accent;
+    }
+
+    &--activo {
+      color: v.$color-accent;
+      font-weight: 600;
+      box-shadow: inset 0 -2px 0 v.$color-accent;
+    }
+  }
+}
+
+@include m.respond-to(480px) {
+  .cabecera {
+    &__contenido {
+      align-items: flex-start;
+    }
+
+    &__lema {
+      display: none;
+    }
+  }
+}
+

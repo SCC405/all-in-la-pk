@@ -1,0 +1,74 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+.boton {
+  @include m.interactive-control;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 v.$spacing-md;
+  border: 1px solid transparent;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background-color v.$transition-fast;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--principal {
+    background: v.$color-primary;
+
+    &:hover:not(:disabled) {
+      background: v.$color-primary-dark;
+    }
+  }
+
+  &--peligro {
+    background: v.$color-danger;
+
+    &:hover:not(:disabled) {
+      background: #8f1e18;
+    }
+  }
+
+  &--secundario {
+    border-color: v.$color-text-secondary;
+    background: v.$color-surface;
+
+    &:hover:not(:disabled) {
+      border-color: v.$color-accent;
+      color: v.$color-accent;
+    }
+  }
+}
+
+.producto__agregar {
+  @include m.interactive-control;
+
+  min-width: v.$touch-target-min;
+  margin-top: v.$spacing-sm;
+  padding: 10px 14px;
+  border: 1px solid v.$color-primary;
+  background: v.$color-primary;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    border-color: v.$color-accent;
+    background: v.$color-primary-dark;
+  }
+
+  &:focus-visible {
+    @include m.focus-ring(3px);
+  }
+
+  &:disabled {
+    border-color: v.$color-disabled-border;
+    background: v.$color-disabled;
+    color: v.$color-text-secondary;
+    cursor: not-allowed;
+  }
+}
+

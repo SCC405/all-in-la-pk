@@ -1,0 +1,201 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+.carrito {
+  position: relative;
+
+  &__desplegable {
+    position: relative;
+  }
+
+  &__activador {
+    @include m.interactive-control;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: v.$spacing-sm;
+    min-width: v.$touch-target-min;
+    padding: v.$spacing-sm 12px;
+    border: 1px solid rgb(212 175 55 / 60%);
+    font-weight: 600;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:hover {
+      border-color: v.$color-accent;
+      background: rgb(212 175 55 / 8%);
+    }
+
+    &:focus-visible {
+      @include m.focus-ring(3px);
+    }
+  }
+
+  &__contador {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 0 7px;
+    border-radius: 999px;
+    background: v.$color-accent;
+    color: v.$color-background;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  &__panel {
+    position: absolute;
+    z-index: 10;
+    top: calc(100% + #{v.$spacing-sm});
+    right: 0;
+    width: min(360px, calc(100vw - 32px));
+    padding: v.$spacing-md;
+    border: 1px solid v.$color-border-strong;
+    border-radius: v.$border-radius-md;
+    background: v.$color-surface;
+    box-shadow: 0 12px 32px rgb(0 0 0 / 45%);
+  }
+
+  &__titulo {
+    margin: 0 0 12px;
+    font-size: 18px;
+  }
+
+  &__vacio {
+    margin: 0;
+    color: v.$color-text-secondary;
+    font-size: 14px;
+  }
+
+  &__lista {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: v.$spacing-sm;
+    padding-bottom: 10px;
+    border-bottom: 1px solid v.$color-disabled;
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+  }
+
+  &__nombre {
+    overflow-wrap: anywhere;
+    font-weight: 600;
+  }
+
+  &__datos {
+    display: grid;
+    flex: 1 1 140px;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__subtotal {
+    color: v.$color-accent;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+  }
+
+  &__controles {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__paso {
+    @include m.interactive-control;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: v.$touch-target-min;
+    padding: 0;
+    border: 1px solid v.$color-text-secondary;
+    background: v.$color-background;
+    font-size: 20px;
+    line-height: 1;
+
+    &:hover:not(:disabled) {
+      border-color: v.$color-accent;
+      color: v.$color-accent;
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  &__cantidad {
+    min-width: 2ch;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  &__quitar {
+    @include m.interactive-control;
+
+    display: inline-flex;
+    align-items: center;
+    margin-left: v.$spacing-xs;
+    padding: 0 12px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: v.$color-danger-text;
+    font-size: 14px;
+
+    &:hover {
+      border-color: v.$color-danger-text;
+    }
+  }
+
+  &__total {
+    margin: 12px 0 0;
+    padding-top: 12px;
+    border-top: 1px solid rgb(212 175 55 / 45%);
+
+    > div {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: v.$spacing-md;
+    }
+
+    dt {
+      font-weight: 700;
+    }
+
+    dd {
+      margin: 0;
+      color: v.$color-accent;
+      font-size: 20px;
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+    }
+  }
+}
+
+@include m.respond-to(480px) {
+  .carrito__activador {
+    padding-inline: 10px;
+  }
+}

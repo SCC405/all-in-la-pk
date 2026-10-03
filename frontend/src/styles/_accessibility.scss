@@ -1,0 +1,17 @@
+// Este módulo se carga al final para que sus anulaciones tengan prioridad sobre
+// las transiciones definidas por cada componente.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .producto:hover {
+    transform: none;
+  }
+}
+

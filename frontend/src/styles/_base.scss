@@ -1,0 +1,56 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: v.$color-background;
+  color: v.$color-text;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  &__contenido {
+    flex: 1;
+    width: 100%;
+    max-width: v.$content-max-width;
+    margin: 0 auto;
+    padding: v.$spacing-xl v.$spacing-md;
+  }
+}
+
+.visualmente-oculto {
+  @include m.visually-hidden;
+}
+
+// El contorno predeterminado casi no se distingue sobre el fondo oscuro.
+a,
+button,
+input,
+select,
+textarea {
+  &:focus-visible {
+    @include m.focus-ring;
+  }
+}
+
+.pie {
+  padding: v.$spacing-md;
+  background: v.$color-primary-dark;
+  color: v.$color-text-secondary;
+  font-size: 13px;
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+}

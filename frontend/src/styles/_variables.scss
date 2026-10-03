@@ -1,0 +1,36 @@
+// Paleta oficial de All In La PK.
+$color-background: #0d0d0d;
+$color-surface: #1c1c1c;
+$color-primary: #0f5132;
+$color-primary-dark: #0a3622;
+$color-accent: #d4af37;
+$color-danger: #b3261e;
+$color-text: #f5f5f5;
+$color-text-secondary: #a7a7a7;
+
+// Variantes accesibles para texto sobre superficies oscuras.
+$color-primary-text: #3db273;
+$color-danger-text: #e5534b;
+
+// Colores auxiliares de interfaz.
+$color-border: #2a2a2a;
+$color-border-strong: #3a3a3a;
+$color-disabled: #333;
+$color-disabled-border: #444;
+$color-placeholder: #6f6f6f;
+
+// Forma y espaciado.
+$border-radius-sm: 6px;
+$border-radius-md: 10px;
+$border-radius-lg: 16px;
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// Dimensiones compartidas.
+$content-max-width: 1120px;
+$touch-target-min: 44px;
+$transition-fast: 150ms ease;
+
