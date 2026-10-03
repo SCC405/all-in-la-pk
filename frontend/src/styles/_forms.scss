@@ -1,0 +1,135 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+.filtro-categorias {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(100%, 280px);
+
+  &__etiqueta {
+    color: v.$color-text;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__selector {
+    @include m.interactive-control;
+
+    padding: 8px 36px 8px 12px;
+    border: 1px solid v.$color-text-secondary;
+    background: v.$color-surface;
+
+    &:hover {
+      border-color: v.$color-accent;
+    }
+
+    &:focus-visible {
+      @include m.focus-ring(3px);
+    }
+  }
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: v.$spacing-md;
+  border-radius: v.$border-radius-sm;
+  background: rgb(0 0 0 / 25%);
+
+  &__leyenda {
+    margin: 0;
+    color: v.$color-text-secondary;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  &__error {
+    margin: 0;
+    color: v.$color-danger-text;
+    font-size: 13px;
+  }
+
+  &__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: v.$spacing-sm;
+  }
+
+  &__rejilla {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  &--ancho-completo {
+    grid-column: 1 / -1;
+  }
+
+  &__etiqueta {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  &__control {
+    min-height: v.$touch-target-min;
+    padding: 10px 12px;
+    border: 1px solid v.$color-text-secondary;
+    border-radius: v.$border-radius-sm;
+    background: v.$color-background;
+    color: v.$color-text;
+    font: inherit;
+    font-size: 15px;
+    resize: vertical;
+
+    &::placeholder {
+      color: v.$color-placeholder;
+    }
+
+    &:focus {
+      border-color: v.$color-accent;
+    }
+
+    // La variante clara alcanza 3:1 como borde sobre el fondo del campo.
+    &--error {
+      border-color: v.$color-danger-text;
+    }
+  }
+
+  &__error {
+    margin: 0;
+    color: v.$color-danger-text;
+    font-size: 13px;
+  }
+
+  &__ayuda {
+    margin: 0;
+    color: v.$color-text-secondary;
+    font-size: 12px;
+  }
+}
+
+@include m.respond-to(640px) {
+  .formulario__rejilla {
+    grid-template-columns: 1fr;
+  }
+
+  .campo--ancho-completo {
+    grid-column: auto;
+  }
+}
+
+@include m.respond-to(560px) {
+  .filtro-categorias {
+    width: 100%;
+  }
+}

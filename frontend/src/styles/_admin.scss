@@ -1,0 +1,112 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+.admin {
+  &__titulo {
+    margin: 0 0 v.$spacing-xs;
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  &__intro {
+    margin: 0 0 v.$spacing-lg;
+    color: v.$color-text-secondary;
+  }
+
+  &__paneles {
+    display: grid;
+    gap: v.$spacing-lg;
+  }
+}
+
+.panel {
+  @include m.surface-panel;
+
+  padding: 20px;
+
+  &__titulo {
+    margin: 0 0 v.$spacing-md;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  &__estado {
+    min-height: 1.5em;
+    margin: 12px 0 0;
+    color: v.$color-primary-text;
+    font-size: 14px;
+  }
+}
+
+.lista {
+  margin: v.$spacing-md 0 0;
+  padding: 0;
+  border-top: 1px solid v.$color-border;
+  list-style: none;
+
+  &__fila {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid v.$color-border;
+  }
+
+  &__datos {
+    flex: 1 1 220px;
+  }
+
+  &__nombre {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  &__descripcion {
+    margin: 2px 0 0;
+    color: v.$color-text-secondary;
+    font-size: 13px;
+  }
+
+  &__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: v.$spacing-sm;
+  }
+
+  &__pregunta {
+    color: v.$color-danger-text;
+    font-size: 14px;
+  }
+
+  &--productos &__fila {
+    align-items: flex-start;
+  }
+}
+
+.producto-admin__resumen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$spacing-sm 20px;
+  margin: v.$spacing-sm 0 0;
+
+  div {
+    display: flex;
+    gap: 6px;
+  }
+
+  dt {
+    color: v.$color-text-secondary;
+    font-size: 13px;
+  }
+
+  dd {
+    margin: 0;
+    color: v.$color-accent;
+    font-size: 13px;
+    font-weight: 700;
+  }
+}
+

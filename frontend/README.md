@@ -5,10 +5,9 @@ Consume la API REST del backend; no accede nunca a la base de datos directamente
 
 ## Estado
 
-Inicializado en **HU-07** con React 18 + Vite. El **catálogo público** (HU-08), su **filtro por
-categoría** (HU-09) y la acción de **agregar al carrito** (HU-10) están implementados. Pendiente:
-gestión de cantidades y total del carrito (HU-11 y HU-12), panel administrativo (HU-13 a HU-15)
-y migración de estilos a SCSS (HU-16).
+Inicializado en **HU-07** con React 18 + Vite. El catálogo público, el carrito completo, el panel
+administrativo, las validaciones y la protección frente a XSS están implementados. Los estilos
+se compilan desde módulos SCSS (HU-16).
 
 ## Puesta en marcha
 
@@ -59,11 +58,14 @@ frontend/
 │   ├── styles/
 │   │   ├── _variables.scss
 │   │   ├── _mixins.scss
+│   │   ├── _base.scss
+│   │   ├── _accessibility.scss
 │   │   ├── _buttons.scss
 │   │   ├── _forms.scss
 │   │   ├── _cards.scss
 │   │   ├── _navbar.scss
 │   │   ├── _admin.scss
+│   │   ├── _carrito.scss
 │   │   └── main.scss
 │   ├── App.jsx
 │   └── main.jsx
@@ -132,11 +134,15 @@ Al enviar con errores, el foco salta al **primer campo que falla en el orden de 
 el error de un campo desaparece en cuanto se corrige, en vez de quedarse en rojo hasta el
 siguiente envío.
 
-## Estilos
+## Estilos SCSS (HU-16)
 
-Los estilos definitivos se escriben en **SCSS** (RNF-09) en **HU-16**. Por ahora están en CSS
-plano en `src/styles/base.css`, con los colores de la identidad visual ya declarados como
-variables para que esa migración sea directa.
+Vite compila `src/styles/main.scss`, que ensambla los módulos mediante `@use`. La paleta, los
+espaciados, radios y dimensiones compartidas viven en `_variables.scss`; `_mixins.scss` reúne
+el foco accesible, los paneles, controles táctiles y puntos de quiebre. Los demás parciales
+separan los estilos por responsabilidad y utilizan anidación BEM. El módulo `_accessibility.scss`
+se carga al final para que la preferencia de movimiento reducido prevalezca sobre las transiciones.
+
+La compilación se comprueba con `npm run build`; no se mantiene una copia CSS manual.
 
 ### Colores de texto sobre superficie oscura
 
@@ -153,9 +159,9 @@ oscuro de las tarjetas no alcanza el mínimo de contraste AA de 4,5:1:
 
 Por eso hay dos variables adicionales, solo para texto, que mantienen el tono de marca:
 
-```css
---color-primario-texto: #3DB273;  /* 6,34:1 */
---color-peligro-texto:  #E5534B;  /* 4,60:1 */
+```scss
+$color-primary-text: #3DB273;  // 6,34:1
+$color-danger-text:  #E5534B;  // 4,60:1
 ```
 
 Los colores de marca originales se siguen usando tal cual para fondos y rellenos.
