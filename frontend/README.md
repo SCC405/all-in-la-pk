@@ -110,6 +110,11 @@ aumentar, disminuir o quitar cada línea (HU-11):
 Cada cambio se anuncia en una región `aria-live`, porque quien usa lector de pantalla no ve
 que el número de al lado cambió.
 
+Cada línea muestra su subtotal (`precio × cantidad`) y el pie del panel suma el total completo
+en pesos colombianos (HU-12). Ambos valores se calculan a partir de `items`; no se guardan como
+estado duplicado, de modo que siempre cambian junto con las cantidades y al quitar productos.
+El total actualizado se anuncia mediante `aria-live`.
+
 ## Validación de formularios (HU-15)
 
 Los formularios del panel validan **en el cliente antes de llamar a la API**

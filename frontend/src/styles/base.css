@@ -817,7 +817,22 @@ textarea:focus-visible {
 }
 
 .carrito__nombre {
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
+.carrito__datos {
+  display: grid;
   flex: 1 1 140px;
+  gap: 2px;
+  min-width: 0;
+}
+
+.carrito__subtotal {
+  color: var(--color-acento);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
 }
 
 .carrito__controles {
@@ -877,4 +892,29 @@ textarea:focus-visible {
 
 .carrito__quitar:hover {
   border-color: var(--color-peligro-texto);
+}
+
+.carrito__total {
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid rgb(212 175 55 / 45%);
+}
+
+.carrito__total > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.carrito__total dt {
+  font-weight: 700;
+}
+
+.carrito__total dd {
+  margin: 0;
+  color: var(--color-acento);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
 }
