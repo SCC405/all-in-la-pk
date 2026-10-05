@@ -58,10 +58,11 @@ services:
         generateValue: true
 
   # ---------- Tienda ----------
+  # Los sitios estáticos no llevan `plan`: Render los sirve gratis siempre y
+  # rechaza el blueprint si se le indica uno.
   - type: web
     name: all-in-la-pk-web
     runtime: static
-    plan: free
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
