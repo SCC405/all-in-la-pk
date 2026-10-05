@@ -1,0 +1,82 @@
+# Despliegue de All In La PK en Render (HU-25).
+#
+# Dos servicios independientes, tal como exige RNF-01: el backend es un
+# servicio Node y el frontend un sitio estático. Cada uno con su propia URL.
+#
+# Render emite y renueva el certificado TLS, así que el backend NO necesita
+# HTTPS_KEY_PATH ni HTTPS_CERT_PATH: recibe el tráfico ya descifrado detrás
+# del proxy y solo necesita confiar en él.
+#
+# Para usarlo: en Render, "New" → "Blueprint" y apuntar a este repositorio.
+# Las variables marcadas con sync:false se rellenan a mano en el panel, para
+# que los secretos no queden escritos en el repositorio.
+
+services:
+  # ---------- API REST ----------
+  - type: web
+    name: all-in-la-pk-api
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      # Render asigna el puerto por esta variable; el servidor ya la lee.
+      - key: PORT
+        value: 10000
+
+      # Detrás del proxy de Render. Sin esto, la redirección a HTTPS no sabría
+      # que la petición original ya venía cifrada y entraría en bucle.
+      - key: TRUST_PROXY
+        value: "true"
+
+      # Redirige lo que llegue sin cifrar y envía HSTS. Además hace que la
+      # cookie del token CSRF salga como SameSite=None; Secure, imprescindible
+      # porque el frontend vive en otro dominio.
+      - key: FORZAR_HTTPS
+        value: "true"
+
+      # La URL del sitio estático de abajo, con esquema y SIN barra final.
+      # Se rellena a mano porque fromService devuelve el host sin el "https://",
+      # y aquí el valor tiene que coincidir carácter por carácter con el Origin
+      # que envía el navegador. Ejemplo:
+      #     https://all-in-la-pk-web.onrender.com
+      - key: CORS_ORIGIN
+        sync: false
+
+      # Cadena de conexión de MongoDB Atlas. Debe terminar en /all_in_la_pk.
+      - key: MONGODB_URI
+        sync: false
+
+      # Secreto que firma los tokens CSRF. Render puede generarlo solo.
+      - key: CSRF_SECRET
+        generateValue: true
+
+  # ---------- Tienda ----------
+  - type: web
+    name: all-in-la-pk-web
+    runtime: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      # URL de la API, con esquema y con la ruta /api. También a mano, por lo
+      # mismo que arriba. Ejemplo:
+      #     https://all-in-la-pk-api.onrender.com/api
+      #
+      # Vite la incrusta EN EL MOMENTO DE COMPILAR, no al arrancar: si cambia,
+      # hay que volver a desplegar el frontend; reiniciarlo no sirve de nada.
+      - key: VITE_API_URL
+        sync: false
+    routes:
+      # La aplicación usa rutas del lado del cliente (/ y /admin). Sin esta
+      # regla, entrar directo a /admin o recargar ahí devolvería un 404.
+      - type: rewrite
+        source: /*
+        destination: /index.html

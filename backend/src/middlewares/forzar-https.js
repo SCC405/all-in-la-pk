@@ -1,6 +1,12 @@
 // Un año, que es lo que recomienda OWASP para HSTS.
 const HSTS_MAX_AGE = 31_536_000;
 
+// La comprobación de salud se exime de la redirección. El proveedor de
+// despliegue puede consultarla por dentro, sin pasar por el proxy que añade
+// X-Forwarded-Proto, y entonces recibiría un 308 en vez de un 200 y daría el
+// servicio por caído.
+const RUTAS_EXENTAS = new Set(['/api/health']);
+
 function esSeguro(request) {
   // `request.secure` ya tiene en cuenta X-Forwarded-Proto cuando Express confía
   // en el proxy. Si no confía, solo es true si la conexión es TLS de verdad.
@@ -15,7 +21,7 @@ function esSeguro(request) {
  */
 export function crearForzarHttps({ forzarHttps }) {
   return function forzarHttpsMiddleware(request, response, next) {
-    if (!forzarHttps) {
+    if (!forzarHttps || RUTAS_EXENTAS.has(request.path)) {
       next();
       return;
     }

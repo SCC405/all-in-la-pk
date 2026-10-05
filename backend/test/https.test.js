@@ -77,6 +77,25 @@ test('una petición insegura se redirige con 308, conservando método y ruta', (
   assert.equal(response.registro.destino, 'https://allinlapk.com/api/categorias?pagina=2');
 });
 
+test('la comprobación de salud no se redirige, aunque llegue sin cifrar', () => {
+  const response = dobleDeRespuesta();
+  let siguiente = false;
+
+  // El proveedor de despliegue puede consultarla por dentro, sin pasar por el
+  // proxy que añade X-Forwarded-Proto. Si la redirigiéramos, recibiría un 308
+  // en vez de un 200 y daría el servicio por caído.
+  crearForzarHttps({ forzarHttps: true })(
+    { secure: false, path: '/api/health', headers: { host: 'x' }, originalUrl: '/api/health' },
+    response,
+    () => {
+      siguiente = true;
+    },
+  );
+
+  assert.ok(siguiente, 'debería dejar pasar la comprobación de salud');
+  assert.equal(response.registro.estado, undefined, 'no debería redirigir');
+});
+
 test('sobre HTTPS se anuncia HSTS y se continúa', () => {
   const response = dobleDeRespuesta();
   let siguiente = false;
