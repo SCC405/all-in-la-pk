@@ -198,6 +198,14 @@ Detalle completo en [`docs/All_In_La_PK_Identidad_Visual.md`](docs/All_In_La_PK_
 El backlog vive como **issues** de este repositorio y se organiza en el
 [tablero del proyecto](https://github.com/SCC405/all-in-la-pk/projects).
 
+## ☁️ Despliegue
+
+La aplicación se publica en Render como **dos servicios independientes**: la API como servicio
+Node y la tienda como sitio estático, cada uno con su propia URL y su certificado TLS.
+
+La configuración vive en [`render.yaml`](render.yaml) y los pasos en
+[`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md).
+
 ## 📚 Documentación
 
 | Documento | Contenido |
@@ -207,6 +215,7 @@ El backlog vive como **issues** de este repositorio y se organiza en el
 | [Identidad visual](docs/All_In_La_PK_Identidad_Visual.md) | Paleta, tipografía, componentes y variables SCSS |
 | [Requerimientos](docs/All_In_La_PK_Requerimientos.docx) | RF y RNF consolidados |
 | [Backlogs](docs/All_In_La_PK_Backlogs_Completos.xlsx) | Product Backlog y Sprint Backlogs en hoja de cálculo |
+| [Despliegue](docs/DESPLIEGUE.md) | Cómo publicar la aplicación en Render y por qué está configurada así |
 
 ## 🤝 Cómo trabajamos
 
