@@ -16,9 +16,23 @@
   &__selector {
     @include m.interactive-control;
 
+    appearance: none;
     padding: 8px 36px 8px 12px;
     border: 1px solid v.$color-text-secondary;
-    background: v.$color-surface;
+
+    // Mismo fondo que los campos del panel: antes este usaba la superficie y
+    // los otros el fondo, asi que dos controles de la misma aplicacion se
+    // veian distintos. El documento de identidad pide el fondo para inputs.
+    background-color: v.$color-background;
+
+    // La flecha va dibujada aqui porque `appearance: none` quita la nativa.
+    // Es decorativa: el <select> sigue siendo nativo, con su teclado y su
+    // lista desplegable del sistema.
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" fill="none" stroke="%23d4af37" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1.5 6 6.5 11 1.5"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 12px 8px;
+    transition: border-color v.$transition-fast;
 
     &:hover {
       border-color: v.$color-accent;
@@ -26,6 +40,13 @@
 
     &:focus-visible {
       @include m.focus-ring(3px);
+    }
+
+    // Las opciones las dibuja el sistema operativo; conviene fijarles color
+    // para que no salgan en blanco sobre blanco en algunos navegadores.
+    option {
+      background: v.$color-surface;
+      color: v.$color-text;
     }
   }
 }

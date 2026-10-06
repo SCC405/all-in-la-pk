@@ -13,5 +13,11 @@
   .producto:hover {
     transform: none;
   }
+
+  // Tambien el acercamiento de la foto: la regla de arriba solo anula el
+  // desplazamiento de la tarjeta, no lo que ocurre dentro de ella.
+  .producto:hover .producto__imagen img {
+    transform: none;
+  }
 }
 

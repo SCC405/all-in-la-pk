@@ -27,7 +27,10 @@ export default function TarjetaProducto({ producto, onAgregar }) {
   const idNombre = `producto-${producto._id}`;
 
   return (
-    <article className="producto" aria-labelledby={idNombre}>
+    <article
+      className={`producto${stock.agotado ? ' producto--agotado' : ''}`}
+      aria-labelledby={idNombre}
+    >
       <div className="producto__imagen">
         {!imagenSegura || imagenFallida ? (
           <span className="producto__sin-imagen" aria-hidden="true">

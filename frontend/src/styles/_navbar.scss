@@ -10,10 +10,13 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: v.$spacing-md;
     max-width: v.$content-max-width;
     margin: 0 auto;
-    padding: 12px v.$spacing-md;
+
+    // Con 12px el logo de 32px quedaba pegado a los bordes. Este aire es lo
+    // que separa una cabecera de una barra de herramientas.
+    padding: v.$spacing-md;
   }
 
   &__marca {
