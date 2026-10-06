@@ -216,6 +216,7 @@ La configuración vive en [`render.yaml`](render.yaml) y los pasos en
 | [Requerimientos](docs/All_In_La_PK_Requerimientos.docx) | RF y RNF consolidados |
 | [Backlogs](docs/All_In_La_PK_Backlogs_Completos.xlsx) | Product Backlog y Sprint Backlogs en hoja de cálculo |
 | [Despliegue](docs/DESPLIEGUE.md) | Cómo publicar la aplicación en Render y por qué está configurada así |
+| [Integración](docs/INTEGRACION.md) | Evidencia de HU-21: catálogo, carrito, panel y CRUD contra producción |
 
 ## 🤝 Cómo trabajamos
 
