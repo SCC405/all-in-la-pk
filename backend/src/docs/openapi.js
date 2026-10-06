@@ -38,6 +38,11 @@ const respuestaError = (descripcion, ejemplo) => ({
   },
 });
 
+// Desde HU-28 toda operación que modifica datos exige sesión de administrador.
+const ERROR_SESION = respuestaError('No hay sesión de administrador.', {
+  error: 'Necesitas iniciar sesión para esta operación. Entra en POST /api/sesion.',
+});
+
 const ERROR_ID = respuestaError('El identificador de la URL no tiene forma de ObjectId.', {
   error: 'El identificador recibido no es válido',
 });
@@ -118,6 +123,76 @@ export const openapi = {
       },
     },
 
+    '/sesion': {
+      get: {
+        tags: ['Sistema'],
+        summary: 'Consultar si hay sesión de administrador',
+        description: [
+          'El frontend la consulta al arrancar para saber si debe mostrar el panel.',
+          '',
+          'Responde `200` siempre: la ausencia de sesión no es un error.',
+        ].join('\n'),
+        responses: {
+          200: {
+            description: 'Estado de la sesión.',
+            content: {
+              'application/json': {
+                examples: {
+                  'Sin sesión': { value: { activa: false } },
+                  'Con sesión': { value: { activa: true, usuario: 'admin' } },
+                },
+              },
+            },
+          },
+        },
+      },
+      post: {
+        tags: ['Sistema'],
+        summary: 'Iniciar sesión como administrador',
+        description: [
+          'Comprueba las credenciales y, si son correctas, deja el token de sesión en una',
+          'cookie `httpOnly` llamada `sesion`.',
+          '',
+          'La contraseña se compara contra un hash `scrypt`: el servidor no la guarda en claro.',
+          'También necesita el token CSRF, porque un formulario de inicio de sesión es tan',
+          'falsificable como cualquier otro.',
+        ].join('\n'),
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['usuario', 'password'],
+                properties: {
+                  usuario: { type: 'string', example: 'admin' },
+                  password: { type: 'string', format: 'password' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'Sesión abierta. La cookie viaja en `Set-Cookie`.',
+            content: { 'application/json': { example: { usuario: 'admin' } } },
+          },
+          401: respuestaError(
+            'Credenciales incorrectas, o el servidor no tiene administrador configurado.',
+            { error: 'Credenciales incorrectas' },
+          ),
+        },
+      },
+      delete: {
+        tags: ['Sistema'],
+        summary: 'Cerrar la sesión',
+        description: 'Borra la cookie de sesión. Responde `204` aunque no hubiera sesión abierta.',
+        responses: {
+          204: { description: 'Sesión cerrada.' },
+        },
+      },
+    },
+
     '/categorias': {
       get: {
         tags: ['Categorías'],
@@ -153,6 +228,7 @@ export const openapi = {
               'application/json': { schema: { $ref: '#/components/schemas/Categoria' } },
             },
           },
+          401: ERROR_SESION,
           400: respuestaError('Faltan campos obligatorios o no cumplen las reglas.', {
             error: 'Datos no válidos',
             detalles: { nombre: 'El nombre de la categoría es obligatorio.' },
@@ -180,6 +256,7 @@ export const openapi = {
           },
         },
         responses: {
+          401: ERROR_SESION,
           200: {
             description: 'Categoría actualizada.',
             content: {
@@ -202,6 +279,7 @@ export const openapi = {
           'Solo se puede eliminar una categoría que no tenga productos asociados. Así ningún producto queda apuntando a una categoría inexistente.',
         parameters: [parametroId('la categoría')],
         responses: {
+          401: ERROR_SESION,
           204: { description: 'Categoría eliminada. No devuelve cuerpo.' },
           400: ERROR_ID,
           404: respuestaError('No existe una categoría con ese identificador.', {
@@ -258,6 +336,7 @@ export const openapi = {
               'application/json': { schema: { $ref: '#/components/schemas/Producto' } },
             },
           },
+          401: ERROR_SESION,
           400: respuestaError(
             'Faltan campos obligatorios, no cumplen las reglas, o la categoría indicada no existe.',
             { error: 'La categoría indicada no existe' },
@@ -305,6 +384,7 @@ export const openapi = {
               'application/json': { schema: { $ref: '#/components/schemas/Producto' } },
             },
           },
+          401: ERROR_SESION,
           400: respuestaError('Datos no válidos, identificador mal formado o categoría inexistente.', {
             error: 'Datos no válidos',
             detalles: { stock: 'El stock debe ser un número entero.' },
@@ -319,6 +399,7 @@ export const openapi = {
         summary: 'Eliminar un producto',
         parameters: [parametroId('el producto')],
         responses: {
+          401: ERROR_SESION,
           204: { description: 'Producto eliminado. No devuelve cuerpo.' },
           400: ERROR_ID,
           404: respuestaError('No existe un producto con ese identificador.', {

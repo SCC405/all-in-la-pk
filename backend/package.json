@@ -11,6 +11,7 @@
     "test": "node --test --test-concurrency=1",
     "check": "node scripts/check.mjs",
     "sembrar": "node scripts/sembrar.mjs",
+    "hash-admin": "node scripts/generar-hash-admin.mjs",
     "certificados": "node scripts/generar-certificados.mjs"
   },
   "engines": {
