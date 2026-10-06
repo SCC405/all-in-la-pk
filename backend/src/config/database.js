@@ -2,6 +2,32 @@ import mongoose from 'mongoose';
 
 const CONNECTION_TIMEOUT_MS = 10_000;
 
+// Clasifica el fallo para poder diagnosticarlo sin exponer la cadena de
+// conexión. Decir solo "no fue posible conectar" obliga a adivinar entre
+// causas muy distintas; esto nombra la causa sin repetir nada del error
+// original, que sí puede contener usuario y contraseña.
+function pistaSegura(error) {
+  const nombre = error?.name ?? '';
+  const codigo = error?.code;
+  const texto = String(error?.message ?? '');
+
+  if (nombre === 'MongoParseError') {
+    return 'La cadena de conexión está mal formada. Revisa el formato de MONGODB_URI.';
+  }
+
+  if (codigo === 8000 || codigo === 18 || /bad auth|authentication failed/i.test(texto)) {
+    return 'El servidor rechazó las credenciales. Revisa el usuario y la contraseña, ' +
+      'y que los caracteres especiales de la contraseña estén codificados.';
+  }
+
+  if (nombre === 'MongooseServerSelectionError') {
+    return 'No se pudo alcanzar el clúster. Revisa que la lista de IP permitidas incluya ' +
+      'el servidor y que el clúster no esté pausado.';
+  }
+
+  return 'Verifica MONGODB_URI y la disponibilidad del servicio.';
+}
+
 export async function connectDatabase(uri) {
   const connectionString = uri?.trim();
 
@@ -19,7 +45,7 @@ export async function connectDatabase(uri) {
     return mongoose.connection;
   } catch (error) {
     throw new Error(
-      'No fue posible conectar con MongoDB. Verifica MONGODB_URI y la disponibilidad del servicio.',
+      `No fue posible conectar con MongoDB. ${pistaSegura(error)}`,
       { cause: error },
     );
   }
