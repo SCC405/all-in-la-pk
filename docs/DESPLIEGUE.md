@@ -1,7 +1,7 @@
 # Despliegue de All In La PK
 
 Guía para publicar la aplicación en Render, de modo que cualquiera pueda usarla sin
-depender del computador de Nicolay ni de Chifu (RNF-15 y RNF-16).
+depender de los computadores de Nicolay Baquero y Santiago Cifuentes (RNF-15 y RNF-16).
 
 ## Qué se despliega
 
@@ -105,8 +105,8 @@ desarrollo:   XSRF-TOKEN=…; Path=/; SameSite=Lax
 
 ### La comprobación de salud está exenta de la redirección
 
-El proveedor puede consultar `/api/health` por dentro, sin pasar por el proxy. Si la
-redirigiéramos recibiría un `308` en lugar de un `200` y daría el servicio por caído.
+El proveedor puede consultar `/api/health` por dentro, sin pasar por el proxy. La excepción
+mantiene una respuesta directa `200`, sin obligar al monitor a seguir una redirección `308`.
 
 Se detectó simulando la configuración de producción en local antes de desplegar; hay una
 prueba que lo fija.

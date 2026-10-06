@@ -46,7 +46,7 @@ sin recargar la página. El resumen muestra el nombre de cada producto y las uni
 Los productos agotados no pueden agregarse. Los botones y el activador del carrito tienen un área
 mínima de 44 px, foco visible y mensajes anunciados mediante una región `aria-live`.
 
-## Estructura prevista
+## Estructura actual
 
 ```
 frontend/
@@ -74,13 +74,13 @@ frontend/
 └── package.json
 ```
 
-## Vistas previstas
+## Vistas
 
 | Ruta | Vista | Estado |
 |---|---|---|
 | `/` | Catálogo con filtro por categoría | Implementada (HU-08, HU-09) |
 | `/admin` | Administración: CRUD de categorías y productos | Implementada (HU-13, HU-14) |
-| _por definir_ | Carrito con cantidades y total | HU-10 a HU-12 |
+| Componente global | Carrito con cantidades y total | Implementado (HU-10 a HU-12) |
 
 La navegación usa **react-router-dom**, así que cada vista tiene su propia URL y se puede
 enlazar directamente — útil para la sustentación.
@@ -188,3 +188,6 @@ Para demostrarlo en la interfaz, registra temporalmente un producto con
 `<script>alert("xss")</script>` como nombre y una imagen HTTPS válida. El catálogo debe mostrar
 la etiqueta literalmente, sin abrir diálogos ni ejecutar código. Una imagen con
 `javascript:alert("xss")` debe ser rechazada por la API.
+
+La visión completa de arquitectura, instalación y operación está en
+[`docs/DOCUMENTACION_TECNICA.md`](../docs/DOCUMENTACION_TECNICA.md).

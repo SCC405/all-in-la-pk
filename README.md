@@ -210,6 +210,7 @@ La configuración vive en [`render.yaml`](render.yaml) y los pasos en
 
 | Documento | Contenido |
 |---|---|
+| [Documentación técnica](docs/DOCUMENTACION_TECNICA.md) | Arquitectura, frontend, backend, base de datos, instalación, ejecución y Swagger |
 | [Proyecto completo](docs/All_In_La_PK_Proyecto_Completo.md) | Descripción, objetivos, alcance, requerimientos, product backlog y las 27 historias de usuario |
 | [Tecnologías](docs/All_In_La_PK_Tecnologias.md) | Stack, arquitectura, flujo de trabajo Git y herramientas |
 | [Identidad visual](docs/All_In_La_PK_Identidad_Visual.md) | Paleta, tipografía, componentes y variables SCSS |
