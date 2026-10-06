@@ -4,8 +4,11 @@
 .admin {
   &__titulo {
     margin: 0;
-    font-size: 30px;
-    font-weight: 500;
+    // La identidad visual pide 32-40px para el título principal (sección 13).
+    // El peso se queda en 600 y no en Bold porque la dirección de este PR
+    // rebaja los pesos; subirlo a 700 es una línea si se prefiere.
+    font-size: 34px;
+    font-weight: 600;
     letter-spacing: -0.01em;
 
     // Mismo filete que el catálogo: las dos pantallas se abren igual.
