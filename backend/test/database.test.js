@@ -40,3 +40,33 @@ test('un fallo de MongoDB devuelve un mensaje controlado sin exponer la URI', as
     return true;
   });
 });
+
+test('un fallo de autenticación lo dice, sin repetir nada del error original', async (context) => {
+  const uri = 'mongodb://usuario:clave-secreta@localhost:27017/all_in_la_pk';
+  const fallo = Object.assign(new Error(`bad auth : authentication failed para ${uri}`), { code: 8000 });
+
+  context.mock.method(mongoose, 'connect', async () => {
+    throw fallo;
+  });
+
+  await assert.rejects(connectDatabase(uri), (error) => {
+    assert.match(error.message, /rechazó las credenciales/);
+    assert.doesNotMatch(error.message, /clave-secreta/);
+    return true;
+  });
+});
+
+test('un clúster inalcanzable apunta a la lista de IP permitidas', async (context) => {
+  const fallo = Object.assign(new Error('could not connect to any servers'), {
+    name: 'MongooseServerSelectionError',
+  });
+
+  context.mock.method(mongoose, 'connect', async () => {
+    throw fallo;
+  });
+
+  await assert.rejects(connectDatabase('mongodb://host/all_in_la_pk'), (error) => {
+    assert.match(error.message, /lista de IP permitidas|clúster no esté pausado/);
+    return true;
+  });
+});
