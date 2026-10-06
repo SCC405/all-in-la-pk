@@ -20,6 +20,15 @@ function pistaSegura(error) {
       'y que los caracteres especiales de la contraseña estén codificados.';
   }
 
+  // Las cadenas mongodb+srv necesitan una consulta DNS de tipo SRV, que
+  // algunas redes bloquean. El fallo ocurre antes de llegar al servidor, asi
+  // que no tiene nada que ver con las credenciales.
+  if (['ECONNREFUSED', 'ENOTFOUND', 'EAI_AGAIN', 'ETIMEDOUT'].includes(codigo) && /querySrv/i.test(texto)) {
+    return 'La red no pudo resolver la dirección del clúster (consulta DNS de tipo SRV). ' +
+      'Suele ocurrir en redes que filtran ese tipo de consulta; prueba desde otra red o ' +
+      'usa la cadena de conexión larga que ofrece Atlas.';
+  }
+
   if (nombre === 'MongooseServerSelectionError') {
     return 'No se pudo alcanzar el clúster. Revisa que la lista de IP permitidas incluya ' +
       'el servidor y que el clúster no esté pausado.';
