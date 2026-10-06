@@ -7,40 +7,49 @@
     align-items: flex-end;
     justify-content: space-between;
     gap: v.$spacing-md;
-    margin-bottom: v.$spacing-lg;
-    padding-bottom: 12px;
-    border-bottom: 1px solid v.$color-border;
+    margin-bottom: 36px;
   }
 
   &__titulo {
     margin: 0;
     font-size: 30px;
-    font-weight: 600;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+
+    // Filete corto en vez de una línea divisoria a todo el ancho: marca la
+    // página sin convertir el dorado en el color dominante.
+    &::after {
+      display: block;
+      width: 40px;
+      height: 2px;
+      margin-top: 12px;
+      background: v.$color-accent;
+      content: '';
+    }
   }
 
   &__conteo {
-    margin: 0;
+    margin: 10px 0 0;
     color: v.$color-text-secondary;
     font-size: 14px;
+    font-variant-numeric: tabular-nums;
   }
 
   &__rejilla {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 44px 24px;
   }
 }
 
+// El producto se apoya en el aire y en la alineación, no en un marco: sin
+// borde, sin fondo y sin esquinas redondeadas, el color lo pone la foto.
 .producto {
-  @include m.surface-panel;
-
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  transition: border-color v.$transition-fast, transform v.$transition-fast;
+  transition: transform v.$transition-fast;
 
   &:hover {
-    border-color: v.$color-accent;
     transform: translateY(-2px);
   }
 
@@ -48,15 +57,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
-    background: v.$color-background;
+    background: v.$color-surface;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: opacity v.$transition-fast;
     }
+  }
+
+  &:hover &__imagen img {
+    opacity: 0.88;
+  }
+
+  // El agotado se cuenta en la foto. El texto y su etiqueta de lector de
+  // pantalla se quedan como están: esto solo añade una señal visual.
+  &:has(.producto__stock--agotado) .producto__imagen {
+    opacity: 0.45;
+    filter: grayscale(1);
   }
 
   &__sin-imagen {
@@ -68,24 +89,26 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 6px;
-    padding: 14px;
+    gap: 4px;
+    padding: 14px 0 0;
   }
 
   &__categoria {
-    margin: 0;
+    margin: 0 0 2px;
     color: v.$color-primary-text;
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
+  // Una sola talla y un solo peso en toda la rejilla: el nombre no compite con
+  // la descripción, y el precio solo se distingue por el acento.
   &__nombre {
     margin: 0;
-    font-size: 17px;
-    font-weight: 600;
-    line-height: 1.3;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.35;
   }
 
   &__descripcion {
@@ -93,7 +116,8 @@
     margin: 0;
     overflow: hidden;
     color: v.$color-text-secondary;
-    font-size: 13px;
+    font-size: 15px;
+    line-height: 1.35;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -105,36 +129,35 @@
     justify-content: space-between;
     gap: v.$spacing-sm;
     margin-top: auto;
-    padding-top: 10px;
+    padding-top: 12px;
   }
 
   &__precio {
     margin: 0;
     color: v.$color-accent;
-    font-size: 19px;
-    font-weight: 700;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
   }
 
   &__stock {
     margin: 0;
     color: v.$color-text-secondary;
-    font-size: 12px;
+    font-size: 13px;
 
     &--agotado {
       color: v.$color-danger-text;
-      font-weight: 600;
     }
   }
 }
 
 .aviso {
   padding: 20px;
-  border-left: 4px solid v.$color-text-secondary;
-  border-radius: v.$border-radius-md;
+  border-left: 2px solid v.$color-text-secondary;
   background: v.$color-surface;
 
   &--error {
-    border-left-color: v.$color-danger;
+    border-left-color: v.$color-danger-text;
   }
 
   &--advertencia {
@@ -160,4 +183,3 @@
     flex-direction: column;
   }
 }
-
