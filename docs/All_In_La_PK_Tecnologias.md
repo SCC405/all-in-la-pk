@@ -527,8 +527,8 @@ Postman
 Swagger
 
 DESPLIEGUE
-Frontend: por definir
-Backend: por definir
+Frontend: Render — https://all-in-la-pk-web.onrender.com
+Backend: Render — https://all-in-la-pk-api.onrender.com
 Base de datos: MongoDB Atlas
 ```
 

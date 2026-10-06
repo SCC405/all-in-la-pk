@@ -5,7 +5,8 @@ No renderiza vistas: únicamente recibe solicitudes, procesa la lógica y devuel
 
 ## Estado
 
-Backend implementado hasta **HU-05 — CRUD REST de productos**.
+Backend integrado y desplegado. Incluye el CRUD REST, documentación OpenAPI, validación,
+protección CSRF, mitigación XSS y soporte HTTPS directo o detrás de un proxy.
 
 - Servidor Express con respuestas JSON.
 - Configuración mediante variables de entorno.
@@ -15,7 +16,7 @@ Backend implementado hasta **HU-05 — CRUD REST de productos**.
 - CRUD REST de categorías y productos.
 - Pruebas automáticas con el módulo de pruebas de Node.js.
 
-## Estructura prevista
+## Estructura actual
 
 ```
 backend/
@@ -50,6 +51,8 @@ npm run dev     # desarrollo con recarga automática
 npm start       # ejecución normal
 npm test        # pruebas automáticas
 npm run check   # validación de sintaxis
+npm run sembrar # datos de demostración
+npm run certificados # certificados autofirmados para HTTPS local
 ```
 
 ## Endpoints
@@ -319,3 +322,17 @@ comprobando la versión negociada.
 ## Variables de entorno
 
 Copia `.env.example` a `.env` y completa los valores. **`.env` nunca se sube al repositorio.**
+
+| Variable | Propósito |
+|---|---|
+| `PORT` | Puerto del servidor; por defecto `4000`. |
+| `MONGODB_URI` | Cadena de conexión con nombre de base; obligatoria. |
+| `NODE_ENV` | Entorno `development` o `production`. |
+| `CORS_ORIGIN` | Origen exacto autorizado para el frontend. |
+| `CSRF_SECRET` | Secreto estable para firmar tokens CSRF. |
+| `HTTPS_KEY_PATH` / `HTTPS_CERT_PATH` | Pareja de archivos para HTTPS servido por Express. |
+| `TRUST_PROXY` | Confianza en el proxy de producción. |
+| `FORZAR_HTTPS` | Redirección, HSTS y cookie segura. |
+
+La visión completa de arquitectura, instalación y operación está en
+[`docs/DOCUMENTACION_TECNICA.md`](../docs/DOCUMENTACION_TECNICA.md).
