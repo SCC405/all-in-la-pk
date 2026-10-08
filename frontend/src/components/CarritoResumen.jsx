@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useCarrito } from '../context/CarritoContext.jsx';
 import { calcularSubtotal, CANTIDAD_MINIMA } from '../utils/carrito.js';
 
@@ -38,9 +38,52 @@ export default function CarritoResumen() {
     return () => clearTimeout(temporizador);
   }, [totalUnidades]);
 
+  const desplegable = useRef(null);
+  const { pathname } = useLocation();
+
+  const cerrar = useCallback(() => {
+    if (desplegable.current) desplegable.current.open = false;
+  }, []);
+
+  // Al cambiar de página se cierra. Sobre todo al pulsar «Comprar»: el panel
+  // se quedaba abierto encima del resumen de compra, tapando justo lo que se
+  // acaba de ir a mirar.
+  useEffect(() => {
+    cerrar();
+  }, [cerrar, pathname]);
+
+  // Y se cierra como se espera de cualquier desplegable: pulsando fuera o con
+  // Escape. <details> no hace ninguna de las dos por su cuenta.
+  useEffect(() => {
+    function alPulsarFuera(evento) {
+      if (!desplegable.current?.open) return;
+      if (desplegable.current.contains(evento.target)) return;
+      cerrar();
+    }
+
+    function alPulsarTecla(evento) {
+      if (evento.key !== 'Escape' || !desplegable.current?.open) return;
+
+      cerrar();
+      // El foco vuelve al activador: si no, quien cierra con teclado lo pierde
+      // y tiene que recorrer la cabecera otra vez.
+      desplegable.current.querySelector('summary')?.focus();
+    }
+
+    // `pointerdown` y no `click`: así cierra en cuanto se pulsa, antes de que
+    // el clic llegue a lo que haya debajo.
+    document.addEventListener('pointerdown', alPulsarFuera);
+    document.addEventListener('keydown', alPulsarTecla);
+
+    return () => {
+      document.removeEventListener('pointerdown', alPulsarFuera);
+      document.removeEventListener('keydown', alPulsarTecla);
+    };
+  }, [cerrar]);
+
   return (
     <div className="carrito">
-      <details className="carrito__desplegable">
+      <details className="carrito__desplegable" ref={desplegable}>
         <summary className="carrito__activador">
           <span aria-hidden="true">♣</span>
           Carrito
