@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useCarrito } from '../context/CarritoContext.jsx';
 import { calcularSubtotal, CANTIDAD_MINIMA } from '../utils/carrito.js';
 
@@ -112,6 +113,12 @@ export default function CarritoResumen() {
                   </dd>
                 </div>
               </dl>
+
+              <p className="carrito__comprar">
+                <Link className="boton boton--principal" to="/compra">
+                  Comprar
+                </Link>
+              </p>
             </>
           )}
         </section>

@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Admin from './pages/Admin.jsx';
 import Catalogo from './pages/Catalogo.jsx';
+import Compra from './pages/Compra.jsx';
+import CompraConfirmada from './pages/CompraConfirmada.jsx';
 import CarritoResumen from './components/CarritoResumen.jsx';
 
 export default function App() {
@@ -26,6 +28,8 @@ export default function App() {
       <main className="app__contenido">
         <Routes>
           <Route path="/" element={<Catalogo />} />
+          <Route path="/compra" element={<Compra />} />
+          <Route path="/compra/confirmacion" element={<CompraConfirmada />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
       </main>

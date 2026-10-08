@@ -27,6 +27,10 @@ export function CarritoProvider({ children }) {
     dispatch({ type: 'producto/eliminado', productoId });
   }, []);
 
+  const vaciarCarrito = useCallback(() => {
+    dispatch({ type: 'carrito/vaciado' });
+  }, []);
+
   const valor = useMemo(() => ({
     items: estado.items,
     mensaje: estado.mensaje,
@@ -36,6 +40,7 @@ export function CarritoProvider({ children }) {
     aumentarCantidad,
     disminuirCantidad,
     eliminarProducto,
+    vaciarCarrito,
   }), [
     agregarProducto,
     aumentarCantidad,
@@ -43,6 +48,7 @@ export function CarritoProvider({ children }) {
     eliminarProducto,
     estado.items,
     estado.mensaje,
+    vaciarCarrito,
   ]);
 
   return (

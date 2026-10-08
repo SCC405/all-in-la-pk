@@ -109,6 +109,12 @@ export function eliminarProducto(estado, productoId) {
   };
 }
 
+// Se vacia al confirmar la compra (HU-33). Sin mensaje: la confirmacion ya
+// ocupa toda la pantalla y anunciar ademas "se vacio el carrito" sobra.
+export function vaciarCarrito() {
+  return { items: [], mensaje: '' };
+}
+
 export function contarUnidades(items) {
   return items.reduce((total, item) => total + item.cantidad, 0);
 }
@@ -131,6 +137,8 @@ export function carritoReducer(estado, accion) {
       return disminuirCantidad(estado, accion.productoId);
     case 'producto/eliminado':
       return eliminarProducto(estado, accion.productoId);
+    case 'carrito/vaciado':
+      return vaciarCarrito();
     default:
       return estado;
   }
