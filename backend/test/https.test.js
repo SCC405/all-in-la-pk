@@ -82,8 +82,8 @@ test('la comprobación de salud no se redirige, aunque llegue sin cifrar', () =>
   let siguiente = false;
 
   // El proveedor de despliegue puede consultarla por dentro, sin pasar por el
-  // proxy que añade X-Forwarded-Proto. Si la redirigiéramos, recibiría un 308
-  // en vez de un 200 y daría el servicio por caído.
+  // proxy que añade X-Forwarded-Proto. Con un 308 la comprobación pasaría sin
+  // haber tocado la aplicación: verificaría el redirector, no la API.
   crearForzarHttps({ forzarHttps: true })(
     { secure: false, path: '/api/health', headers: { host: 'x' }, originalUrl: '/api/health' },
     response,
@@ -94,6 +94,29 @@ test('la comprobación de salud no se redirige, aunque llegue sin cifrar', () =>
 
   assert.ok(siguiente, 'debería dejar pasar la comprobación de salud');
   assert.equal(response.registro.estado, undefined, 'no debería redirigir');
+});
+
+test('la comprobación de salud sí recibe HSTS cuando llega cifrada', () => {
+  const response = dobleDeRespuesta();
+  let siguiente = false;
+
+  // La exención se salta la redirección, no la cabecera. Sin esto /api/health
+  // era la única ruta de la API que respondía sin HSTS, y HU-20 se quedaba sin
+  // poder usarla como evidencia.
+  crearForzarHttps({ forzarHttps: true })(
+    { secure: true, path: '/api/health', headers: { host: 'x' }, originalUrl: '/api/health' },
+    response,
+    () => {
+      siguiente = true;
+    },
+  );
+
+  assert.ok(siguiente);
+  assert.equal(response.registro.estado, undefined, 'no debería redirigir');
+  assert.equal(
+    response.registro.cabeceras['Strict-Transport-Security'],
+    `max-age=${HSTS_MAX_AGE}; includeSubDomains`,
+  );
 });
 
 test('sobre HTTPS se anuncia HSTS y se continúa', () => {
