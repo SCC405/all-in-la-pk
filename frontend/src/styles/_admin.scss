@@ -3,45 +3,59 @@
 
 .admin {
   &__titulo {
-    margin: 0 0 v.$spacing-xs;
-    font-size: 30px;
+    margin: 0;
+    // La identidad visual pide 32-40px para el título principal (sección 13).
+    // El peso se queda en 600 y no en Bold porque la dirección de este PR
+    // rebaja los pesos; subirlo a 700 es una línea si se prefiere.
+    font-size: 34px;
     font-weight: 600;
+    letter-spacing: -0.01em;
+
+    // Mismo filete que el catálogo: las dos pantallas se abren igual.
+    &::after {
+      display: block;
+      width: 40px;
+      height: 2px;
+      margin-top: 12px;
+      background: v.$color-accent;
+      content: '';
+    }
   }
 
   &__intro {
-    margin: 0 0 v.$spacing-lg;
+    margin: 10px 0 36px;
     color: v.$color-text-secondary;
   }
 
   &__paneles {
     display: grid;
-    gap: v.$spacing-lg;
+    gap: 40px;
   }
 }
 
 .panel {
   @include m.surface-panel;
 
-  padding: 20px;
+  padding: 28px;
 
   &__titulo {
-    margin: 0 0 v.$spacing-md;
-    font-size: 22px;
-    font-weight: 600;
+    margin: 0 0 v.$spacing-lg;
+    font-size: 20px;
+    font-weight: 500;
   }
 
   &__estado {
     min-height: 1.5em;
-    margin: 12px 0 0;
+    margin: 14px 0 0;
     color: v.$color-primary-text;
     font-size: 14px;
   }
 }
 
 .lista {
-  margin: v.$spacing-md 0 0;
+  // El borde superior lo pone ya la regla inferior del formulario.
+  margin: v.$spacing-sm 0 0;
   padding: 0;
-  border-top: 1px solid v.$color-border;
   list-style: none;
 
   &__fila {
@@ -50,8 +64,14 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 12px 0;
+    padding: 16px 12px;
     border-bottom: 1px solid v.$color-border;
+    margin-inline: -12px;
+    transition: background-color v.$transition-fast;
+
+    &:hover {
+      background: rgb(255 255 255 / 3%);
+    }
   }
 
   &__datos {
@@ -84,6 +104,20 @@
   &--productos &__fila {
     align-items: flex-start;
   }
+
+  // En reposo «Eliminar» solo ofrece la acción, así que no necesita el rojo
+  // relleno: seis filas lo convertían en un muro. El relleno se reserva para
+  // «Sí, eliminar», que vive en el bloque con role="group" y sí borra.
+  &__acciones:not([role]) .boton--peligro {
+    border-color: transparent;
+    background: transparent;
+    color: v.$color-danger-text;
+
+    &:hover:not(:disabled) {
+      border-color: v.$color-danger-text;
+      background: transparent;
+    }
+  }
 }
 
 .producto-admin__resumen {
@@ -104,9 +138,27 @@
 
   dd {
     margin: 0;
-    color: v.$color-accent;
+    color: v.$color-text;
     font-size: 13px;
-    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  // Solo el precio lleva el acento: en una lista larga, dorar también el stock
+  // hacía que el dorado dejara de destacar nada.
+  div:first-child dd {
+    color: v.$color-accent;
   }
 }
 
+@include m.respond-to(560px) {
+  // En pantallas estrechas 28px de relleno se comen el ancho util del panel.
+  .panel {
+    padding: 20px 16px;
+  }
+
+  .lista__fila {
+    margin-inline: -8px;
+    padding-inline: 8px;
+  }
+}

@@ -17,8 +17,8 @@
     @include m.interactive-control;
 
     padding: 8px 36px 8px 12px;
-    border: 1px solid v.$color-text-secondary;
-    background: v.$color-surface;
+    border: 1px solid v.$color-border-control;
+    background: transparent;
 
     &:hover {
       border-color: v.$color-accent;
@@ -30,13 +30,21 @@
   }
 }
 
+// Sin fondo propio: una caja dentro de otra caja añadía cromo y dejaba un hueco
+// muerto a la derecha del panel. Basta una regla para separarla de la lista.
 .formulario {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: v.$spacing-md;
-  border-radius: v.$border-radius-sm;
-  background: rgb(0 0 0 / 25%);
+  gap: 16px;
+  max-width: 54rem;
+  padding: 0 0 v.$spacing-lg;
+  border-bottom: 1px solid v.$color-border;
+
+  // Un campo suelto no necesita todo el ancho del panel: con una medida corta
+  // se lee mejor y el formulario deja de parecer un trámite.
+  > .campo {
+    max-width: 34rem;
+  }
 
   &__leyenda {
     margin: 0;
@@ -83,7 +91,7 @@
   &__control {
     min-height: v.$touch-target-min;
     padding: 10px 12px;
-    border: 1px solid v.$color-text-secondary;
+    border: 1px solid v.$color-border-control;
     border-radius: v.$border-radius-sm;
     background: v.$color-background;
     color: v.$color-text;
