@@ -105,11 +105,21 @@ desarrollo:   XSRF-TOKEN=…; Path=/; SameSite=Lax
 
 ### La comprobación de salud está exenta de la redirección
 
-El proveedor puede consultar `/api/health` por dentro, sin pasar por el proxy. La excepción
-mantiene una respuesta directa `200`, sin obligar al monitor a seguir una redirección `308`.
+El proveedor puede consultar `/api/health` por dentro, sin pasar por el proxy que añade
+`X-Forwarded-Proto`. Sin la excepción recibiría un `308` en vez de un `200`.
+
+Render **no** daría el servicio por caído por eso: su documentación dice que el endpoint
+puede responder cualquier código `2xx` o `3xx` para indicar que la instancia está sana
+([health checks](https://render.com/docs/health-checks)). El motivo real es otro: con un
+`308` la comprobación pasaría **sin haber tocado la aplicación**, verificando que el
+redirector funciona en vez de que la API responde. Un health check que no ejercita lo que
+dice vigilar no sirve de nada.
 
 Se detectó simulando la configuración de producción en local antes de desplegar; hay una
 prueba que lo fija.
+
+La excepción se salta **solo la redirección**, no la cabecera: `/api/health` sigue
+anunciando HSTS cuando la petición llega cifrada.
 
 ### La regla de reescritura del sitio estático
 
