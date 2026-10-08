@@ -4,7 +4,10 @@ import Admin from './pages/Admin.jsx';
 import Catalogo from './pages/Catalogo.jsx';
 import Compra from './pages/Compra.jsx';
 import CompraConfirmada from './pages/CompraConfirmada.jsx';
+import Login from './pages/Login.jsx';
 import CarritoResumen from './components/CarritoResumen.jsx';
+import BotonSesion from './components/BotonSesion.jsx';
+import RutaProtegida from './components/RutaProtegida.jsx';
 
 export default function App() {
   return (
@@ -21,6 +24,7 @@ export default function App() {
           <div className="cabecera__acciones">
             <Navbar />
             <CarritoResumen />
+            <BotonSesion />
           </div>
         </div>
       </header>
@@ -30,7 +34,16 @@ export default function App() {
           <Route path="/" element={<Catalogo />} />
           <Route path="/compra" element={<Compra />} />
           <Route path="/compra/confirmacion" element={<CompraConfirmada />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/login" element={<Login />} />
+          {/* El panel es la única ruta protegida: comprar no exige sesión. */}
+          <Route
+            path="/admin"
+            element={
+              <RutaProtegida>
+                <Admin />
+              </RutaProtegida>
+            }
+          />
         </Routes>
       </main>
 

@@ -15,12 +15,20 @@ export async function obtenerCsrf(origen) {
   return { token: csrfToken, cookie };
 }
 
-/** Cabeceras para una operación que modifica datos. */
+/**
+ * Cabeceras para una operación que modifica datos.
+ *
+ * Si `csrf.cookieSesion` está puesta se envía junto a la del token: desde
+ * HU-28 toda mutación necesita además sesión de administrador, y el navegador
+ * mandaría las dos cookies en la misma cabecera.
+ */
 export function cabecerasCsrf(csrf, extra = {}) {
+  const cookies = [csrf.cookie, csrf.cookieSesion].filter(Boolean).join('; ');
+
   return {
     'Content-Type': 'application/json',
     'X-CSRF-Token': csrf.token,
-    Cookie: csrf.cookie,
+    Cookie: cookies,
     ...extra,
   };
 }

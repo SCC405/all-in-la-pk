@@ -40,6 +40,18 @@ async function startServer() {
     await connectDatabase(env.mongodbUri);
     await escuchar();
     console.log(`Backend disponible en ${protocolo}://localhost:${env.port}`);
+
+    // Falla cerrado: sin credenciales nadie puede entrar y el panel queda
+    // inutilizable. Mas vale decirlo al arrancar que descubrirlo con un 401.
+    if (!env.adminUsuario || !env.adminPasswordHash) {
+      console.warn(
+        [
+          'AVISO: no hay administrador configurado. Nadie podra iniciar sesion ni modificar',
+          '       el catalogo. Define ADMIN_USUARIO y ADMIN_PASSWORD_HASH en el .env;',
+          '       el hash se genera con: npm run hash-admin --prefix backend -- "tu-contrasena"',
+        ].join('\n'),
+      );
+    }
   } catch (error) {
     console.error(`No fue posible iniciar el backend: ${detalleDeInicio(error)}`);
     await disconnectDatabase();
