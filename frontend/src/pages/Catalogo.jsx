@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import EsqueletoCatalogo from '../components/EsqueletoCatalogo.jsx';
 import FiltroCategorias from '../components/FiltroCategorias.jsx';
 import TarjetaProducto from '../components/TarjetaProducto.jsx';
 import { categoriasServicio } from '../services/categoriasServicio.js';
@@ -38,11 +39,7 @@ export default function Catalogo() {
   }, [sincronizarConCatalogo]);
 
   if (estado.fase === 'cargando') {
-    return (
-      <p className="aviso" role="status">
-        Cargando el catálogo…
-      </p>
-    );
+    return <EsqueletoCatalogo />;
   }
 
   if (estado.fase === 'error') {

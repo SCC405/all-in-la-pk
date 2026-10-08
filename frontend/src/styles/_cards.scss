@@ -1,5 +1,6 @@
 @use 'variables' as v;
 @use 'mixins' as m;
+@use 'movimiento' as mov;
 
 .catalogo {
   &__encabezado {
@@ -8,6 +9,11 @@
     justify-content: space-between;
     gap: v.$spacing-md;
     margin-bottom: 36px;
+  }
+
+  &__encabezado,
+  &__rejilla {
+    @include mov.entrada(aparecer, v.$duracion-lenta);
   }
 
   &__titulo {
@@ -21,6 +27,8 @@
 
     // Filete corto en vez de una línea divisoria a todo el ancho: marca la
     // página sin convertir el dorado en el color dominante.
+    // Se dibuja de izquierda a derecha al cargar: es el unico adorno con
+    // movimiento propio de la pagina, y dura lo que dura leer el titulo.
     &::after {
       display: block;
       width: 40px;
@@ -28,6 +36,8 @@
       margin-top: 12px;
       background: v.$color-accent;
       content: '';
+      transform-origin: left;
+      animation: dibujar-filete v.$duracion-lenta v.$curva-salida 120ms both;
     }
   }
 
@@ -50,7 +60,18 @@
 .producto {
   display: flex;
   flex-direction: column;
-  transition: transform v.$transition-fast;
+  transition: transform v.$duracion-rapida v.$curva-suave;
+
+  @include mov.entrada(aparecer-subiendo, v.$duracion-media);
+
+  // Escalonado por posicion, sin tocar el JSX. El retardo se corta en la
+  // tarjeta 12: mas alla, el escalonado deja de leerse como un detalle y
+  // empieza a leerse como lentitud.
+  @for $i from 1 through v.$escalonado-maximo {
+    &:nth-child(#{$i}) {
+      animation-delay: ($i - 1) * v.$escalonado-paso;
+    }
+  }
 
   &:hover {
     transform: translateY(-2px);
@@ -68,12 +89,18 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: opacity v.$transition-fast;
+      transition:
+        opacity v.$duracion-rapida v.$curva-suave,
+        transform v.$duracion-lenta v.$curva-salida;
     }
   }
 
-  &:hover &__imagen img {
-    opacity: 0.88;
+  // La foto se acerca dentro de su marco, que no se mueve. Es el gesto de las
+  // dos referencias: el recorte queda quieto y lo que respira es la imagen.
+  &:hover &__imagen img,
+  &:focus-within &__imagen img {
+    opacity: 0.92;
+    transform: scale(1.05);
   }
 
   // El agotado se cuenta en la foto. El texto y su etiqueta de lector de
@@ -81,6 +108,14 @@
   &:has(.producto__stock--agotado) .producto__imagen {
     opacity: 0.45;
     filter: grayscale(1);
+    transition: opacity v.$duracion-media v.$curva-suave, filter v.$duracion-media v.$curva-suave;
+  }
+
+  // Al pasar por encima recupera algo de color: deja ver el producto sin
+  // dejar de decir que no se puede comprar.
+  &:has(.producto__stock--agotado):hover .producto__imagen {
+    opacity: 0.62;
+    filter: grayscale(0.7);
   }
 
   &__sin-imagen {
@@ -184,5 +219,11 @@
   .catalogo__encabezado {
     align-items: stretch;
     flex-direction: column;
+  }
+}
+
+@keyframes dibujar-filete {
+  from {
+    transform: scaleX(0);
   }
 }

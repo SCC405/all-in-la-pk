@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCarrito } from '../context/CarritoContext.jsx';
 import { calcularSubtotal, CANTIDAD_MINIMA } from '../utils/carrito.js';
@@ -19,6 +20,24 @@ export default function CarritoResumen() {
     eliminarProducto,
   } = useCarrito();
 
+  // El contador da un golpe cuando cambia la cuenta. En una pantalla ancha el
+  // carrito queda lejos del boton que se acaba de pulsar, y sin esto no hay
+  // forma de saber si el clic conto.
+  const [late, setLate] = useState(false);
+  const anterior = useRef(totalUnidades);
+
+  useEffect(() => {
+    if (anterior.current === totalUnidades) return;
+
+    anterior.current = totalUnidades;
+    setLate(true);
+
+    // Se quita la clase al acabar para que la animacion pueda repetirse en el
+    // siguiente cambio: una animacion CSS no se reinicia sola.
+    const temporizador = setTimeout(() => setLate(false), 300);
+    return () => clearTimeout(temporizador);
+  }, [totalUnidades]);
+
   return (
     <div className="carrito">
       <details className="carrito__desplegable">
@@ -26,7 +45,7 @@ export default function CarritoResumen() {
           <span aria-hidden="true">♣</span>
           Carrito
           <span
-            className="carrito__contador"
+            className={`carrito__contador${late ? ' carrito__contador--late' : ''}`}
             aria-label={`${totalUnidades} ${totalUnidades === 1 ? 'producto' : 'productos'}`}
           >
             {totalUnidades}

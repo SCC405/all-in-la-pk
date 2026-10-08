@@ -1,5 +1,6 @@
 @use 'variables' as v;
 @use 'mixins' as m;
+@use 'movimiento' as mov;
 
 .carrito {
   position: relative;
@@ -47,6 +48,33 @@
     color: v.$color-background;
     font-size: 13px;
     font-weight: 800;
+
+    // El golpe al anadir algo. Es la unica confirmacion visible de que el
+    // boton hizo efecto: sin ella, en una pantalla grande el carrito queda
+    // lejos del producto y no se sabe si el clic conto.
+    &--late {
+      animation: latido v.$duracion-media v.$curva-suave both;
+    }
+  }
+
+  // La animacion va colgada de [open], no del panel a secas.
+  //
+  // El panel existe en el DOM aunque <details> este cerrado. Animandolo
+  // directamente, el navegador tiene que decidir que hacer con una animacion
+  // sobre contenido que todavia no se muestra, y con fill-mode: both el
+  // elemento se queda mientras tanto en el estado inicial (opacidad 0).
+  // Funciona, pero depende de cuando el navegador decida renderizarlo por
+  // primera vez. Con [open] la animacion empieza justo al abrirse, que es
+  // cuando tiene sentido, y el panel cerrado no arrastra ningun estado.
+  //
+  // Solo se anima la apertura: al cerrar, <details> oculta el contenido de
+  // inmediato y no hay nada a lo que animar sin JavaScript.
+  &__desplegable[open] &__panel {
+    @include mov.entrada(aparecer-bajando, v.$duracion-media);
+  }
+
+  &__desplegable[open] &__item {
+    @include mov.entrada(aparecer, v.$duracion-rapida);
   }
 
   &__panel {
@@ -123,6 +151,10 @@
   &__paso {
     @include m.interactive-control;
 
+    transition:
+      border-color v.$duracion-rapida v.$curva-suave,
+      color v.$duracion-rapida v.$curva-suave;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -153,6 +185,8 @@
 
   &__quitar {
     @include m.interactive-control;
+
+    transition: border-color v.$duracion-rapida v.$curva-suave;
 
     display: inline-flex;
     align-items: center;
