@@ -7,7 +7,7 @@ import { filtrarProductosPorCategoria } from '../utils/filtrarProductos.js';
 import { useCarrito } from '../context/CarritoContext.jsx';
 
 export default function Catalogo() {
-  const { agregarProducto } = useCarrito();
+  const { agregarProducto, sincronizarConCatalogo } = useCarrito();
   const [estado, setEstado] = useState({ fase: 'cargando' });
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
 
@@ -16,13 +16,17 @@ export default function Catalogo() {
 
     Promise.all([productosServicio.listar(), categoriasServicio.listar()])
       .then(([productos, categorias]) => {
-        if (vigente) {
-          setEstado({
-            fase: 'listo',
-            productos: productos ?? [],
-            categorias: categorias ?? [],
-          });
-        }
+        if (!vigente) return;
+
+        setEstado({
+          fase: 'listo',
+          productos: productos ?? [],
+          categorias: categorias ?? [],
+        });
+
+        // Un carrito guardado de una visita anterior lleva dentro los precios
+        // de entonces. Estos son los datos frescos: es el momento de refrescarlo.
+        sincronizarConCatalogo(productos ?? []);
       })
       .catch((error) => {
         if (vigente) setEstado({ fase: 'error', mensaje: error.message });
@@ -31,7 +35,7 @@ export default function Catalogo() {
     return () => {
       vigente = false;
     };
-  }, []);
+  }, [sincronizarConCatalogo]);
 
   if (estado.fase === 'cargando') {
     return (

@@ -109,6 +109,56 @@ export function eliminarProducto(estado, productoId) {
   };
 }
 
+/**
+ * Refresca el carrito contra los productos recien traidos del catalogo.
+ *
+ * Al guardarse entre recargas, el carrito lleva dentro una foto del producto
+ * de cuando se anadio. Si mientras tanto cambio el precio, desaparecio el
+ * articulo o bajo el stock, esa foto miente. Esto la actualiza en cuanto
+ * llegan datos frescos:
+ *
+ *   - lo que ya no esta en el catalogo se cae del carrito,
+ *   - lo que sigue, adopta precio y stock actuales,
+ *   - y la cantidad se recorta a lo que de verdad queda.
+ *
+ * Sin esto, persistir el carrito seria enseñar precios viejos en el resumen
+ * de compra, que es peor que no persistirlo.
+ */
+export function sincronizarConCatalogo(estado, productos) {
+  if (!Array.isArray(productos)) return estado;
+
+  const porId = new Map(productos.map((producto) => [producto._id, producto]));
+
+  const items = estado.items
+    .filter((item) => porId.has(item.producto._id))
+    .map((item) => {
+      const fresco = porId.get(item.producto._id);
+      return { producto: fresco, cantidad: Math.min(item.cantidad, fresco.stock) };
+    })
+    // Lo que se quedo sin stock no puede comprarse, asi que tampoco esperar.
+    .filter((item) => item.cantidad >= CANTIDAD_MINIMA);
+
+  const sinCambios = items.length === estado.items.length
+    && items.every((item, i) => (
+      item.producto === estado.items[i].producto && item.cantidad === estado.items[i].cantidad
+    ));
+
+  // Devolver el mismo objeto cuando no cambio nada evita un render de mas en
+  // cada carga del catalogo.
+  if (sinCambios) return estado;
+
+  const desaparecidos = estado.items.length - items.length;
+
+  return {
+    items,
+    mensaje: desaparecidos > 0
+      ? (desaparecidos === 1
+        ? 'Se quitó un producto del carrito porque ya no está disponible.'
+        : `Se quitaron ${desaparecidos} productos del carrito porque ya no están disponibles.`)
+      : estado.mensaje,
+  };
+}
+
 // Se vacia al confirmar la compra (HU-33). Sin mensaje: la confirmacion ya
 // ocupa toda la pantalla y anunciar ademas "se vacio el carrito" sobra.
 export function vaciarCarrito() {
@@ -139,6 +189,8 @@ export function carritoReducer(estado, accion) {
       return eliminarProducto(estado, accion.productoId);
     case 'carrito/vaciado':
       return vaciarCarrito();
+    case 'carrito/sincronizado':
+      return sincronizarConCatalogo(estado, accion.productos);
     default:
       return estado;
   }
