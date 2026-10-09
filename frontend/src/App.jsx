@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Admin from './pages/Admin.jsx';
 import Catalogo from './pages/Catalogo.jsx';
@@ -10,6 +10,8 @@ import BotonSesion from './components/BotonSesion.jsx';
 import RutaProtegida from './components/RutaProtegida.jsx';
 
 export default function App() {
+  const { pathname } = useLocation();
+
   return (
     <div className="app">
       <header className="cabecera">
@@ -29,7 +31,10 @@ export default function App() {
         </div>
       </header>
 
-      <main className="app__contenido">
+      {/* La ruta como key: al cambiar, React monta un <main> nuevo y la
+          animacion de entrada se vuelve a disparar. Sin esto solo correria
+          en la primera carga. */}
+      <main className="app__contenido" key={pathname}>
         <Routes>
           <Route path="/" element={<Catalogo />} />
           <Route path="/compra" element={<Compra />} />

@@ -1,0 +1,55 @@
+@use 'variables' as v;
+
+// Bloques grises que ocupan el sitio de lo que está cargando (HU-34).
+//
+// El barrido va despacio a propósito: rápido parece un error parpadeando,
+// lento parece que está trabajando.
+
+.esqueleto {
+  background:
+    linear-gradient(
+      100deg,
+      v.$color-surface 30%,
+      rgb(255 255 255 / 6%) 50%,
+      v.$color-surface 70%
+    );
+  background-size: 250% 100%;
+  background-position-x: 150%;
+  animation: barrido 1.6s linear infinite;
+
+  // Sin texto dentro, un párrafo vacío mide cero.
+  &__linea {
+    height: 12px;
+    margin: 0;
+
+    &--corta {
+      width: 35%;
+      height: 9px;
+    }
+
+    &--media {
+      width: 70%;
+    }
+
+    &--precio {
+      width: 45%;
+      height: 15px;
+    }
+  }
+
+  &__boton {
+    height: v.$touch-target-min;
+    margin: 14px 0 0;
+  }
+}
+
+// La tarjeta falsa no responde al puntero ni entra escalonada: es relleno,
+// no contenido, y animarla dos veces solo la haría parecer interactiva.
+.producto--esqueleto {
+  animation: none;
+  pointer-events: none;
+
+  &:hover {
+    transform: none;
+  }
+}

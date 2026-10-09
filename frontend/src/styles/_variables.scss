@@ -40,3 +40,23 @@ $content-max-width: 1120px;
 $touch-target-min: 44px;
 $transition-fast: 150ms ease;
 
+// Movimiento (HU-34). Tres duraciones y dos curvas, no una por componente:
+// que todo se mueva al mismo ritmo es lo que hace que parezca una sola
+// interfaz y no piezas sueltas.
+//
+// La referencia (glossier.com, merimeri.com) es contenida: nada rebota, nada
+// tarda. Lo que se mueve lo hace deprisa y se aparta.
+$duracion-rapida: 160ms;   // respuesta al puntero: hover, foco, color
+$duracion-media: 280ms;    // algo aparece o cambia de sitio
+$duracion-lenta: 420ms;    // entradas de pagina, lo que solo pasa una vez
+
+// Salida suave para lo que entra: arranca con brio y frena al llegar.
+$curva-salida: cubic-bezier(0.22, 0.61, 0.36, 1);
+// Simetrica, para lo que va y vuelve.
+$curva-suave: cubic-bezier(0.4, 0, 0.2, 1);
+
+// Tope del escalonado del catalogo. Sin el, la tarjeta 40 entraria casi medio
+// minuto despues de la primera: lo que empieza como gracia acaba en espera.
+$escalonado-paso: 45ms;
+$escalonado-maximo: 12;
+
