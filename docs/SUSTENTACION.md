@@ -30,11 +30,17 @@ Dilo tú antes de que lo pregunte. Queda mucho mejor.
 | Historias de usuario cerradas | **22 de las 27 originales** |
 | Puntos de historia completados | **93 de 115 originales** |
 | Sprints terminados | 2 de 3 (el tercero en curso) |
-| Pruebas automáticas en la cadena nueva | **241 pasan** (105 backend + 136 frontend) |
-| Pruebas de integración omitidas sin servicios externos | 4 |
+| Pruebas automáticas, en un clon recién hecho | **241 pasan** (105 backend + 136 frontend) |
+| Omitidas por falta de servicios locales | 4: tres necesitan MongoDB y una, certificados TLS |
 | Issues del proyecto | 41 (26 cerrados, 15 abiertos) |
-| Pull requests creados | 41 (7 abiertos al momento de la revisión) |
+| Pull requests | 42 creados · 34 fusionados · 6 abiertos · 2 cerrados sin fusionar |
 | Reparto del trabajo | Por historias de usuario y revisión cruzada |
+
+> **Las dos cifras de arriba se mueven.** Las pruebas omitidas dependen de la
+> máquina: si ya se corrió `npm run certificados`, la de TLS no se salta y
+> entonces son 242 y 3. Y el número de PR cambia con cada uno que se abre. Si
+> no queréis depender de eso, decid «más de cuarenta pull requests, uno por
+> historia» y enseñad la pestaña, que siempre dice la verdad.
 
 **Producción, comprobada hoy:**
 
@@ -231,9 +237,17 @@ Abrid el repositorio en GitHub.
 4. **Reparto:** enseñad el tablero por responsable; los squash hacen que contar
    commits no represente con fidelidad el trabajo de cada integrante.
 
-> «Nadie empuja directo a `develop`. Toda historia entra por pull request y la
-> revisa el compañero. Las historias dependientes se apilan para que cada diff
-> siga siendo pequeño y revisable.»
+> «Toda historia entra por pull request y la revisa el compañero. Las
+> dependientes se apilan para que cada diff siga siendo pequeño y revisable.»
+
+Si alguien mira el historial, hay **exactamente dos commits que no pasaron por un
+pull request**: el commit inicial del repositorio y un retoque del README del
+primer día. Son justo los dos que tiene `main` ahora mismo. Mejor decirlo vosotros
+que dejar que lo encuentren:
+
+```bash
+git log --oneline origin/main
+```
 
 ### Paso 8 — Las pruebas, en vivo · 1 min
 
@@ -245,9 +259,14 @@ npm test --prefix backend
 npm test --prefix frontend
 ```
 
-> «241 pruebas pasan en la cadena nueva. Las 4 que se omiten requieren MongoDB o
-> certificados locales. Hay un guardia que impide ejecutar las de base contra la
-> base real: la URL tiene que terminar en `_test` o `-test`.»
+> «241 pruebas pasan. Las 4 que se omiten necesitan MongoDB o certificados
+> locales. Hay un guardia que impide ejecutar las de base contra la base real: la
+> URL tiene que terminar en `_test` o `-test`.»
+
+**Mirad el número en pantalla antes de decirlo en voz alta.** Si en esa máquina ya
+se generaron los certificados, serán 242 y 3 omitidas; y con un MongoDB de pruebas
+levantado, las suites de integración despliegan muchos más casos y el total sube
+bastante. Las tres cifras son correctas: dependen de lo que tenga la máquina.
 
 ### Paso 9 — El despliegue · 1 min
 
