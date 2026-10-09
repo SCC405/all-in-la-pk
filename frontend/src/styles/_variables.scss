@@ -15,14 +15,20 @@ $color-danger-text: #e5534b;
 // Colores auxiliares de interfaz.
 $color-border: #2a2a2a;
 $color-border-strong: #3a3a3a;
+// Borde de controles (campos, selectores, botones de contorno). Más sobrio que
+// el gris de texto, pero sigue cumpliendo el 3:1 que pide WCAG 1.4.11:
+// 4,28:1 sobre el fondo del campo y 3,75:1 sobre la superficie del panel.
+$color-border-control: #767676;
 $color-disabled: #333;
 $color-disabled-border: #444;
 $color-placeholder: #6f6f6f;
 
-// Forma y espaciado.
-$border-radius-sm: 6px;
-$border-radius-md: 10px;
-$border-radius-lg: 16px;
+// Forma y espaciado. La dirección visual de referencia no usa esquinas
+// redondeadas: los controles y los paneles se apoyan en el aire y en la
+// alineación. Las variables se mantienen para poder revertirlo en un sitio.
+$border-radius-sm: 0;
+$border-radius-md: 0;
+$border-radius-lg: 0;
 $spacing-xs: 4px;
 $spacing-sm: 8px;
 $spacing-md: 16px;
@@ -33,4 +39,24 @@ $spacing-xl: 32px;
 $content-max-width: 1120px;
 $touch-target-min: 44px;
 $transition-fast: 150ms ease;
+
+// Movimiento (HU-34). Tres duraciones y dos curvas, no una por componente:
+// que todo se mueva al mismo ritmo es lo que hace que parezca una sola
+// interfaz y no piezas sueltas.
+//
+// La referencia (glossier.com, merimeri.com) es contenida: nada rebota, nada
+// tarda. Lo que se mueve lo hace deprisa y se aparta.
+$duracion-rapida: 160ms;   // respuesta al puntero: hover, foco, color
+$duracion-media: 280ms;    // algo aparece o cambia de sitio
+$duracion-lenta: 420ms;    // entradas de pagina, lo que solo pasa una vez
+
+// Salida suave para lo que entra: arranca con brio y frena al llegar.
+$curva-salida: cubic-bezier(0.22, 0.61, 0.36, 1);
+// Simetrica, para lo que va y vuelve.
+$curva-suave: cubic-bezier(0.4, 0, 0.2, 1);
+
+// Tope del escalonado del catalogo. Sin el, la tarjeta 40 entraria casi medio
+// minuto despues de la primera: lo que empieza como gracia acaba en espera.
+$escalonado-paso: 45ms;
+$escalonado-maximo: 12;
 

@@ -1,5 +1,6 @@
 @use 'variables' as v;
 @use 'mixins' as m;
+@use 'movimiento' as mov;
 
 * {
   box-sizing: border-box;
@@ -20,6 +21,10 @@ body {
   min-height: 100vh;
 
   &__contenido {
+    // Entrada corta al cambiar de pagina. Solo opacidad, sin desplazamiento:
+    // mover el contenido entero en cada navegacion marea y retrasa la lectura.
+    @include mov.entrada(aparecer, v.$duracion-media);
+
     flex: 1;
     width: 100%;
     max-width: v.$content-max-width;

@@ -1,3 +1,5 @@
+@use 'variables' as v;
+
 // Este módulo se carga al final para que sus anulaciones tengan prioridad sobre
 // las transiciones definidas por cada componente.
 @media (prefers-reduced-motion: reduce) {
@@ -10,8 +12,49 @@
     scroll-behavior: auto !important;
   }
 
+  // Por qué la regla de arriba basta para las entradas, y no hace falta
+  // apagarlas una por una:
+  //
+  // Todas se declaran con `both` como fill-mode. Con la duración en 0,01 ms la
+  // animación se salta, pero el estado final se queda aplicado, así que lo que
+  // entra con `opacity: 0` termina visible igualmente. Es la parte que es fácil
+  // romper: sin `both`, quien pide menos movimiento se quedaría con el catálogo
+  // en blanco, que es mucho peor que un desvanecido.
+  //
+  // Lo que sí hay que apagar a mano es lo que se mueve con `transform` o con
+  // `background-position` en el estado de reposo, porque ahí no hay animación
+  // que saltarse: es CSS normal.
+
   .producto:hover {
     transform: none;
   }
-}
 
+  // El acercamiento de la foto al pasar por encima. El cambio de opacidad se
+  // queda: es información —«estás sobre esta tarjeta»—, no decoración.
+  .producto:hover .producto__imagen img,
+  .producto:focus-within .producto__imagen img {
+    transform: none;
+  }
+
+  // El filete dorado del título se dibuja escalando desde cero. Sin animación
+  // que lo despliegue, tiene que estar ya entero.
+  .catalogo__titulo::after,
+  .admin__titulo::after {
+    transform: none;
+  }
+
+  // El golpe del contador del carrito. La realimentación no se pierde: el
+  // número sigue cambiando, que es lo que de verdad informa.
+  .carrito__contador--late {
+    animation: none;
+    transform: none;
+  }
+
+  // El barrido del esqueleto es un bucle infinito, justo el tipo de movimiento
+  // que molesta. Se queda como un bloque liso, que sigue cumpliendo su función
+  // de reservar el sitio.
+  .esqueleto {
+    background: v.$color-surface;
+    animation: none;
+  }
+}

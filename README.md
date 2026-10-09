@@ -110,6 +110,18 @@ cp backend/.env.example backend/.env
 Completa `MONGODB_URI` en ese archivo. **Nunca se sube al repositorio.** El resto de
 variables traen valores válidos para desarrollo.
 
+Para poder entrar al panel de administración hacen falta además `ADMIN_USUARIO` y
+`ADMIN_PASSWORD_HASH`. La contraseña no se guarda en claro en ninguna parte: se genera
+su hash y es eso lo que va al `.env`.
+
+```bash
+npm run hash-admin --prefix backend -- "tu-contraseña"
+```
+
+Sin esas dos variables el servidor arranca igual y el catálogo se ve, pero nadie puede
+iniciar sesión ni modificar nada. Es deliberado: una instalación a medio configurar no
+debe quedar abierta.
+
 ### 3. Arrancar
 
 Hacen falta **dos terminales**, una para cada proyecto:
@@ -149,6 +161,7 @@ se niega a continuar, porque sembrar los borra; para forzarlo, `npm run sembrar 
 | `npm test` | Pruebas. Las de integración se saltan si no hay base de datos de pruebas |
 | `npm run check` | Comprueba que todos los archivos sean sintácticamente válidos |
 | `npm run sembrar` | Llena la base con datos de ejemplo |
+| `npm run hash-admin` | Genera el hash de la contraseña de administrador |
 | `npm run certificados` | Genera certificados autofirmados para probar HTTPS en local |
 
 Para ejecutar también las pruebas que necesitan MongoDB:

@@ -1,10 +1,17 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Admin from './pages/Admin.jsx';
 import Catalogo from './pages/Catalogo.jsx';
+import Compra from './pages/Compra.jsx';
+import CompraConfirmada from './pages/CompraConfirmada.jsx';
+import Login from './pages/Login.jsx';
 import CarritoResumen from './components/CarritoResumen.jsx';
+import BotonSesion from './components/BotonSesion.jsx';
+import RutaProtegida from './components/RutaProtegida.jsx';
 
 export default function App() {
+  const { pathname } = useLocation();
+
   return (
     <div className="app">
       <header className="cabecera">
@@ -19,14 +26,29 @@ export default function App() {
           <div className="cabecera__acciones">
             <Navbar />
             <CarritoResumen />
+            <BotonSesion />
           </div>
         </div>
       </header>
 
-      <main className="app__contenido">
+      {/* La ruta como key: al cambiar, React monta un <main> nuevo y la
+          animacion de entrada se vuelve a disparar. Sin esto solo correria
+          en la primera carga. */}
+      <main className="app__contenido" key={pathname}>
         <Routes>
           <Route path="/" element={<Catalogo />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/compra" element={<Compra />} />
+          <Route path="/compra/confirmacion" element={<CompraConfirmada />} />
+          <Route path="/login" element={<Login />} />
+          {/* El panel es la única ruta protegida: comprar no exige sesión. */}
+          <Route
+            path="/admin"
+            element={
+              <RutaProtegida>
+                <Admin />
+              </RutaProtegida>
+            }
+          />
         </Routes>
       </main>
 

@@ -68,6 +68,10 @@
     color: v.$color-text;
     font-size: 15px;
     text-decoration: none;
+    transition:
+      background-color v.$duracion-rapida v.$curva-suave,
+      color v.$duracion-rapida v.$curva-suave,
+      box-shadow v.$duracion-rapida v.$curva-suave;
 
     &:hover {
       background: rgb(0 0 0 / 20%);

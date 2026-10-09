@@ -38,4 +38,15 @@ export const env = Object.freeze({
   // cada reinicio invalida los tokens ya emitidos: tolerable en desarrollo,
   // no en produccion, donde ademas puede haber varias instancias.
   csrfSecret: process.env.CSRF_SECRET?.trim() || '',
+
+  // Credenciales del administrador (HU-28). La contraseña nunca se guarda en
+  // claro: ADMIN_PASSWORD_HASH lleva el resultado de `npm run hash-admin`.
+  // Si falta cualquiera de las dos no entra nadie, que es lo que debe pasar
+  // en una instalación a medio configurar.
+  adminUsuario: process.env.ADMIN_USUARIO?.trim() || '',
+  adminPasswordHash: process.env.ADMIN_PASSWORD_HASH?.trim() || '',
+
+  // Firma el token de sesión. Sin un secreto fijo cada reinicio cierra las
+  // sesiones abiertas, y con varias instancias no valdrían entre ellas.
+  sesionSecret: process.env.SESION_SECRET?.trim() || '',
 });

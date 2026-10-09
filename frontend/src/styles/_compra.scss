@@ -1,0 +1,263 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+@use 'movimiento' as mov;
+
+// Proceso de compra (HU-31, HU-32 y HU-33). Reutiliza .formulario, .campo,
+// .boton y los controles de cantidad del carrito; aquí solo va la maqueta.
+
+.compra {
+  &__titulo {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  &__intro {
+    margin: v.$spacing-sm 0 v.$spacing-xl;
+    color: v.$color-text-secondary;
+  }
+
+  &__subtitulo {
+    margin: 0 0 v.$spacing-md;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  // El resumen a la izquierda y los datos a la derecha: así se ve lo que se
+  // paga mientras se rellena, sin tener que subir a comprobarlo.
+  &__columnas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: v.$spacing-xl;
+    align-items: start;
+  }
+
+  // Primero lo que se compra y despues el formulario, con un respiro entre
+  // medias: el orden en que hay que leerlos.
+  &__resumen {
+    @include m.surface-panel;
+    @include mov.entrada(aparecer-subiendo, v.$duracion-media);
+
+    padding: v.$spacing-lg;
+  }
+
+  &__datos {
+    @include mov.entrada(aparecer-subiendo, v.$duracion-media, 90ms);
+    max-width: none;
+  }
+
+  &__volver {
+    margin: v.$spacing-lg 0 0;
+  }
+}
+
+.resumen-compra {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__linea {
+    @include mov.entrada(aparecer, v.$duracion-rapida);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: v.$spacing-md;
+    padding: v.$spacing-md 0;
+    border-bottom: 1px solid v.$color-border;
+    transition: opacity v.$duracion-rapida v.$curva-suave;
+
+    &:first-child {
+      padding-top: 0;
+    }
+  }
+
+  &__datos {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  &__nombre {
+    margin: 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &__unitario {
+    margin: 0;
+    color: v.$color-text-secondary;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__controles {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: v.$spacing-xs;
+  }
+
+  &__subtotal {
+    margin: 0;
+    color: v.$color-accent;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+}
+
+.totales {
+  margin: v.$spacing-lg 0 0;
+
+  &__fila {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: v.$spacing-md;
+    padding: 6px 0;
+
+    dt {
+      color: v.$color-text-secondary;
+      font-size: 14px;
+    }
+
+    dd {
+      margin: 0;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      transition: color v.$duracion-rapida v.$curva-suave;
+    }
+
+    &--total {
+      margin-top: v.$spacing-sm;
+      padding-top: v.$spacing-md;
+      border-top: 1px solid rgb(212 175 55 / 45%);
+
+      dt {
+        color: v.$color-text;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      dd {
+        color: v.$color-accent;
+        font-size: 20px;
+        font-weight: 800;
+      }
+    }
+  }
+
+  &__aviso {
+    @include mov.entrada(aparecer, v.$duracion-media);
+    margin: v.$spacing-md 0 0;
+    padding: 10px 12px;
+    border-left: 2px solid v.$color-accent;
+    background: rgb(212 175 55 / 8%);
+    color: v.$color-text-secondary;
+    font-size: 13px;
+  }
+}
+
+.carrito__comprar {
+  margin: v.$spacing-md 0 0;
+
+  .boton {
+    width: 100%;
+  }
+}
+
+.confirmacion {
+  max-width: 44rem;
+  margin: 0 auto;
+
+  // La unica pieza con un gesto algo mas largo de toda la tienda. Se lo gana:
+  // es el final del recorrido y pasa una sola vez.
+  &__marca {
+    @include mov.entrada(asentarse, v.$duracion-lenta);
+    margin: 0;
+    color: v.$color-accent;
+    font-size: 40px;
+    line-height: 1;
+  }
+
+  &__titulo {
+    @include mov.entrada(aparecer-subiendo, v.$duracion-media, 80ms);
+    margin: v.$spacing-sm 0 0;
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  &__intro {
+    @include mov.entrada(aparecer-subiendo, v.$duracion-media, 140ms);
+    margin: v.$spacing-sm 0 0;
+    color: v.$color-text-secondary;
+  }
+
+  &__referencia {
+    @include mov.entrada(aparecer-subiendo, v.$duracion-media, 200ms);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: v.$spacing-sm v.$spacing-md;
+    margin: v.$spacing-lg 0 0;
+    padding: 12px 16px;
+    border: 1px solid rgb(212 175 55 / 45%);
+
+    strong {
+      color: v.$color-accent;
+      font-size: 20px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  &__referencia-etiqueta {
+    color: v.$color-text-secondary;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  &__bloques {
+    @include mov.entrada(aparecer, v.$duracion-media, 280ms);
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: v.$spacing-xl;
+    align-items: start;
+    margin-top: v.$spacing-xl;
+  }
+
+  &__direccion {
+    margin: 0 0 v.$spacing-lg;
+    color: v.$color-text-secondary;
+    font-size: 14px;
+    font-style: normal;
+    line-height: 1.6;
+  }
+
+  &__pago {
+    margin: 0;
+    color: v.$color-text-secondary;
+    font-size: 14px;
+  }
+}
+
+@include m.respond-to(880px) {
+  .compra__columnas,
+  .confirmacion__bloques {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@include m.respond-to(480px) {
+  .compra__resumen {
+    padding: v.$spacing-md;
+  }
+
+  .resumen-compra__linea {
+    flex-direction: column;
+    gap: v.$spacing-sm;
+  }
+}
