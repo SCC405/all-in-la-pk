@@ -2,7 +2,10 @@ import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Admin from './pages/Admin.jsx';
 import Catalogo from './pages/Catalogo.jsx';
+import Login from './pages/Login.jsx';
 import CarritoResumen from './components/CarritoResumen.jsx';
+import BotonSesion from './components/BotonSesion.jsx';
+import RutaProtegida from './components/RutaProtegida.jsx';
 
 export default function App() {
   return (
@@ -19,6 +22,7 @@ export default function App() {
           <div className="cabecera__acciones">
             <Navbar />
             <CarritoResumen />
+            <BotonSesion />
           </div>
         </div>
       </header>
@@ -26,7 +30,15 @@ export default function App() {
       <main className="app__contenido">
         <Routes>
           <Route path="/" element={<Catalogo />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/admin"
+            element={
+              <RutaProtegida>
+                <Admin />
+              </RutaProtegida>
+            }
+          />
         </Routes>
       </main>
 
