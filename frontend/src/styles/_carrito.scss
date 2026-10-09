@@ -20,11 +20,9 @@
     padding: v.$spacing-sm 12px;
     border: 1px solid rgb(212 175 55 / 60%);
     font-weight: 600;
-    list-style: none;
-
-    &::-webkit-details-marker {
-      display: none;
-    }
+    background: transparent;
+    color: v.$color-text;
+    cursor: pointer;
 
     &:hover {
       border-color: v.$color-accent;
@@ -57,23 +55,7 @@
     }
   }
 
-  // La animacion va colgada de [open], no del panel a secas.
-  //
-  // El panel existe en el DOM aunque <details> este cerrado. Animandolo
-  // directamente, el navegador tiene que decidir que hacer con una animacion
-  // sobre contenido que todavia no se muestra, y con fill-mode: both el
-  // elemento se queda mientras tanto en el estado inicial (opacidad 0).
-  // Funciona, pero depende de cuando el navegador decida renderizarlo por
-  // primera vez. Con [open] la animacion empieza justo al abrirse, que es
-  // cuando tiene sentido, y el panel cerrado no arrastra ningun estado.
-  //
-  // Solo se anima la apertura: al cerrar, <details> oculta el contenido de
-  // inmediato y no hay nada a lo que animar sin JavaScript.
-  &__desplegable[open] &__panel {
-    @include mov.entrada(aparecer-bajando, v.$duracion-media);
-  }
-
-  &__desplegable[open] &__item {
+  &__panel--abierto &__item {
     @include mov.entrada(aparecer, v.$duracion-rapida);
   }
 
@@ -88,6 +70,23 @@
     border-radius: v.$border-radius-md;
     background: v.$color-surface;
     box-shadow: 0 12px 32px rgb(0 0 0 / 45%);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transform-origin: top right;
+    pointer-events: none;
+    transition:
+      opacity v.$duracion-media v.$curva-suave,
+      transform v.$duracion-media v.$curva-suave,
+      visibility 0s linear v.$duracion-media;
+
+    &--abierto {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+      transition-delay: 0s;
+    }
   }
 
   &__titulo {
@@ -229,7 +228,31 @@
 }
 
 @include m.respond-to(480px) {
-  .carrito__activador {
-    padding-inline: 10px;
+  // Al partirse la cabecera, el carrito puede quedar lejos del borde derecho.
+  // Anclar el panel a la cabecera evita que se recorte hacia la izquierda a
+  // 320 px, algo que no detecta comparar solo document.scrollWidth.
+  .cabecera {
+    position: relative;
+  }
+
+  .carrito {
+    position: static;
+
+    &__desplegable {
+      position: static;
+    }
+
+    &__activador {
+      padding-inline: 10px;
+    }
+
+    &__panel {
+      right: v.$spacing-md;
+      left: v.$spacing-md;
+      width: auto;
+      max-height: calc(100vh - 180px);
+      overflow-y: auto;
+      transform-origin: top center;
+    }
   }
 }
