@@ -24,7 +24,10 @@ export default function CarritoResumen() {
   // carrito queda lejos del boton que se acaba de pulsar, y sin esto no hay
   // forma de saber si el clic conto.
   const [late, setLate] = useState(false);
+  const [abierto, setAbierto] = useState(false);
   const anterior = useRef(totalUnidades);
+  const carrito = useRef(null);
+  const activador = useRef(null);
 
   useEffect(() => {
     if (anterior.current === totalUnidades) return;
@@ -38,11 +41,11 @@ export default function CarritoResumen() {
     return () => clearTimeout(temporizador);
   }, [totalUnidades]);
 
-  const desplegable = useRef(null);
   const { pathname } = useLocation();
 
-  const cerrar = useCallback(() => {
-    if (desplegable.current) desplegable.current.open = false;
+  const cerrar = useCallback(({ devolverFoco = false } = {}) => {
+    setAbierto(false);
+    if (devolverFoco) activador.current?.focus();
   }, []);
 
   // Al cambiar de página se cierra. Sobre todo al pulsar «Comprar»: el panel
@@ -53,21 +56,20 @@ export default function CarritoResumen() {
   }, [cerrar, pathname]);
 
   // Y se cierra como se espera de cualquier desplegable: pulsando fuera o con
-  // Escape. <details> no hace ninguna de las dos por su cuenta.
+  // Escape, sin saltarse la transición de salida.
   useEffect(() => {
     function alPulsarFuera(evento) {
-      if (!desplegable.current?.open) return;
-      if (desplegable.current.contains(evento.target)) return;
+      if (!abierto) return;
+      if (carrito.current?.contains(evento.target)) return;
       cerrar();
     }
 
     function alPulsarTecla(evento) {
-      if (evento.key !== 'Escape' || !desplegable.current?.open) return;
+      if (evento.key !== 'Escape' || !abierto) return;
 
-      cerrar();
       // El foco vuelve al activador: si no, quien cierra con teclado lo pierde
       // y tiene que recorrer la cabecera otra vez.
-      desplegable.current.querySelector('summary')?.focus();
+      cerrar({ devolverFoco: true });
     }
 
     // `pointerdown` y no `click`: así cierra en cuanto se pulsa, antes de que
@@ -79,12 +81,19 @@ export default function CarritoResumen() {
       document.removeEventListener('pointerdown', alPulsarFuera);
       document.removeEventListener('keydown', alPulsarTecla);
     };
-  }, [cerrar]);
+  }, [abierto, cerrar]);
 
   return (
-    <div className="carrito">
-      <details className="carrito__desplegable" ref={desplegable}>
-        <summary className="carrito__activador">
+    <div className="carrito" ref={carrito}>
+      <div className="carrito__desplegable">
+        <button
+          className="carrito__activador"
+          type="button"
+          aria-expanded={abierto}
+          aria-controls="panel-carrito"
+          onClick={() => setAbierto((valor) => !valor)}
+          ref={activador}
+        >
           <span aria-hidden="true">♣</span>
           Carrito
           <span
@@ -93,9 +102,14 @@ export default function CarritoResumen() {
           >
             {totalUnidades}
           </span>
-        </summary>
+        </button>
 
-        <section className="carrito__panel" aria-labelledby="titulo-carrito">
+        <section
+          className={`carrito__panel${abierto ? ' carrito__panel--abierto' : ''}`}
+          id="panel-carrito"
+          aria-labelledby="titulo-carrito"
+          aria-hidden={!abierto}
+        >
           <h2 className="carrito__titulo" id="titulo-carrito">Tu carrito</h2>
 
           {items.length === 0 ? (
@@ -184,7 +198,7 @@ export default function CarritoResumen() {
             </>
           )}
         </section>
-      </details>
+      </div>
 
       <p className="visualmente-oculto" aria-live="polite" aria-atomic="true">
         {mensaje}

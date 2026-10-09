@@ -101,3 +101,27 @@ test('las reglas de accesibilidad siguen en pie', () => {
   assert.match(compacto, /outline:2pxsolid#d4af37/i);
   assert.match(css, /\.producto__stock--agotado/);
 });
+
+test('el panel del carrito transiciona tanto al abrir como al cerrar', () => {
+  assert.match(
+    compacto,
+    /\.carrito__panel\{[^}]*opacity:0;[^}]*visibility:hidden;[^}]*transform:translateY\(-8px\);/,
+  );
+  assert.match(
+    compacto,
+    /\.carrito__panel--abierto\{[^}]*opacity:1;[^}]*visibility:visible;[^}]*transform:translateY\(0\);/,
+  );
+  assert.match(compacto, /transition:opacity280ms/);
+});
+
+test('el carrito se ancla a la cabecera en pantallas estrechas', () => {
+  assert.match(
+    compacto,
+    /@media\(max-width:480px\)\{[^}]*\.cabecera\{position:relative;\}/,
+  );
+  assert.match(compacto, /\.carrito\{position:static;\}/);
+  assert.match(
+    compacto,
+    /\.carrito__panel\{right:16px;left:16px;width:auto;[^}]*overflow-y:auto;/,
+  );
+});
