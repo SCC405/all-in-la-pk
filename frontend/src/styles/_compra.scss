@@ -43,7 +43,6 @@
 
   &__datos {
     @include mov.entrada(aparecer-subiendo, v.$duracion-media, 90ms);
-
     max-width: none;
   }
 
@@ -59,7 +58,6 @@
 
   &__linea {
     @include mov.entrada(aparecer, v.$duracion-rapida);
-
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -153,7 +151,6 @@
 
   &__aviso {
     @include mov.entrada(aparecer, v.$duracion-media);
-
     margin: v.$spacing-md 0 0;
     padding: 10px 12px;
     border-left: 2px solid v.$color-accent;
@@ -179,7 +176,6 @@
   // es el final del recorrido y pasa una sola vez.
   &__marca {
     @include mov.entrada(asentarse, v.$duracion-lenta);
-
     margin: 0;
     color: v.$color-accent;
     font-size: 40px;
@@ -188,7 +184,6 @@
 
   &__titulo {
     @include mov.entrada(aparecer-subiendo, v.$duracion-media, 80ms);
-
     margin: v.$spacing-sm 0 0;
     font-size: 30px;
     font-weight: 600;
@@ -196,14 +191,12 @@
 
   &__intro {
     @include mov.entrada(aparecer-subiendo, v.$duracion-media, 140ms);
-
     margin: v.$spacing-sm 0 0;
     color: v.$color-text-secondary;
   }
 
   &__referencia {
     @include mov.entrada(aparecer-subiendo, v.$duracion-media, 200ms);
-
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
@@ -229,7 +222,6 @@
 
   &__bloques {
     @include mov.entrada(aparecer, v.$duracion-media, 280ms);
-
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
     gap: v.$spacing-xl;
