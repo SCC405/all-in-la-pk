@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import mongoose from 'mongoose';
+// Antes que app.js a proposito: deja las credenciales de administrador en
+// process.env para que config/env.js las lea al cargarse.
+import { abrirSesion } from './ayuda-sesion.js';
 import app from '../src/app.js';
 import Categoria from '../src/models/categoria.model.js';
 import Producto from '../src/models/producto.model.js';
@@ -26,6 +29,8 @@ test('CRUD REST de categorías', { skip: URI ? false : MOTIVO_SIN_BASE }, async 
 
   // Con la proteccion CSRF activa, toda mutacion necesita el par cookie+cabecera.
   const csrf = await obtenerCsrf(origen);
+  // Desde HU-28 toda mutacion necesita ademas sesion de administrador.
+  csrf.cookieSesion = await abrirSesion(origen, csrf);
   const borrar = () => ({ method: 'DELETE', headers: cabecerasCsrf(csrf) });
 
   suite.after(async () => {

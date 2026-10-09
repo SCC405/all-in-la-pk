@@ -4,6 +4,7 @@ import express from 'express';
 import { env } from './config/env.js';
 import { errorHandler } from './middlewares/error-handler.js';
 import { crearProteccionCsrf } from './middlewares/csrf.js';
+import { crearRequiereSesion } from './middlewares/sesion.js';
 import { crearForzarHttps } from './middlewares/forzar-https.js';
 import { notFound } from './middlewares/not-found.js';
 import categoriasRouter from './routes/categorias.routes.js';
@@ -11,6 +12,7 @@ import csrfRouter from './routes/csrf.routes.js';
 import docsRouter from './routes/docs.routes.js';
 import healthRouter from './routes/health.routes.js';
 import productosRouter from './routes/productos.routes.js';
+import sesionRouter from './routes/sesion.routes.js';
 
 const app = express();
 
@@ -40,8 +42,17 @@ app.use('/api', csrfRouter);
 
 // A partir de aqui, toda operacion que modifique datos necesita token CSRF.
 app.use(crearProteccionCsrf(env));
-app.use('/api/categorias', categoriasRouter);
-app.use('/api/productos', productosRouter);
+
+// Iniciar sesion va despues del CSRF (tambien hay que protegerlo) pero antes
+// de exigir sesion: si no, no habria forma de abrir la primera.
+app.use('/api', sesionRouter);
+
+// Y a partir de aqui, ademas, sesion de administrador. El middleware deja
+// pasar GET y HEAD, de modo que el catalogo sigue siendo publico.
+const requiereSesion = crearRequiereSesion(env);
+
+app.use('/api/categorias', requiereSesion, categoriasRouter);
+app.use('/api/productos', requiereSesion, productosRouter);
 app.use(notFound);
 app.use(errorHandler);
 

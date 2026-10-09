@@ -57,6 +57,28 @@ services:
       - key: CSRF_SECRET
         generateValue: true
 
+      # ----- Sesión de administrador (HU-28) -----
+      #
+      # Sin estas dos el servidor arranca igual y el catálogo se ve, pero nadie
+      # puede iniciar sesión ni modificar nada. Falla cerrado a propósito: una
+      # instalación a medio configurar no debe quedar abierta.
+      - key: ADMIN_USUARIO
+        sync: false
+
+      # El hash de la contraseña, NUNCA la contraseña. Se genera con:
+      #     npm run hash-admin --prefix backend -- "la-contraseña"
+      #
+      # Tiene la forma `scrypt$<sal>$<hash>`. Solo vale el que produce ese
+      # script: el servidor no entiende bcrypt ni ningún otro formato, y si
+      # llega uno distinto rechaza todos los intentos de acceso.
+      - key: ADMIN_PASSWORD_HASH
+        sync: false
+
+      # Firma el token de sesión. Igual que el de CSRF, lo genera Render: así
+      # no pasa por el chat de nadie ni acaba en el repositorio.
+      - key: SESION_SECRET
+        generateValue: true
+
   # ---------- Tienda ----------
   # Los sitios estáticos no llevan `plan`: Render los sirve gratis siempre y
   # rechaza el blueprint si se le indica uno.
