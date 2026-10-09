@@ -1,0 +1,247 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+// Proceso de compra (HU-31, HU-32 y HU-33). Reutiliza .formulario, .campo,
+// .boton y los controles de cantidad del carrito; aquí solo va la maqueta.
+
+.compra {
+  &__titulo {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  &__intro {
+    margin: v.$spacing-sm 0 v.$spacing-xl;
+    color: v.$color-text-secondary;
+  }
+
+  &__subtitulo {
+    margin: 0 0 v.$spacing-md;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  // El resumen a la izquierda y los datos a la derecha: así se ve lo que se
+  // paga mientras se rellena, sin tener que subir a comprobarlo.
+  &__columnas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: v.$spacing-xl;
+    align-items: start;
+  }
+
+  &__resumen {
+    @include m.surface-panel;
+
+    padding: v.$spacing-lg;
+  }
+
+  &__datos {
+    max-width: none;
+  }
+
+  &__volver {
+    margin: v.$spacing-lg 0 0;
+  }
+}
+
+.resumen-compra {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__linea {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: v.$spacing-md;
+    padding: v.$spacing-md 0;
+    border-bottom: 1px solid v.$color-border;
+
+    &:first-child {
+      padding-top: 0;
+    }
+  }
+
+  &__datos {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  &__nombre {
+    margin: 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &__unitario {
+    margin: 0;
+    color: v.$color-text-secondary;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__controles {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: v.$spacing-xs;
+  }
+
+  &__subtotal {
+    margin: 0;
+    color: v.$color-accent;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+}
+
+.totales {
+  margin: v.$spacing-lg 0 0;
+
+  &__fila {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: v.$spacing-md;
+    padding: 6px 0;
+
+    dt {
+      color: v.$color-text-secondary;
+      font-size: 14px;
+    }
+
+    dd {
+      margin: 0;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    &--total {
+      margin-top: v.$spacing-sm;
+      padding-top: v.$spacing-md;
+      border-top: 1px solid rgb(212 175 55 / 45%);
+
+      dt {
+        color: v.$color-text;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      dd {
+        color: v.$color-accent;
+        font-size: 20px;
+        font-weight: 800;
+      }
+    }
+  }
+
+  &__aviso {
+    margin: v.$spacing-md 0 0;
+    padding: 10px 12px;
+    border-left: 2px solid v.$color-accent;
+    background: rgb(212 175 55 / 8%);
+    color: v.$color-text-secondary;
+    font-size: 13px;
+  }
+}
+
+.carrito__comprar {
+  margin: v.$spacing-md 0 0;
+
+  .boton {
+    width: 100%;
+  }
+}
+
+.confirmacion {
+  max-width: 44rem;
+  margin: 0 auto;
+
+  &__marca {
+    margin: 0;
+    color: v.$color-accent;
+    font-size: 40px;
+    line-height: 1;
+  }
+
+  &__titulo {
+    margin: v.$spacing-sm 0 0;
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  &__intro {
+    margin: v.$spacing-sm 0 0;
+    color: v.$color-text-secondary;
+  }
+
+  &__referencia {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: v.$spacing-sm v.$spacing-md;
+    margin: v.$spacing-lg 0 0;
+    padding: 12px 16px;
+    border: 1px solid rgb(212 175 55 / 45%);
+
+    strong {
+      color: v.$color-accent;
+      font-size: 20px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  &__referencia-etiqueta {
+    color: v.$color-text-secondary;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  &__bloques {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: v.$spacing-xl;
+    align-items: start;
+    margin-top: v.$spacing-xl;
+  }
+
+  &__direccion {
+    margin: 0 0 v.$spacing-lg;
+    color: v.$color-text-secondary;
+    font-size: 14px;
+    font-style: normal;
+    line-height: 1.6;
+  }
+
+  &__pago {
+    margin: 0;
+    color: v.$color-text-secondary;
+    font-size: 14px;
+  }
+}
+
+@include m.respond-to(880px) {
+  .compra__columnas,
+  .confirmacion__bloques {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@include m.respond-to(480px) {
+  .compra__resumen {
+    padding: v.$spacing-md;
+  }
+
+  .resumen-compra__linea {
+    flex-direction: column;
+    gap: v.$spacing-sm;
+  }
+}

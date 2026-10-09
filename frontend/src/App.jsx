@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Admin from './pages/Admin.jsx';
 import Catalogo from './pages/Catalogo.jsx';
+import Compra from './pages/Compra.jsx';
+import CompraConfirmada from './pages/CompraConfirmada.jsx';
 import Login from './pages/Login.jsx';
 import CarritoResumen from './components/CarritoResumen.jsx';
 import BotonSesion from './components/BotonSesion.jsx';
@@ -30,7 +32,10 @@ export default function App() {
       <main className="app__contenido">
         <Routes>
           <Route path="/" element={<Catalogo />} />
+          <Route path="/compra" element={<Compra />} />
+          <Route path="/compra/confirmacion" element={<CompraConfirmada />} />
           <Route path="/login" element={<Login />} />
+          {/* El panel es la única ruta protegida: comprar no exige sesión. */}
           <Route
             path="/admin"
             element={
