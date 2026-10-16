@@ -1,9 +1,9 @@
 # Guía de sustentación — All In La PK
 
-Actualizada el 9 de octubre de 2026. Los números de este documento están
-verificados contra el código, GitHub y producción, no estimados. Las funciones
-de HU-28 a HU-34 se describen como quedarán al fusionar la cadena de PR
-`#77 → #78 → #79 → #80`.
+Actualizada el 15 de octubre de 2026. Los números de este documento están
+verificados contra el código, GitHub y producción, no estimados. **Las funciones
+de HU-28 a HU-34 ya están fusionadas y desplegadas**: lo que describe esta guía
+es lo que se ve hoy en producción, no lo que quedará.
 
 **Equipo:** Nicolay Baquero ([@Nicolayyy](https://github.com/Nicolayyy)) y
 Santiago Cifuentes ([@SCC405](https://github.com/SCC405)).
@@ -27,13 +27,13 @@ Dilo tú antes de que lo pregunte. Queda mucho mejor.
 
 | | |
 |---|---:|
-| Historias de usuario cerradas | **22 de las 27 originales** |
-| Puntos de historia completados | **93 de 115 originales** |
+| Historias de usuario cerradas | **29 de 34** (22 de las 27 originales + las 7 del profesor) |
+| Puntos de historia completados | **133 de 155** (93 originales + 40 de las correcciones) |
 | Sprints terminados | 2 de 3 (el tercero en curso) |
 | Pruebas automáticas, en un clon recién hecho | **241 pasan** (105 backend + 136 frontend) |
 | Omitidas por falta de servicios locales | 4: tres necesitan MongoDB y una, certificados TLS |
-| Issues del proyecto | 41 (26 cerrados, 15 abiertos) |
-| Pull requests | 42 creados · 34 fusionados · 6 abiertos · 2 cerrados sin fusionar |
+| Issues del proyecto | 41 (35 cerrados, 6 abiertos) |
+| Pull requests | 42 creados · 40 fusionados · **ninguno abierto** · 2 cerrados sin fusionar |
 | Reparto del trabajo | Por historias de usuario y revisión cruzada |
 
 > **Las dos cifras de arriba se mueven.** Las pruebas omitidas dependen de la
@@ -51,8 +51,22 @@ Dilo tú antes de que lo pregunte. Queda mucho mejor.
 | Swagger UI | https://all-in-la-pk-api.onrender.com/api-docs | `200` |
 | OpenAPI JSON | https://all-in-la-pk-api.onrender.com/api-docs.json | `200` |
 
-Con 8 productos y 5 categorías cargados, comprobados contra la API el 9 de
-octubre.
+Con 8 productos y 5 categorías cargados. Comprobado el 15 de octubre, con las
+siete historias del profesor ya desplegadas.
+
+**Y lo que prueba que la autenticación está viva en producción:**
+
+| Comprobación | Resultado |
+|---|---|
+| `GET /api/sesion` | `200 {"activa":false}` — antes de HU-28 daba `404` |
+| `POST /api/categorias` sin token CSRF | `403` — corta el CSRF |
+| `POST /api/categorias` con CSRF pero sin sesión | `401` — corta la sesión |
+| Login con contraseña incorrecta | `401`, y **no** emite cookie |
+| `/admin` sin sesión | Redirige a `/login` |
+| HSTS en `/api/health` | Presente |
+
+Ese orden —CSRF primero, sesión después— es el que hay que saber explicar: con
+`curl` a secas sale `403`, no `401`, y no es un fallo.
 
 ### Lo que todavía está abierto
 
@@ -61,11 +75,14 @@ abajo tiene issue abierto: no es una lista de olvidos, es trabajo planificado.
 
 | Pendiente | Issue |
 |---|---|
-| Pruebas funcionales, validar seguridad, cerrar despliegue, errores finales y sustentación | HU-22, HU-23 y HU-25 a HU-27 |
-| Promover `develop` a `main`; ya se confirmó que los dos servicios de Render siguen `develop` | #73 |
-| Cerrar administrativamente los bugs HSTS y documentación, ya corregidos en el PR #76 | #70 y #71 |
-| Fusionar autenticación, compra y movimiento después de configurar las variables de Render | PR #77 a #80 |
-| Integrar en HU-34 el cierre animado y el ajuste móvil del carrito | PR #82 sobre #80 |
+| Pruebas funcionales y validar seguridad | HU-22 y HU-23 |
+| Cerrar HU-25, que solo espera la promoción a `main` | HU-25 |
+| Errores finales y preparar la sustentación | HU-26 y HU-27 |
+| Promover `develop` a `main`. Merge limpio y **no despliega nada**: los dos servicios de Render siguen `develop` | #73 |
+
+**Ya no queda ningún pull request abierto.** Las siete historias del profesor
+(HU-28 a HU-34) y los dos bugs de HSTS y documentación están fusionados,
+desplegados y comprobados contra producción.
 
 ### Lo que pidió el profesor
 
@@ -586,9 +603,9 @@ npm test --prefix frontend
 
 ### Las cinco cifras que conviene llevar en la cabeza
 
-**27** historias originales + **7** nuevas · **22** originales cerradas ·
-**93/115** puntos originales · **241** pruebas aprobadas · **2** servicios en
-producción.
+**34** historias en total · **29** cerradas · **133/155** puntos ·
+**241** pruebas aprobadas · **2** servicios en producción.
 
-> Actualizad en esta página únicamente las cifras de historias y PR después de
-> fusionar la cadena pendiente; no improviséis números durante la sustentación.
+> Si alguna cifra os falla la memoria, **enseñad la pestaña** en vez de
+> improvisar: el tablero de issues y la lista de pull requests siempre dicen la
+> verdad, y un número equivocado dicho en voz alta cuesta más que no decirlo.
