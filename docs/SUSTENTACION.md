@@ -1,6 +1,6 @@
 # Guía de sustentación — All In La PK
 
-Actualizada el 15 de octubre de 2026. Los números de este documento están
+Actualizada el 16 de octubre de 2026. Los números de este documento están
 verificados contra el código, GitHub y producción, no estimados. **Las funciones
 de HU-28 a HU-34 ya están fusionadas y desplegadas**: lo que describe esta guía
 es lo que se ve hoy en producción, no lo que quedará.
@@ -27,13 +27,14 @@ Dilo tú antes de que lo pregunte. Queda mucho mejor.
 
 | | |
 |---|---:|
-| Historias de usuario cerradas | **29 de 34** (22 de las 27 originales + las 7 del profesor) |
-| Puntos de historia completados | **133 de 155** (93 originales + 40 de las correcciones) |
-| Sprints terminados | 2 de 3 (el tercero en curso) |
+| Historias de usuario cerradas | **32 de 34** (25 de las 27 originales + las 7 del profesor) |
+| Puntos de historia completados | **149 de 155** (109 originales + 40 de las correcciones) |
+| Sprints terminados | 2 de 3 (al tercero solo le quedan HU-26 y HU-27) |
 | Pruebas automáticas, en un clon recién hecho | **241 pasan** (105 backend + 136 frontend) |
 | Omitidas por falta de servicios locales | 4: tres necesitan MongoDB y una, certificados TLS |
-| Issues del proyecto | 41 (35 cerrados, 6 abiertos) |
-| Pull requests | 42 creados · 40 fusionados · **ninguno abierto** · 2 cerrados sin fusionar |
+| Con MongoDB de pruebas y certificados | **271 pasan**, ninguna omitida (135 + 136) |
+| Issues del proyecto | 41 (39 cerrados, 2 abiertos) |
+| Pull requests | 47 creados · 45 fusionados · **ninguno abierto** · 2 cerrados sin fusionar |
 | Reparto del trabajo | Por historias de usuario y revisión cruzada |
 
 > **Las dos cifras de arriba se mueven.** Las pruebas omitidas dependen de la
@@ -70,19 +71,24 @@ Ese orden —CSRF primero, sesión después— es el que hay que saber explicar:
 
 ### Lo que todavía está abierto
 
-Decirlo vosotros demuestra control. Que lo descubra él, lo contrario. Todo lo de
-abajo tiene issue abierto: no es una lista de olvidos, es trabajo planificado.
+Decirlo vosotros demuestra control. Que lo descubra él, lo contrario. Solo
+quedan las dos historias que, por definición, se cierran al final:
 
 | Pendiente | Issue |
 |---|---|
-| Pruebas funcionales y validar seguridad | HU-22 y HU-23 |
-| Cerrar HU-25, que solo espera la promoción a `main` | HU-25 |
-| Errores finales y preparar la sustentación | HU-26 y HU-27 |
-| Promover `develop` a `main`. Merge limpio y **no despliega nada**: los dos servicios de Render siguen `develop` | #73 |
+| Corregir errores finales | HU-26 (#25) |
+| Preparar la sustentación | HU-27 (#26) |
 
-**Ya no queda ningún pull request abierto.** Las siete historias del profesor
-(HU-28 a HU-34) y los dos bugs de HSTS y documentación están fusionados,
-desplegados y comprobados contra producción.
+Lo demás está cerrado y con evidencia escrita:
+
+| Historia | Evidencia |
+|---|---|
+| HU-22 — Pruebas funcionales | [`PRUEBAS_FUNCIONALES.md`](PRUEBAS_FUNCIONALES.md): 271 pruebas y recorrido en producción |
+| HU-23 — Validar seguridad | [`SEGURIDAD_EVIDENCIA.md`](SEGURIDAD_EVIDENCIA.md): HTTPS, XSS y CSRF reproducibles |
+| HU-25 — Desplegar aplicación | [`DESPLIEGUE.md`](DESPLIEGUE.md) y la verificación de producción, 14 de 14 |
+
+`develop` ya está promovido a `main` (#73, PR #87) y **no queda ningún pull
+request abierto**.
 
 ### Lo que pidió el profesor
 
@@ -259,11 +265,11 @@ Abrid el repositorio en GitHub.
 
 Si alguien mira el historial, hay **exactamente dos commits que no pasaron por un
 pull request**: el commit inicial del repositorio y un retoque del README del
-primer día. Son justo los dos que tiene `main` ahora mismo. Mejor decirlo vosotros
-que dejar que lo encuentren:
+primer día. Son los dos primeros del historial. Mejor decirlo vosotros que dejar
+que lo encuentren:
 
 ```bash
-git log --oneline origin/main
+git log --oneline --reverse origin/main
 ```
 
 ### Paso 8 — Las pruebas, en vivo · 1 min
@@ -282,8 +288,9 @@ npm test --prefix frontend
 
 **Mirad el número en pantalla antes de decirlo en voz alta.** Si en esa máquina ya
 se generaron los certificados, serán 242 y 3 omitidas; y con un MongoDB de pruebas
-levantado, las suites de integración despliegan muchos más casos y el total sube
-bastante. Las tres cifras son correctas: dependen de lo que tenga la máquina.
+levantado, las suites de integración despliegan cada caso y el total sube a 271
+sin ninguna omitida. Las tres cifras son correctas: dependen de lo que tenga la
+máquina. El detalle está en [`PRUEBAS_FUNCIONALES.md`](PRUEBAS_FUNCIONALES.md).
 
 ### Paso 9 — El despliegue · 1 min
 
@@ -523,7 +530,7 @@ Hay ramas `fix/` para eso: categorías huérfanas, categorías compartidas en el
 panel, diagnóstico de conexión a MongoDB, diagnóstico de DNS, plan del sitio
 estático en Render. Se detectaron, se abrió issue y se corrigieron por PR.
 
-**¿Qué prueban exactamente las 241 pruebas?**
+**¿Qué prueban exactamente las pruebas?**
 Backend: modelos y sus validaciones, rutas CRUD, autenticación y cookies de
 sesión, CSRF, redirección HTTPS, HSTS, manejador de errores, OpenAPI y conexión a
 base de datos. Frontend: carrito y persistencia, cantidades, total, envío,
@@ -603,7 +610,7 @@ npm test --prefix frontend
 
 ### Las cinco cifras que conviene llevar en la cabeza
 
-**34** historias en total · **29** cerradas · **133/155** puntos ·
+**34** historias en total · **32** cerradas · **149/155** puntos ·
 **241** pruebas aprobadas · **2** servicios en producción.
 
 > Si alguna cifra os falla la memoria, **enseñad la pestaña** en vez de
