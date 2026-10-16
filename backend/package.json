@@ -1,0 +1,31 @@
+{
+  "name": "all-in-la-pk-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API REST de All In La PK",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "test": "node --test --test-concurrency=1",
+    "check": "node scripts/check.mjs",
+    "sembrar": "node scripts/sembrar.mjs",
+    "hash-admin": "node scripts/generar-hash-admin.mjs",
+    "certificados": "node scripts/generar-certificados.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "mongoose": "^8.24.4",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

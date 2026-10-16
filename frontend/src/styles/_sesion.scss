@@ -1,0 +1,45 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+// Pantalla de acceso (HU-29). Reutiliza .formulario, .campo y .boton, que ya
+// existen: aquí solo va la caja que los centra y el bloque de la cabecera.
+.acceso {
+  max-width: 28rem;
+  margin: 0 auto;
+
+  &__titulo {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  &__intro {
+    margin: v.$spacing-sm 0 v.$spacing-lg;
+    color: v.$color-text-secondary;
+    font-size: 14px;
+  }
+
+  .formulario {
+    max-width: none;
+    border-bottom: 0;
+  }
+}
+
+.sesion {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-sm;
+
+  &__usuario {
+    color: v.$color-text-secondary;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+}
+
+@include m.respond-to(480px) {
+  // En la cabecera estrecha el nombre de usuario se come el espacio del botón.
+  .sesion__usuario {
+    display: none;
+  }
+}

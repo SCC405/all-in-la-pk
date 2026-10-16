@@ -27,8 +27,8 @@ sin depender de Postman ni de modificar código.
 
 | Integrante | Rol | GitHub |
 |---|---|---|
-| Nicolay | Desarrollador | [@Nicolayyy](https://github.com/Nicolayyy) |
-| Chifu (Santiago) | Desarrollador | [@SCC405](https://github.com/SCC405) |
+| Nicolay Baquero | Desarrollador | [@Nicolayyy](https://github.com/Nicolayyy) |
+| Santiago Cifuentes | Desarrollador | [@SCC405](https://github.com/SCC405) |
 
 **Metodología:** Scrum resumido/adaptado — 3 sprints de 2 semanas · 115 puntos de historia.
 
@@ -77,35 +77,111 @@ all-in-la-pk/
 
 ## 🚀 Puesta en marcha
 
-Requisitos: **Node.js 18+** y **npm**, más una cuenta de **MongoDB Atlas**.
+Requisitos: **Node.js 20 o superior** (hay un `.nvmrc`) y **npm**. Para la base de datos,
+una cuenta de **MongoDB Atlas** o un MongoDB local.
 
 ```bash
 git clone https://github.com/SCC405/all-in-la-pk.git
-cd all-in-la-pk
 ```
+
+Backend y frontend son proyectos npm **independientes**: cada uno tiene sus dependencias y
+se instala por separado. Los comandos de abajo usan `--prefix` para no tener que entrar y
+salir de carpetas, y funcionan igual en PowerShell, CMD y bash.
+
+### 1. Instalar
+
+```bash
+npm ci --prefix backend
+```
+
+```bash
+npm ci --prefix frontend
+```
+
+> `npm ci` instala exactamente lo que dice el `package-lock.json`. Usa `npm install` solo
+> cuando vayas a añadir o actualizar una dependencia.
+
+### 2. Configurar el backend
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Completa `MONGODB_URI` en ese archivo. **Nunca se sube al repositorio.** El resto de
+variables traen valores válidos para desarrollo.
+
+Para poder entrar al panel de administración hacen falta además `ADMIN_USUARIO` y
+`ADMIN_PASSWORD_HASH`. La contraseña no se guarda en claro en ninguna parte: se genera
+su hash y es eso lo que va al `.env`.
+
+```bash
+npm run hash-admin --prefix backend -- "tu-contraseña"
+```
+
+Sin esas dos variables el servidor arranca igual y el catálogo se ve, pero nadie puede
+iniciar sesión ni modificar nada. Es deliberado: una instalación a medio configurar no
+debe quedar abierta.
+
+### 3. Arrancar
+
+Hacen falta **dos terminales**, una para cada proyecto:
+
+```bash
+npm run dev --prefix backend
+```
+
+```bash
+npm run dev --prefix frontend
+```
+
+| Dirección | Qué es |
+|---|---|
+| `http://localhost:5173` | La tienda |
+| `http://localhost:4000/api` | La API REST |
+| `http://localhost:4000/api-docs` | Swagger UI: documentación navegable y ejecutable |
+| `http://localhost:4000/api-docs.json` | Especificación OpenAPI, importable en Postman |
+
+### 4. Datos de ejemplo (opcional)
+
+```bash
+npm run sembrar --prefix backend
+```
+
+Crea 5 categorías y 8 productos para ver la tienda con contenido. Si la base ya tiene datos
+se niega a continuar, porque sembrar los borra; para forzarlo, `npm run sembrar --prefix backend -- --confirmar`.
+
+## 📜 Comandos disponibles
 
 ### Backend
 
+| Comando | Qué hace |
+|---|---|
+| `npm run dev` | Servidor con reinicio automático al guardar |
+| `npm start` | Servidor en modo normal |
+| `npm test` | Pruebas. Las de integración se saltan si no hay base de datos de pruebas |
+| `npm run check` | Comprueba que todos los archivos sean sintácticamente válidos |
+| `npm run sembrar` | Llena la base con datos de ejemplo |
+| `npm run hash-admin` | Genera el hash de la contraseña de administrador |
+| `npm run certificados` | Genera certificados autofirmados para probar HTTPS en local |
+
+Para ejecutar también las pruebas que necesitan MongoDB:
+
 ```bash
-cd backend
-npm install
-cp .env.example .env    # completar con la cadena de conexión de MongoDB Atlas
-npm run dev
+MONGODB_URI_TEST=mongodb://localhost:27017/all_in_la_pk_test npm test --prefix backend
 ```
 
-API disponible en `http://localhost:4000/api` · Documentación Swagger en `http://localhost:4000/api-docs`
+> La base debe terminar en `_test` o `-test`: las pruebas borran datos al terminar y hay un
+> guardia que impide apuntarlas por error a la base real.
 
 ### Frontend
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+| Comando | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo con recarga en caliente |
+| `npm run build` | Compila la versión de producción en `dist/` |
+| `npm run preview` | Sirve localmente lo ya compilado |
+| `npm test` | Pruebas unitarias |
 
-Aplicación disponible en `http://localhost:5173`
-
-> Las instrucciones detalladas se completan en **HU-24 (Documentación técnica)**.
 
 ## 🎨 Identidad visual
 
@@ -113,10 +189,12 @@ Aplicación disponible en `http://localhost:5173`
 |---|---|---|
 | Verde póker | `#0F5132` | Color principal, botones, elementos activos |
 | Verde oscuro | `#0A3622` | Navbar, footer, hover |
+| Verde texto | `#3DB273` | Texto verde accesible sobre superficies oscuras |
 | Dorado | `#D4AF37` | Acentos, precios, elementos destacados |
 | Negro carbón | `#0D0D0D` | Fondo principal |
 | Gris oscuro | `#1C1C1C` | Tarjetas, formularios, superficies |
 | Rojo cartas | `#B3261E` | Errores y acciones destructivas |
+| Rojo texto | `#E5534B` | Texto de error accesible sobre superficies oscuras |
 | Blanco humo | `#F5F5F5` | Texto principal |
 | Gris claro | `#A7A7A7` | Texto secundario |
 
@@ -133,15 +211,26 @@ Detalle completo en [`docs/All_In_La_PK_Identidad_Visual.md`](docs/All_In_La_PK_
 El backlog vive como **issues** de este repositorio y se organiza en el
 [tablero del proyecto](https://github.com/SCC405/all-in-la-pk/projects).
 
+## ☁️ Despliegue
+
+La aplicación se publica en Render como **dos servicios independientes**: la API como servicio
+Node y la tienda como sitio estático, cada uno con su propia URL y su certificado TLS.
+
+La configuración vive en [`render.yaml`](render.yaml) y los pasos en
+[`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md).
+
 ## 📚 Documentación
 
 | Documento | Contenido |
 |---|---|
+| [Documentación técnica](docs/DOCUMENTACION_TECNICA.md) | Arquitectura, frontend, backend, base de datos, instalación, ejecución y Swagger |
 | [Proyecto completo](docs/All_In_La_PK_Proyecto_Completo.md) | Descripción, objetivos, alcance, requerimientos, product backlog y las 27 historias de usuario |
 | [Tecnologías](docs/All_In_La_PK_Tecnologias.md) | Stack, arquitectura, flujo de trabajo Git y herramientas |
 | [Identidad visual](docs/All_In_La_PK_Identidad_Visual.md) | Paleta, tipografía, componentes y variables SCSS |
 | [Requerimientos](docs/All_In_La_PK_Requerimientos.docx) | RF y RNF consolidados |
 | [Backlogs](docs/All_In_La_PK_Backlogs_Completos.xlsx) | Product Backlog y Sprint Backlogs en hoja de cálculo |
+| [Despliegue](docs/DESPLIEGUE.md) | Cómo publicar la aplicación en Render y por qué está configurada así |
+| [Integración](docs/INTEGRACION.md) | Evidencia de HU-21: catálogo, carrito, panel y CRUD contra producción |
 
 ## 🤝 Cómo trabajamos
 
@@ -151,5 +240,5 @@ la convención de commits y cómo se cierra una historia de usuario.
 ---
 
 <div align="center">
-<sub>Proyecto de aula · Nicolay & Chifu · 2026</sub>
+<sub>Proyecto de aula · Nicolay Baquero & Santiago Cifuentes · 2026</sub>
 </div>

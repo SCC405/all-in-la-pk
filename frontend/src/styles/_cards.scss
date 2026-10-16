@@ -1,0 +1,229 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+@use 'movimiento' as mov;
+
+.catalogo {
+  &__encabezado {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: v.$spacing-md;
+    margin-bottom: 36px;
+  }
+
+  &__encabezado,
+  &__rejilla {
+    @include mov.entrada(aparecer, v.$duracion-lenta);
+  }
+
+  &__titulo {
+    margin: 0;
+    // La identidad visual pide 32-40px para el título principal (sección 13).
+    // El peso se queda en 600 y no en Bold porque la dirección de este PR
+    // rebaja los pesos; subirlo a 700 es una línea si se prefiere.
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+
+    // Filete corto en vez de una línea divisoria a todo el ancho: marca la
+    // página sin convertir el dorado en el color dominante.
+    // Se dibuja de izquierda a derecha al cargar: es el unico adorno con
+    // movimiento propio de la pagina, y dura lo que dura leer el titulo.
+    &::after {
+      display: block;
+      width: 40px;
+      height: 2px;
+      margin-top: 12px;
+      background: v.$color-accent;
+      content: '';
+      transform-origin: left;
+      animation: dibujar-filete v.$duracion-lenta v.$curva-salida 120ms both;
+    }
+  }
+
+  &__conteo {
+    margin: 10px 0 0;
+    color: v.$color-text-secondary;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__rejilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 44px 24px;
+  }
+}
+
+// El producto se apoya en el aire y en la alineación, no en un marco: sin
+// borde, sin fondo y sin esquinas redondeadas, el color lo pone la foto.
+.producto {
+  display: flex;
+  flex-direction: column;
+  transition: transform v.$duracion-rapida v.$curva-suave;
+
+  @include mov.entrada(aparecer-subiendo, v.$duracion-media);
+
+  // Escalonado por posicion, sin tocar el JSX. El retardo se corta en la
+  // tarjeta 12: mas alla, el escalonado deja de leerse como un detalle y
+  // empieza a leerse como lentitud.
+  @for $i from 1 through v.$escalonado-maximo {
+    &:nth-child(#{$i}) {
+      animation-delay: ($i - 1) * v.$escalonado-paso;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &__imagen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: v.$color-surface;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition:
+        opacity v.$duracion-rapida v.$curva-suave,
+        transform v.$duracion-lenta v.$curva-salida;
+    }
+  }
+
+  // La foto se acerca dentro de su marco, que no se mueve. Es el gesto de las
+  // dos referencias: el recorte queda quieto y lo que respira es la imagen.
+  &:hover &__imagen img,
+  &:focus-within &__imagen img {
+    opacity: 0.92;
+    transform: scale(1.05);
+  }
+
+  // El agotado se cuenta en la foto. El texto y su etiqueta de lector de
+  // pantalla se quedan como están: esto solo añade una señal visual.
+  &:has(.producto__stock--agotado) .producto__imagen {
+    opacity: 0.45;
+    filter: grayscale(1);
+    transition: opacity v.$duracion-media v.$curva-suave, filter v.$duracion-media v.$curva-suave;
+  }
+
+  // Al pasar por encima recupera algo de color: deja ver el producto sin
+  // dejar de decir que no se puede comprar.
+  &:has(.producto__stock--agotado):hover .producto__imagen {
+    opacity: 0.62;
+    filter: grayscale(0.7);
+  }
+
+  &__sin-imagen {
+    color: #3f3f3f;
+    font-size: 48px;
+  }
+
+  &__cuerpo {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 0 0;
+  }
+
+  &__categoria {
+    margin: 0 0 2px;
+    color: v.$color-primary-text;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  // Una sola talla y un solo peso en toda la rejilla: el nombre no compite con
+  // la descripción, y el precio solo se distingue por el acento.
+  &__nombre {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.35;
+  }
+
+  &__descripcion {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    color: v.$color-text-secondary;
+    font-size: 15px;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  &__pie {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: v.$spacing-sm;
+    margin-top: auto;
+    padding-top: 12px;
+  }
+
+  &__precio {
+    margin: 0;
+    color: v.$color-accent;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  &__stock {
+    margin: 0;
+    color: v.$color-text-secondary;
+    font-size: 13px;
+
+    &--agotado {
+      color: v.$color-danger-text;
+    }
+  }
+}
+
+.aviso {
+  padding: 20px;
+  border-left: 2px solid v.$color-text-secondary;
+  background: v.$color-surface;
+
+  &--error {
+    border-left-color: v.$color-danger-text;
+  }
+
+  &--advertencia {
+    margin-bottom: v.$spacing-md;
+    border-left-color: v.$color-accent;
+  }
+
+  &__titulo {
+    margin: 0 0 v.$spacing-xs;
+    font-weight: 600;
+  }
+
+  &__detalle {
+    margin: 0;
+    color: v.$color-text-secondary;
+    font-size: 14px;
+  }
+}
+
+@include m.respond-to(560px) {
+  .catalogo__encabezado {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+@keyframes dibujar-filete {
+  from {
+    transform: scaleX(0);
+  }
+}

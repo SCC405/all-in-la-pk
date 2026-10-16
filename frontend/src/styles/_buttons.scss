@@ -1,0 +1,77 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+.boton {
+  @include m.interactive-control;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 v.$spacing-md;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color v.$transition-fast, border-color v.$transition-fast;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--principal {
+    background: v.$color-primary;
+
+    &:hover:not(:disabled) {
+      background: v.$color-primary-dark;
+    }
+  }
+
+  &--peligro {
+    background: v.$color-danger;
+
+    &:hover:not(:disabled) {
+      background: #8f1e18;
+    }
+  }
+
+  &--secundario {
+    border-color: v.$color-border-control;
+    background: transparent;
+
+    &:hover:not(:disabled) {
+      border-color: v.$color-accent;
+      color: v.$color-accent;
+    }
+  }
+}
+
+// Botón de contorno: en reposo solo dibuja su caja y deja que la foto del
+// producto sea lo único con color; el verde de marca aparece al interactuar.
+.producto__agregar {
+  @include m.interactive-control;
+
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px 14px;
+  border: 1px solid v.$color-border-control;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color v.$transition-fast, border-color v.$transition-fast;
+
+  &:hover:not(:disabled) {
+    border-color: v.$color-primary;
+    background: v.$color-primary;
+  }
+
+  &:focus-visible {
+    @include m.focus-ring(3px);
+  }
+
+  &:disabled {
+    border-color: v.$color-border-strong;
+    background: transparent;
+    color: v.$color-text-secondary;
+    cursor: not-allowed;
+  }
+}

@@ -1,0 +1,59 @@
+@use 'variables' as v;
+
+// Fotogramas compartidos (HU-34).
+//
+// Están todos aquí y no repartidos por los componentes para que se reutilicen:
+// si cada bloque inventa su propia entrada, la interfaz se mueve de seis
+// maneras distintas y se nota.
+//
+// Regla que vale para todos: la animación SIEMPRE lleva `both` como
+// fill-mode. Con `prefers-reduced-motion` la duración baja a 0,01 ms, así que
+// la animación se salta — pero el estado final se queda aplicado. Sin `both`,
+// lo que entra con `opacity: 0` se quedaría invisible para quien pide menos
+// movimiento, que es justo a quien no se puede romper la página.
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes aparecer-subiendo {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes aparecer-bajando {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes asentarse {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+// El contador del carrito al cambiar: un golpe corto, sin rebote.
+@keyframes latido {
+  50% {
+    transform: scale(1.28);
+  }
+}
+
+// Barrido del esqueleto de carga. Se mueve despacio a propósito: rápido
+// parece un error, lento parece que está trabajando.
+@keyframes barrido {
+  to {
+    background-position-x: -150%;
+  }
+}
+
+@mixin entrada($nombre: aparecer-subiendo, $duracion: v.$duracion-media, $retardo: 0ms) {
+  animation: $nombre $duracion v.$curva-salida $retardo both;
+}
