@@ -224,13 +224,16 @@ La configuración vive en [`render.yaml`](render.yaml) y los pasos en
 | Documento | Contenido |
 |---|---|
 | [Documentación técnica](docs/DOCUMENTACION_TECNICA.md) | Arquitectura, frontend, backend, base de datos, instalación, ejecución y Swagger |
-| [Proyecto completo](docs/All_In_La_PK_Proyecto_Completo.md) | Descripción, objetivos, alcance, requerimientos, product backlog y las 27 historias de usuario |
+| [Proyecto completo](docs/All_In_La_PK_Proyecto_Completo.md) | Descripción, objetivos, alcance, requerimientos, product backlog y las 34 historias de usuario |
 | [Tecnologías](docs/All_In_La_PK_Tecnologias.md) | Stack, arquitectura, flujo de trabajo Git y herramientas |
 | [Identidad visual](docs/All_In_La_PK_Identidad_Visual.md) | Paleta, tipografía, componentes y variables SCSS |
 | [Requerimientos](docs/All_In_La_PK_Requerimientos.docx) | RF y RNF consolidados |
 | [Backlogs](docs/All_In_La_PK_Backlogs_Completos.xlsx) | Product Backlog y Sprint Backlogs en hoja de cálculo |
 | [Despliegue](docs/DESPLIEGUE.md) | Cómo publicar la aplicación en Render y por qué está configurada así |
 | [Integración](docs/INTEGRACION.md) | Evidencia de HU-21: catálogo, carrito, panel y CRUD contra producción |
+| [Pruebas funcionales](docs/PRUEBAS_FUNCIONALES.md) | Evidencia de HU-22: resultados por criterio y recorrido en producción |
+| [Evidencia de seguridad](docs/SEGURIDAD_EVIDENCIA.md) | Evidencia de HU-23: HTTPS, XSS y CSRF reproducibles |
+| [Guía de sustentación](docs/SUSTENTACION.md) | Guion, cifras verificadas y preguntas probables |
 
 ## 🤝 Cómo trabajamos
 
