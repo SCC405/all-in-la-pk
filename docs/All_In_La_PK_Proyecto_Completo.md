@@ -72,6 +72,9 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 | Sprint 1 | 11–12 | Backend, base de datos, Swagger, CRUD y catálogo |
 | Sprint 2 | 13–14 | Carrito, panel administrador, SCSS y seguridad |
 | Sprint 3 | 15–16 | Integración, pruebas, documentación, despliegue y sustentación |
+| Correcciones | 16–17 | Sesión de administrador, proceso de compra e interacción |
+
+La fila de correcciones no estaba en el plan inicial: recoge las siete historias que pidió el profesor tras la sustentación del 6 de octubre de 2026 (HU-28 a HU-34, 40 puntos).
 
 ## 9. Requerimientos funcionales
 
@@ -802,6 +805,186 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 - Ensayar funcionamiento.
 - Verificar despliegue antes de sustentar.
 
+### HU-28 — Autenticar al administrador en la API
+
+**Descripción / Historia de usuario:** Como administrador, quiero iniciar sesión con usuario y contraseña para que solo yo pueda modificar el catálogo.
+
+**Prioridad:** Muy alta
+**Puntos:** 8
+**Dependencias:** HU-03, HU-05, HU-19
+**Sprint:** 3 (correcciones)
+**Responsable:** Santiago Cifuentes
+
+**Criterios de aceptación:**
+- Existen los endpoints de consultar, abrir y cerrar sesión.
+- La contraseña se almacena con hash y sal, nunca en claro.
+- Las operaciones que modifican datos responden 401 sin sesión.
+- Las lecturas públicas del catálogo siguen abiertas.
+- Unas credenciales incorrectas no revelan si el usuario existe.
+- La sesión convive con la protección CSRF de HU-19.
+- Swagger documenta los tres endpoints.
+
+**Subtareas:**
+- Decidir dónde viven las credenciales.
+- Implementar el hash con scrypt del módulo crypto de Node.
+- Crear el middleware que exige sesión.
+- Montarlo después de la protección CSRF.
+- Documentar en OpenAPI y en el archivo de variables de ejemplo.
+- Escribir las pruebas.
+
+### HU-29 — Pantalla de inicio de sesión y sesión persistente
+
+**Descripción / Historia de usuario:** Como administrador, quiero una pantalla de inicio de sesión y que mi sesión se mantenga al recargar, para no autenticarme en cada página.
+
+**Prioridad:** Muy alta
+**Puntos:** 5
+**Dependencias:** HU-28
+**Sprint:** 3 (correcciones)
+**Responsable:** Santiago Cifuentes
+
+**Criterios de aceptación:**
+- Existe una ruta de acceso con formulario de usuario y contraseña.
+- Al entrar correctamente se redirige al panel.
+- Un fallo conserva el usuario escrito y señala el error.
+- La sesión sobrevive a la recarga de la página.
+- Hay un botón de cerrar sesión visible mientras haya sesión.
+- El formulario es utilizable con teclado y anuncia los errores.
+
+**Subtareas:**
+- Crear el contexto de sesión.
+- Crear el servicio que habla con los endpoints.
+- Construir la pantalla de acceso.
+- Añadir el botón de cerrar sesión a la cabecera.
+- Resolver el estado de comprobación inicial.
+- Escribir las pruebas.
+
+### HU-30 — Ocultar y proteger el panel de administración
+
+**Descripción / Historia de usuario:** Como visitante, no quiero ver ni poder entrar al panel de administración, para que el catálogo solo lo gestione quien tiene permiso.
+
+**Prioridad:** Muy alta
+**Puntos:** 3
+**Dependencias:** HU-28, HU-29
+**Sprint:** 3 (correcciones)
+**Responsable:** Santiago Cifuentes
+
+**Criterios de aceptación:**
+- El enlace al panel no aparece sin sesión.
+- Entrar directamente al panel sin sesión redirige al acceso.
+- Después de entrar se vuelve a la página que se intentaba abrir.
+- La API rechaza las operaciones sin sesión aunque el panel esté oculto.
+
+**Subtareas:**
+- Crear el componente de ruta protegida.
+- Condicionar el enlace de la navegación.
+- Recordar el destino al redirigir.
+- Comprobar que la API responde 401 con el panel oculto.
+
+### HU-31 — Resumen de la compra antes de pagar
+
+**Descripción / Historia de usuario:** Como cliente, quiero ver el detalle de lo que voy a comprar antes de pagar, para confirmar que el pedido es correcto.
+
+**Prioridad:** Alta
+**Puntos:** 5
+**Dependencias:** HU-10, HU-11, HU-12
+**Sprint:** 3 (correcciones)
+**Responsable:** Nicolay Baquero
+
+**Criterios de aceptación:**
+- Desde el carrito se llega a una página propia de compra.
+- Se listan los productos con cantidad, precio unitario y subtotal.
+- Se pueden cambiar cantidades o quitar artículos desde ahí.
+- Con el carrito vacío no se puede continuar y se ofrece volver al catálogo.
+- Los importes usan el formato de pesos colombianos del catálogo.
+
+**Subtareas:**
+- Crear la página de compra y su ruta.
+- Añadir el botón de comprar al carrito.
+- Resolver el caso del carrito vacío.
+- Reutilizar el cálculo del total.
+- Escribir las pruebas.
+
+### HU-32 — Datos de envío y forma de pago
+
+**Descripción / Historia de usuario:** Como cliente, quiero indicar mi dirección y la forma de pago y ver cuánto cuesta el envío, para completar el pedido.
+
+**Prioridad:** Alta
+**Puntos:** 8
+**Dependencias:** HU-31, HU-15
+**Sprint:** 3 (correcciones)
+**Responsable:** Nicolay Baquero
+
+**Criterios de aceptación:**
+- Formulario con nombre, correo, teléfono, dirección y ciudad.
+- Selector de forma de pago sin pedir datos de tarjeta.
+- Se muestra el precio del envío y el total pasa a ser productos más envío.
+- La regla del costo de envío está escrita en un solo sitio y documentada.
+- Los campos obligatorios se validan antes de permitir comprar.
+- El botón de comprar está deshabilitado mientras falten datos.
+- Los campos tienen etiqueta, autocompletado y son usables con teclado.
+
+**Subtareas:**
+- Definir y documentar la regla del costo de envío.
+- Crear las validaciones del formulario con sus pruebas.
+- Construir el formulario reutilizando los estilos de campo existentes.
+- Mostrar el desglose de productos, envío y total.
+
+**Nota de alcance:** sin pasarela de pago. No se piden, no se validan y no se guardan números de tarjeta, códigos de seguridad ni fechas de caducidad. La forma de pago es solo una elección que se registra con el pedido, en línea con el alcance declarado en el README.
+
+### HU-33 — Confirmación de compra exitosa
+
+**Descripción / Historia de usuario:** Como cliente, quiero ver una confirmación cuando termino la compra, para saber que el pedido quedó tomado.
+
+**Prioridad:** Alta
+**Puntos:** 3
+**Dependencias:** HU-32
+**Sprint:** 3 (correcciones)
+**Responsable:** Nicolay Baquero
+
+**Criterios de aceptación:**
+- Al comprar con todos los datos válidos se muestra una confirmación.
+- La confirmación incluye referencia de pedido, resumen y dirección de envío.
+- El carrito queda vacío después de comprar.
+- Volver atrás no repite la compra.
+- La confirmación se anuncia a lectores de pantalla.
+
+**Subtareas:**
+- Crear la pantalla de confirmación.
+- Generar la referencia del pedido.
+- Vaciar el carrito al confirmar.
+- Evitar el reenvío al volver atrás.
+- Escribir las pruebas.
+
+**Decisión de alcance:** el pedido no se persiste. No hay modelo ni endpoint de pedidos, por lo que la confirmación indica que se contactará al cliente para coordinar el pago y la entrega, y no afirma que el pedido quedó registrado. Persistirlo exigiría modelo, endpoint y pruebas, y queda como ampliación futura.
+
+### HU-34 — Hacer la tienda más interactiva
+
+**Descripción / Historia de usuario:** Como cliente, quiero que la tienda responda a lo que hago y se sienta viva, para que recorrer el catálogo y comprar sea más agradable.
+
+**Prioridad:** Media
+**Puntos:** 8
+**Dependencias:** HU-16
+**Sprint:** 3 (correcciones)
+**Responsable:** Equipo
+
+**Criterios de aceptación:**
+- La paleta de la identidad visual no cambia.
+- Hay transiciones al pasar el cursor por tarjetas, botones y filas.
+- Hay realimentación visible al añadir un producto al carrito.
+- El panel del carrito tiene transición al abrir y al cerrar.
+- El catálogo aparece de forma escalonada al cargar.
+- El estado de carga reserva el espacio de la rejilla.
+- Todo el movimiento se anula bajo prefers-reduced-motion.
+- Se conservan el contorno de foco, las etiquetas de lector de pantalla y los objetivos táctiles.
+- No hay desbordamiento horizontal a 320 píxeles.
+
+**Subtareas:**
+- Definir duraciones y curvas compartidas.
+- Añadir las animaciones de catálogo, carrito y compra.
+- Sustituir el texto de carga por un esqueleto con la forma de la rejilla.
+- Ampliar el bloque de movimiento reducido.
+- Verificar en navegador a 1280 y 320 píxeles.
+
 ## 13. Sprint Backlogs
 
 ### Sprint 1
@@ -864,6 +1047,26 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 **Carga Santiago Cifuentes:** 16 puntos  
 **Total Sprint 3:** 32 puntos
 
+### Sprint 3 — Correcciones de la sustentación
+
+**Origen:** retroalimentación del profesor tras la sustentación del 6 de octubre de 2026. Siete historias nuevas que amplían el alcance con autenticación de administrador, proceso de compra e interacción del lado cliente.
+
+**Sprint Goal:** proteger el panel de administración detrás de una sesión, llevar el carrito hasta una confirmación de compra sin pasarela de pago, y dar movimiento a la tienda conservando la identidad visual y las reglas de accesibilidad.
+
+| HU | Actividad | Responsable | Puntos | Dependencias |
+|---|---|---|---:|---|
+| HU-28 | Autenticar al administrador en la API | Santiago Cifuentes | 8 | HU-03, HU-05, HU-19 |
+| HU-29 | Pantalla de inicio de sesión y sesión persistente | Santiago Cifuentes | 5 | HU-28 |
+| HU-30 | Ocultar y proteger el panel de administración | Santiago Cifuentes | 3 | HU-28, HU-29 |
+| HU-31 | Resumen de la compra antes de pagar | Nicolay Baquero | 5 | HU-10, HU-11, HU-12 |
+| HU-32 | Datos de envío y forma de pago | Nicolay Baquero | 8 | HU-31, HU-15 |
+| HU-33 | Confirmación de compra exitosa | Nicolay Baquero | 3 | HU-32 |
+| HU-34 | Hacer la tienda más interactiva | Equipo | 8 | HU-16 |
+
+**Carga Nicolay Baquero:** 20 puntos (16 propios más la mitad de HU-34)
+**Carga Santiago Cifuentes:** 20 puntos (16 propios más la mitad de HU-34)
+**Total correcciones:** 40 puntos
+
 ## 14. Resumen de carga
 
 | Sprint | Nicolay Baquero | Santiago Cifuentes | Total |
@@ -871,6 +1074,9 @@ Scrum resumido/adaptado para un equipo de dos personas. Se mantendrá un Product
 | Sprint 1 | 19 | 19 | 38 |
 | Sprint 2 | 22 | 23 | 45 |
 | Sprint 3 | 16 | 16 | 32 |
-| **Total** | **57** | **58** | **115** |
+| Correcciones | 20 | 20 | 40 |
+| **Total** | **77** | **78** | **155** |
 
-La distribución global queda equilibrada: 57 puntos para Nicolay Baquero y 58 puntos para Santiago Cifuentes.
+La distribución global queda equilibrada: 77 puntos para Nicolay Baquero y 78 puntos para Santiago Cifuentes.
+
+Las 27 historias originales suman 115 puntos. Las siete añadidas tras la sustentación suman 40, para un total de **34 historias y 155 puntos**.
