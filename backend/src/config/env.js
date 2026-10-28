@@ -50,3 +50,26 @@ export const env = Object.freeze({
   // sesiones abiertas, y con varias instancias no valdrían entre ellas.
   sesionSecret: process.env.SESION_SECRET?.trim() || '',
 });
+
+// En desarrollo los secretos efímeros facilitan arrancar sin configurar Atlas.
+// En producción no se debe aceptar ese respaldo: cada instancia firmaría
+// tokens distintos y una instalación incompleta parecería funcionar.
+export function validarConfiguracionProduccion(configuracion, variables = process.env) {
+  if (configuracion.nodeEnv !== 'production') return;
+
+  const requeridas = {
+    MONGODB_URI: configuracion.mongodbUri,
+    CORS_ORIGIN: variables.CORS_ORIGIN?.trim(),
+    CSRF_SECRET: configuracion.csrfSecret,
+    ADMIN_USUARIO: configuracion.adminUsuario,
+    ADMIN_PASSWORD_HASH: configuracion.adminPasswordHash,
+    SESION_SECRET: configuracion.sesionSecret,
+  };
+  const faltantes = Object.entries(requeridas)
+    .filter(([, valor]) => !valor)
+    .map(([nombre]) => nombre);
+
+  if (faltantes.length > 0) {
+    throw new Error(`Faltan variables de entorno para producción: ${faltantes.join(', ')}`);
+  }
+}

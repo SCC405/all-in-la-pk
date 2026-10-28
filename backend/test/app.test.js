@@ -20,6 +20,8 @@ test('GET /api/health informa que el backend está disponible', async (context) 
   assert.equal(response.status, 200);
   assert.equal(body.status, 'ok');
   assert.equal(body.service, 'all-in-la-pk-backend');
+  assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+  assert.equal(response.headers.get('x-frame-options'), 'SAMEORIGIN');
 });
 
 test('una ruta inexistente responde con un error 404 controlado', async (context) => {

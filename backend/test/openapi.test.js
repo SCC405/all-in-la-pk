@@ -141,5 +141,7 @@ test('GET /api-docs sirve la interfaz de Swagger UI', async (context) => {
 
   assert.equal(respuesta.status, 200);
   assert.match(respuesta.headers.get('content-type'), /text\/html/);
+  assert.match(respuesta.headers.get('content-security-policy'), /default-src 'self'/);
+  assert.match(respuesta.headers.get('content-security-policy'), /object-src 'none'/);
   assert.match(html, /swagger-ui/);
 });

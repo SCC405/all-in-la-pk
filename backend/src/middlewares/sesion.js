@@ -3,9 +3,10 @@ import { verificarPassword } from '../utils/password.js';
 
 export const NOMBRE_COOKIE = 'sesion';
 
-// Ocho horas: una jornada. Pasado ese plazo el token deja de valer aunque la
-// cookie siga en el navegador, porque la caducidad va dentro de la firma.
-export const DURACION_MS = 8 * 60 * 60 * 1000;
+// Sesión corta para reducir el tiempo de uso de una cookie robada. Pasado ese
+// plazo el token deja de valer aunque la cookie siga en el navegador, porque
+// la caducidad va dentro de la firma.
+export const DURACION_MS = 15 * 60 * 1000;
 
 // Leer el catálogo es público: la tienda no pide sesión a nadie. Solo se
 // protege lo que modifica datos.
@@ -92,6 +93,9 @@ export function crearIniciarSesion(env) {
     // El mismo mensaje en los dos casos: decir «ese usuario no existe» le
     // confirma a quien lo intenta cuál de las dos mitades ya acertó.
     if (!usuarioCorrecto || !passwordCorrecta) {
+      // No registrar el usuario ni la contraseña: basta la IP para detectar
+      // intentos repetidos sin volcar credenciales en los logs.
+      console.warn('Inicio de sesión fallido desde', request.ip ?? 'origen desconocido');
       response.status(401).json({ error: 'Credenciales incorrectas' });
       return;
     }
