@@ -31,9 +31,12 @@ services:
         value: 10000
 
       # Detrás del proxy de Render. Sin esto, la redirección a HTTPS no sabría
-      # que la petición original ya venía cifrada y entraría en bucle.
+      # que la petición original ya venía cifrada y entraría en bucle. El
+      # número de saltos decide qué IP ve el límite de login: ver DESPLIEGUE.md.
+      # Medido el 29 de octubre: Cloudflare, el balanceador de Render y la
+      # conexión final. Con 1 se ve 10.x y con 2 la IP de Cloudflare.
       - key: TRUST_PROXY
-        value: "true"
+        value: "3"
 
       # Redirige lo que llegue sin cifrar y envía HSTS. Además hace que la
       # cookie del token CSRF salga como SameSite=None; Secure, imprescindible
@@ -88,6 +91,21 @@ services:
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
+    headers:
+      # La CSP efectiva de la interfaz se entrega en la respuesta HTML. La
+      # API está en otro origen; por eso connect-src lo autoriza expresamente.
+      - path: /*
+        name: Content-Security-Policy
+        value: "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self'; style-src 'self'; img-src 'self' https:; connect-src 'self' https://all-in-la-pk-api.onrender.com"
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
     envVars:
       # URL de la API, con esquema y con la ruta /api. También a mano, por lo
       # mismo que arriba. Ejemplo:

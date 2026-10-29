@@ -80,6 +80,7 @@ test('generar un hash de contraseña vacía es un error explícito', () => {
 // ---------- token de sesión ----------
 
 test('un token recién emitido se puede leer', () => {
+  assert.equal(DURACION_MS, 15 * 60 * 1000);
   const sesion = leerToken(generarToken('admin', SECRETO), SECRETO);
 
   assert.equal(sesion.usuario, 'admin');

@@ -181,6 +181,9 @@ export const openapi = {
             'Credenciales incorrectas, o el servidor no tiene administrador configurado.',
             { error: 'Credenciales incorrectas' },
           ),
+          429: respuestaError('Demasiados intentos de inicio de sesión durante 15 minutos.', {
+            error: 'Demasiados intentos. Espera 15 minutos e inténtalo de nuevo.',
+          }),
         },
       },
       delete: {

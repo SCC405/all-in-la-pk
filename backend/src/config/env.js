@@ -16,6 +16,17 @@ function esVerdadero(valor) {
   return ['1', 'true', 'si', 'sí'].includes(valor?.trim().toLowerCase() ?? '');
 }
 
+// Cuántos proxies hay delante de Express. Un número son saltos exactos; un
+// valor verdadero equivale a uno. Nunca se devuelve `true` a secas: con él
+// Express tomaría la primera IP de X-Forwarded-For, que la escribe el cliente.
+export function nivelesDeProxy(valor) {
+  const texto = valor?.trim() ?? '';
+
+  if (/^\d+$/.test(texto)) return Number(texto) || false;
+
+  return esVerdadero(texto) ? 1 : false;
+}
+
 export const env = Object.freeze({
   nodeEnv: process.env.NODE_ENV?.trim() || 'development',
   port: parsePort(process.env.PORT),
@@ -30,8 +41,9 @@ export const env = Object.freeze({
 
   // Solo se activa detrás de un proxy de verdad. Si se activara siempre,
   // cualquier cliente podría enviar X-Forwarded-Proto: https y saltarse
-  // la redirección.
-  trustProxy: esVerdadero(process.env.TRUST_PROXY),
+  // la redirección. El número de saltos decide además qué IP ve el límite de
+  // intentos de login: con uno solo, en Render sale la del proxy interno.
+  trustProxy: nivelesDeProxy(process.env.TRUST_PROXY),
   forzarHttps: esVerdadero(process.env.FORZAR_HTTPS),
 
   // Firma los tokens CSRF. Sin un secreto fijo el servidor arranca igual, pero
@@ -50,3 +62,26 @@ export const env = Object.freeze({
   // sesiones abiertas, y con varias instancias no valdrían entre ellas.
   sesionSecret: process.env.SESION_SECRET?.trim() || '',
 });
+
+// En desarrollo los secretos efímeros facilitan arrancar sin configurar Atlas.
+// En producción no se debe aceptar ese respaldo: cada instancia firmaría
+// tokens distintos y una instalación incompleta parecería funcionar.
+export function validarConfiguracionProduccion(configuracion, variables = process.env) {
+  if (configuracion.nodeEnv !== 'production') return;
+
+  const requeridas = {
+    MONGODB_URI: configuracion.mongodbUri,
+    CORS_ORIGIN: variables.CORS_ORIGIN?.trim(),
+    CSRF_SECRET: configuracion.csrfSecret,
+    ADMIN_USUARIO: configuracion.adminUsuario,
+    ADMIN_PASSWORD_HASH: configuracion.adminPasswordHash,
+    SESION_SECRET: configuracion.sesionSecret,
+  };
+  const faltantes = Object.entries(requeridas)
+    .filter(([, valor]) => !valor)
+    .map(([nombre]) => nombre);
+
+  if (faltantes.length > 0) {
+    throw new Error(`Faltan variables de entorno para producción: ${faltantes.join(', ')}`);
+  }
+}

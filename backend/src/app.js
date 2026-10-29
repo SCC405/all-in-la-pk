@@ -1,6 +1,7 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
+import helmet from 'helmet';
 import { env } from './config/env.js';
 import { errorHandler } from './middlewares/error-handler.js';
 import { crearProteccionCsrf } from './middlewares/csrf.js';
@@ -22,10 +23,27 @@ app.disable('x-powered-by');
 // explícito para leer X-Forwarded-Proto y saber si la petición original era
 // HTTPS. Sin esta línea, la redirección de abajo entraría en bucle.
 if (env.trustProxy) {
-  app.set('trust proxy', 1);
+  app.set('trust proxy', env.trustProxy);
 }
 
 app.use(crearForzarHttps(env));
+
+// Cabeceras generales para la API. El HSTS propio conserva la excepción de
+// /api/health, y la CSP se ajusta por separado para Swagger UI: su página
+// genera un script de configuración en línea que necesita una excepción.
+app.use(helmet({ contentSecurityPolicy: false, strictTransportSecurity: false }));
+app.use('/api-docs', helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'", "'unsafe-inline'"],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    imgSrc: ["'self'", 'data:'],
+    connectSrc: ["'self'"],
+    objectSrc: ["'none'"],
+    baseUri: ["'self'"],
+    frameAncestors: ["'none'"],
+  },
+}));
 
 // credentials: true es imprescindible para que el navegador acepte la cookie
 // del token CSRF cuando el frontend vive en otro origen.
