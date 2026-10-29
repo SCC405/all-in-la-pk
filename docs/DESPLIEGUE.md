@@ -92,6 +92,18 @@ bucle**: el proxy descifra, Express cree que llegó sin cifrar y redirige, y vue
 Solo se activa aquí. Si estuviera activo siempre, cualquier cliente podría enviar esa
 cabecera a mano y hacerse pasar por una conexión segura.
 
+**El valor también puede ser un número: cuántos proxies hay delante.** Decide qué IP ve el
+límite de cinco intentos de login. Con `true` (un salto) Render deja ver la IP de su proxy
+interno, `10.x.x.x`, y todos los visitantes comparten contador: cinco fallos de cualquiera
+bloquean al administrador. El número correcto se comprueba así:
+
+1. Un login fallido desde un equipo cuya IP pública conozcas.
+2. En los logs, `Inicio de sesión fallido desde …` tiene que mostrar esa IP.
+3. Repetirlo enviando `X-Forwarded-For: 1.2.3.4`: si el log dice `1.2.3.4`, sobra un salto y
+   cualquiera podría saltarse el límite cambiando esa cabecera.
+
+Nunca `TRUST_PROXY` con un número mayor del necesario, por lo del punto 3.
+
 ### `FORZAR_HTTPS=true`
 
 Dos efectos: redirige lo que llegue sin cifrar y envía `Strict-Transport-Security`; y hace que
