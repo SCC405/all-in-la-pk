@@ -1,7 +1,7 @@
 // Cliente HTTP compartido para hablar con la API REST de All In La PK.
 // Toda la comunicación con el backend pasa por aquí (RNF-02).
 
-const URL_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
+const URL_BASE = import.meta.env?.VITE_API_URL ?? 'http://localhost:4000/api';
 
 const METODOS_QUE_MODIFICAN = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
@@ -21,6 +21,14 @@ export class ErrorApi extends Error {
 // dominios distintos eso deja de funcionar, así que se toma del cuerpo de la
 // respuesta, que sí llega siempre. La cookie viaja sola gracias a `credentials`.
 let tokenCsrf = null;
+const observadoresSesionCaducada = new Set();
+
+// El contexto de sesión escucha los 401 de rutas protegidas. El login también
+// responde 401 por credenciales incorrectas, así que esa ruta se excluye.
+export function alCaducarSesion(observador) {
+  observadoresSesionCaducada.add(observador);
+  return () => observadoresSesionCaducada.delete(observador);
+}
 
 async function obtenerTokenCsrf() {
   const respuesta = await fetch(`${URL_BASE}/csrf-token`, { credentials: 'include' });
@@ -75,6 +83,10 @@ async function peticion(ruta, opciones = {}) {
   const cuerpo = await respuesta.json().catch(() => null);
 
   if (!respuesta.ok) {
+    if (respuesta.status === 401 && ruta !== '/sesion') {
+      for (const observador of observadoresSesionCaducada) observador();
+    }
+
     // El backend responde { error, detalles? }: `detalles` trae el mensaje por
     // campo cuando la validación del esquema rechaza el formulario.
     throw new ErrorApi(
