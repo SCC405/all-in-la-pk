@@ -30,8 +30,9 @@
 | 4 | Dependencias con avisos de seguridad en la instalación inicial. | A03 | `npm audit` detectó avisos en el árbol de `body-parser`, `qs` y `vite`. | `npm audit fix` en backend y frontend, con archivos lock actualizados. Auditorías posteriores: cero vulnerabilidades en ambos. | Corregido en la rama; repetir auditoría periódicamente. |
 | 5 | Producción podía arrancar con secretos de firma efímeros si faltaba una variable. | A02, A04 | `csrf.js` y `sesion.js` generaban un secreto por proceso como respaldo. | El arranque de producción ahora exige `MONGODB_URI`, `CORS_ORIGIN`, `CSRF_SECRET`, `ADMIN_USUARIO`, `ADMIN_PASSWORD_HASH` y `SESION_SECRET`; solo informa los nombres ausentes. Desarrollo conserva el respaldo local. | Corregido en la rama. |
 | 6 | Un precio negativo manipulado en `localStorage` superaba la validación de forma del carrito. | A06, A08 | `itemValido` comprobaba que el precio fuera finito, pero no que fuera no negativo. | Se rechazan precios negativos al restaurar el carrito; ya se rechazaban cantidades menores que uno. Hay prueba para ambos valores. | Corregido en la rama. |
-| 7 | La configuración de acceso de Atlas no se pudo verificar en esta sesión. | A02, A04 | El panel de Atlas solicitó autenticación al intentar revisar `Network Access` y `Database Access`. | Verificar en la cuenta del proyecto el rango de IP y que el usuario de la API tenga solo `readWrite` sobre `all_in_la_pk`; no alterar la lista de IP sin validar el egreso de Render. | Pendiente de comprobación del titular. |
+| 7 | El usuario de la API en Atlas tiene acceso a todas las bases del clúster. | A01, A02 | En una revisión posterior, Santiago confirmó el alcance del usuario en `Database Access` y el rango `0.0.0.0/0` en `Network Access`. | Restringir el usuario de producción a `readWrite` solo en `all_in_la_pk` y crear otro usuario para `all_in_la_pk_test`. Mantener `0.0.0.0/0` como riesgo aceptado mientras Render gratuito no ofrezca una IP de salida fija. | Confirmado; roles pendientes de corregir. |
 | 8 | El checkout solicita datos personales aunque el pedido no se transmite ni persiste. | A06, privacidad | `frontend/src/pages/Compra.jsx` pide nombre, correo, teléfono, dirección y ciudad; `construirPedido` los conserva en el estado de navegación para la confirmación. | No guardar datos de tarjeta; antes de un uso real, explicar el carácter de demostración o implementar un proceso de pedido con finalidad, autorización y conservación definidas. | Riesgo residual de diseño. |
+| 9 | Tras caducar la sesión, el panel permanecía visible y mostraba el mensaje técnico del 401 al guardar. | A07 | Con el límite de 15 minutos, una mutación protegida devolvía 401 mientras el estado React seguía activo. | El cliente HTTP avisa al contexto cuando una ruta protegida responde 401; el contexto cierra la sesión y la ruta protegida lleva a `/login`. El 401 de credenciales incorrectas queda excluido. | Corregido en la rama; prueba automatizada del cliente. |
 
 ### HTTPS y cookies
 
@@ -60,12 +61,12 @@ La guía propone enviar una compra con cantidad `-5` o precio manipulado. Este p
 | Categoría | Resultado en All In La PK |
 |---|---|
 | A01 Control de acceso roto | Mutaciones de catálogo protegidas en Express; no existe recurso privado por propietario para probar IDOR. |
-| A02 Configuración insegura | CORS específico y HSTS existentes; Helmet/CSP añadidos. Atlas y aplicación efectiva de la CSP en Render pendientes de verificar. |
+| A02 Configuración insegura | CORS específico y HSTS existentes; Helmet/CSP añadidos. En Atlas se confirmó un usuario con acceso a todas las bases y `0.0.0.0/0`; falta limitar los roles. La CSP en Render sigue pendiente de sincronización. |
 | A03 Fallos de cadena de suministro | `npm audit` de ambos proyectos: cero avisos tras actualizar dependencias. |
 | A04 Fallos criptográficos | HTTPS y hash lento con sal; secretos fuera del código. Arranque de producción falla si falta uno. |
 | A05 Inyección | React escapa texto y los esquemas de Mongoose validan tipos; CSP de la tienda preparada. |
 | A06 Diseño inseguro | Restauración del carrito endurecida; sigue faltando un flujo real de pedidos y tratamiento definido de datos del comprador. |
-| A07 Fallos de autenticación | Login genérico, token de 15 minutos y límite de cinco fallos por IP. |
+| A07 Fallos de autenticación | Login genérico, token de 15 minutos, límite de cinco fallos por IP y redirección a `/login` al recibir 401 por sesión caducada. |
 | A08 Integridad de software o datos | Firma HMAC de sesión y CSRF; la UI no debe ser fuente de verdad para un pedido futuro. |
 | A09 Fallos de registro y alertas | Se registran fallos y bloqueos de login; no hay alertas ni centralización de seguridad. |
 | A10 Manejo de excepciones | Respuestas 500 genéricas y errores de conexión sin filtrar URI; faltantes de producción impiden iniciar. |
@@ -74,7 +75,8 @@ La guía propone enviar una compra con cantidad `-5` o precio manipulado. Este p
 
 | Riesgo que sigue presente | Probabilidad | Impacto | Tratamiento |
 |---|---|---|---|
-| El usuario de Atlas o su lista de IP podrían tener permisos amplios; no se pudo entrar al panel. | Media | Alto | Mitigar: revisar `Network Access` y limitar la cuenta de la API a `readWrite` en la base del proyecto. |
+| El usuario de la API en Atlas tiene permiso sobre todas las bases del clúster. | Media | Alto | Mitigar: dejarle `readWrite` solo en `all_in_la_pk` y usar otro usuario para la base de pruebas. Verificar la conexión de producción tras cambiar el rol. |
+| `Network Access` de Atlas permite `0.0.0.0/0`. | Media | Alto | Aceptar temporalmente por la ausencia de IP de salida fija en Render gratuito; compensar con credenciales fuertes, privilegios mínimos y seguimiento de accesos. Revisar la regla si cambia el alojamiento. |
 | La CSP del frontend solo entrará en vigor cuando Render aplique el Blueprint actualizado. | Media | Medio | Mitigar: sincronizar el servicio y verificar la cabecera y la consola del navegador después del despliegue. |
 | El login usa un limitador en memoria por IP; reinicios o varias instancias reinician el conteo y un origen compartido puede bloquear a otros. | Media | Medio | Mitigar: usar almacén compartido y alertas si escala el despliegue. |
 | El token de sesión es autocontenido; cerrar sesión borra la cookie, pero no revoca un token robado antes de que venza. | Baja | Alto | Mitigar: lista de revocación o sesiones del servidor, además del vencimiento de 15 minutos. |
@@ -104,12 +106,13 @@ El catálogo y las categorías se guardan en Atlas; **no hay colección de clien
 ## 8. Evidencia de verificación y límites
 
 - `npm test --prefix backend`: **110 aprobadas, 3 omitidas, 0 fallidas**. Las omitidas requieren `MONGODB_URI_TEST` sobre una base terminada en `_test`; no se conectó la suite destructiva al Atlas compartido.
-- `npm test --prefix frontend`: **136 aprobadas, 0 fallidas**. `npm run build --prefix frontend` compiló con Vite 8.3.5.
+- `npm test --prefix frontend`: **137 aprobadas, 0 fallidas**. La nueva prueba distingue el 401 del login del 401 de una ruta protegida. `npm run build --prefix frontend` compiló con Vite 8.3.5.
 - Swagger UI se abrió en un servidor local con la nueva CSP: se renderizaron el título, los esquemas y las rutas de categorías, productos y sistema.
 - `npm audit --prefix backend` y `npm audit --prefix frontend`: **0 vulnerabilidades** en cada uno tras actualizar los lockfiles.
 - `npm outdated` muestra actualizaciones disponibles, entre ellas Mongoose 9 y React 19; no se hizo una migración mayor dentro de este laboratorio porque requiere pruebas de compatibilidad. Una versión más nueva no implica por sí sola una vulnerabilidad en la versión instalada.
 - `git ls-files` y `git status --ignored`: `.env` y certificados locales permanecen ignorados. La búsqueda de URI en el historial solo encontró las cadenas de ejemplo de `backend/test/ayuda-base-de-datos*`.
 - Lecturas HTTPS del 28-10-2026: `/api/health` respondió 200 con HSTS; el frontend respondió 200. Estas lecturas comprueban la versión **actualmente desplegada**, no los cambios de esta rama.
-- Pendientes de comprobación externa: permisos y rango de IP de Atlas (el panel pidió iniciar sesión); aplicación de la nueva CSP y de las dependencias actualizadas en Render después de fusionar y desplegar. No se registran como verificados.
+- Revisión posterior comunicada por Santiago: Atlas permite al usuario de la API acceder a todas las bases y mantiene `0.0.0.0/0`. Falta restringir los roles y crear el usuario de pruebas. La corrección del panel por sesión caducada tiene prueba automatizada, pero aún no se ha verificado en Render.
+- Pendiente de comprobación tras fusionar y desplegar: sincronizar el Blueprint de Render y verificar en producción la CSP, las cabeceras de Helmet y la redirección por sesión caducada. No se registran como verificados.
 
 **Fuentes de referencia:** guía del laboratorio entregada por el docente; [OWASP Top 10:2025](https://top10.owasp.org/2025/0x00_2025-Introduction/); [NIST, respuesta a incidentes](https://csrc.nist.gov/projects/incident-response); [Ley 1581 de 2012, artículo 4](https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981).
