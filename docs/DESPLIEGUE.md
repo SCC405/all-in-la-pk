@@ -104,6 +104,17 @@ bloquean al administrador. El número correcto se comprueba así:
 
 Nunca `TRUST_PROXY` con un número mayor del necesario, por lo del punto 3.
 
+**En Render el valor es `3`.** Medido el 29 de octubre de 2026 desde una IP conocida:
+
+| `TRUST_PROXY` | IP que registró la API | Con `X-Forwarded-For: 1.2.3.4` |
+|---|---|---|
+| `true` (1) | `10.31.179.45`, proxy interno de Render | — |
+| `2` | `172.64.208.91`, un servidor de Cloudflare | La misma: no se deja falsificar |
+| `3` | **La IP real del cliente** | **La IP real**: el contador siguió bajando igual |
+
+Con `2` tampoco basta: la IP de Cloudflare cambia según el nodo y la comparten todos los
+visitantes que entran por él.
+
 ### `FORZAR_HTTPS=true`
 
 Dos efectos: redirige lo que llegue sin cifrar y envía `Strict-Transport-Security`; y hace que
