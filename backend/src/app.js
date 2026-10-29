@@ -23,7 +23,7 @@ app.disable('x-powered-by');
 // explícito para leer X-Forwarded-Proto y saber si la petición original era
 // HTTPS. Sin esta línea, la redirección de abajo entraría en bucle.
 if (env.trustProxy) {
-  app.set('trust proxy', 1);
+  app.set('trust proxy', env.trustProxy);
 }
 
 app.use(crearForzarHttps(env));
