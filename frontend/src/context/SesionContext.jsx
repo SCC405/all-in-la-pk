@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { alCaducarSesion } from '../services/apiCliente.js';
 import { sesionServicio } from '../services/sesionServicio.js';
 import { ESTADO_INICIAL_SESION, FASES, sesionDesdeRespuesta } from '../utils/sesion.js';
 
@@ -11,11 +12,16 @@ export function SesionProvider({ children }) {
   // única forma de saberlo: la cookie es httpOnly y desde aquí no se ve.
   useEffect(() => {
     let vigente = true;
+    let sesionInvalidada = false;
+    const dejarDeEscuchar = alCaducarSesion(() => {
+      sesionInvalidada = true;
+      if (vigente) setEstado(sesionDesdeRespuesta(null));
+    });
 
     sesionServicio
       .consultar()
       .then((respuesta) => {
-        if (vigente) setEstado(sesionDesdeRespuesta(respuesta));
+        if (vigente && !sesionInvalidada) setEstado(sesionDesdeRespuesta(respuesta));
       })
       .catch(() => {
         // Ante la duda, no hay sesión: más vale pedir login de más que enseñar
@@ -25,6 +31,7 @@ export function SesionProvider({ children }) {
 
     return () => {
       vigente = false;
+      dejarDeEscuchar();
     };
   }, []);
 

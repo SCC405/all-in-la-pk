@@ -2,7 +2,7 @@ import { createServer as crearServidorHttp } from 'node:http';
 import { createServer as crearServidorHttps } from 'node:https';
 import app from './src/app.js';
 import { connectDatabase, disconnectDatabase } from './src/config/database.js';
-import { env } from './src/config/env.js';
+import { env, validarConfiguracionProduccion } from './src/config/env.js';
 import { opcionesHttps } from './src/config/https.js';
 
 let httpServer;
@@ -37,6 +37,7 @@ function detalleDeInicio(error) {
 
 async function startServer() {
   try {
+    validarConfiguracionProduccion(env);
     await connectDatabase(env.mongodbUri);
     await escuchar();
     console.log(`Backend disponible en ${protocolo}://localhost:${env.port}`);

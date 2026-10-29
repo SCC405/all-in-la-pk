@@ -29,6 +29,7 @@ function itemValido(item) {
     && typeof item.producto._id === 'string'
     && typeof item.producto.nombre === 'string'
     && Number.isFinite(item.producto.precio)
+    && item.producto.precio >= 0
     && Number.isInteger(item.cantidad)
     && item.cantidad >= 1,
   );
